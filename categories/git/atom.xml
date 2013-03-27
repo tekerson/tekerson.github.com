@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | Deprecated Behaviour]]></title>
+  <link href="http://blog.tekerson.com/categories/git/atom.xml" rel="self"/>
+  <link href="http://blog.tekerson.com/"/>
+  <updated>2013-03-27T17:48:27+10:00</updated>
+  <id>http://blog.tekerson.com/</id>
+  <author>
+    <name><![CDATA[Brenton Alker]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Basic branching with git]]></title>
+    <link href="http://blog.tekerson.com/2008/09/05/basic-branching-with-git/"/>
+    <updated>2008-09-05T22:48:22+10:00</updated>
+    <id>http://blog.tekerson.com/2008/09/05/basic-branching-with-git</id>
+    <content type="html"><![CDATA[<p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it's <strong>easy!</strong></p>
+
+<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using "<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>" to work on multiple things at once, but this is very limiting.</p>
+
+<p>So, Here we go. My basic workflow now look like this.</p>
+
+<p>Create a new branch (based on the HEAD of your current branch), and automatically switch to it:</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; -b my_branch&lt;/code&gt;
+</code></pre>
+
+<p>Then you can work within this branch as you always would.</p>
+
+<p>Work, work, work...</p>
+
+<pre><code>&lt;code&gt;&lt;a&gt;&lt;/a&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add manual page"&gt;git add&lt;/a&gt; files_i_have_edited.txt
+&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-commit.html" title="git-commit manual page"&gt;git commit&lt;/a&gt; -m 'My changes'&lt;/code&gt;
+</code></pre>
+
+<p>Repeating this step until the task is complete. Then, to get the changes back into the master branch. Switch to it</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; master&lt;/code&gt;
+</code></pre>
+
+<p>And pull the changes from the branch</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-pull.html" title="git-pull manual page"&gt;git pull&lt;/a&gt; . my_branch&lt;/code&gt;
+</code></pre>
+
+<p>Easy. No need to remember revision numbers where you branched, or which changed have already been merged. You can of course switch back to the branch and continue work with</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; my_branch&lt;/code&gt;
+</code></pre>
+
+<p>this "edit, commit, pull" cycle can continue until the task is complete. Then, once you're satisfied you can delete the branch with</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html" title="git-branch manual page"&gt;git branch&lt;/a&gt; -d my_branch&lt;/code&gt;
+</code></pre>
+
+<p>It's still in the history of course, but no need to keep old branches around.</p>
+
+<p>Hope that makes things clear to anyone else who was confused as I was by some of the overly complicated explanation of branching in git.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>DNS (Bind9) Configuration - Deprecated Behaviour</title>
+  <meta name="author" content="Brenton Alker">
+
+  
+  <meta name="description" content="I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &#8216;hosts&#8217; files, and just to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.tekerson.com/2006/11/03/dns-bind9-configuration">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2296226-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Deprecated Behaviour</a></h1>
+  
+    <h2>The inane, sometimes insane, ramblings from the mind of Brenton Alker.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">DNS (Bind9) Configuration</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-03T04:56:19+10:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &#8216;hosts&#8217; files, and just to see if I could&#8230; I have worked with DNS servers mainly through web-based front-ends, so I wanted to find out what the configuration really looked like. The most helpful and complete resource I came across was the <a href="http://www.net.cmu.edu/groups/netdev/docs/bind9/Bv9ARM.html">BIND 9 Administrator Reference Manual</a> (Good title). Here is the configuration I finally came up with (and some associated notes).</p>
+
+<h2>The Configuration Files</h2>
+
+<p>The &#8216;named.conf&#8217; file that usually contains the main configuration information is split into 3 seperate files on the debian install.</p>
+
+<h3>named.conf</h3>
+
+<p>The &#8216;named.conf&#8217; file is located in the &#8216;/etc/bind/&#8217; directory, this is the main bind configuration directory on a debian install. The &#8216;named.conf&#8217; file itself is written so there is probably no need to edit it. All personalisation of the service can be done using the &#8216;named.conf.options&#8217; and &#8216;named.conf.local&#8217; files that are referenced in the &#8216;named.conf&#8217;.</p>
+
+<h3>named.conf.options</h3>
+
+<p>&#8216;named.conf.options&#8217; pretty much contains the <em>options</em> block that is usually found in the top of the &#8216;named.conf&#8217; file.</p>
+
+<p>The <em>directory</em> parameter specifies the root directory where all relatively referenced files can be found (this is the default on debian)</p>
+
+<p>The <em>forwarders</em> is a list of DNS servers that this server can &#8216;forward&#8217; the query to if it doesn&#8217;t know the answer. This is pointed at my ISP&#8217;s normal DNS server (in this case, via the network router)</p>
+
+<p>The <em>auth-nxdomain</em> directive instructs the server to answer as an authoritative source for non-existant (nx) records. It is generally a bad idea.</p>
+
+<p>The <em>allow-query</em> directive is fairly self-explanatory, it provides a list of IP ranges that are permitted to query this server. In this case, I have limited access to the localhost and the private network.</p>
+
+<p>The <em>listen-on</em> directive is similar, it provides a list of IPs that the server should listen on. In my case this is only the loopback and the private interface.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>options {
+</span><span class='line'>        directory "/etc/bind";
+</span><span class='line'>        forwarders {
+</span><span class='line'>                192.168.1.1;
+</span><span class='line'>        };
+</span><span class='line'>        auth-nxdomain no;    # conform to RFC1035
+</span><span class='line'>        allow-query {
+</span><span class='line'>            192.168.1.0/24;    # Only allow queries from the network and local machine
+</span><span class='line'>            127.0.0.0/24;
+</span><span class='line'>        };
+</span><span class='line'>         listen-on {
+</span><span class='line'>            192.168.1.100;
+</span><span class='line'>            127.0.0.1;
+</span><span class='line'>        };
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On the debian package the file &#8216;named.conf.local&#8217; is referenced by the &#8216;named.conf&#8217; to provide information about the setup specific to this server. As such, there is little or no need to edit the &#8216;named.conf&#8217; itself. My &#8216;named.conf.local&#8217; defines 2 zones; &#8216;everyone-here.is-a-geek.com&#8217;, whichs maps the computers on the LAN, and the &#8216;1.168.192.in-addr.arpa&#8217; zone, which provides the reverse dns information. While this is (especially on a LAN) pretty much un-used as far as I know, it&#8217;s still good practice to put it in, and it can be useful at times for resolving the &#8220;Which computer connected to my server?&#8221; question.</p>
+
+<p>The <em>type</em> &#8216;master&#8217; tells the server that it is the authority for this zone, and it should be able to answer definitively about requests for systems in it.</p>
+
+<p>The <em>file</em> points to the &#8216;database&#8217; file containing specific information about the contents of the zone. This file is relative to the <em>path</em> given earlier, but an absolute path can also be used.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//Add the zone for normal DNS lookup
+</span><span class='line'>zone "everyone-here.is-a-geek.com" {
+</span><span class='line'>        type master;
+</span><span class='line'>        file "db.everyone-here.is-a-geek.com";
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The reverse zone is exactly the same as the forward zone. All reverse DNS zones end in &#8216;.in-addr.arpa&#8217;, the rest of the address is the IP in reverse (i.e 192.168.1. is my internal IP range, so to allow lookups I add entries for &#8216;1.168.192.in-addr.arpa&#8217;)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//Add the zone for reverse lookups
+</span><span class='line'>zone "1.168.192.in-addr.arpa" {
+</span><span class='line'>        type master;
+</span><span class='line'>        file "db.192";
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>The Database file(s)</h2>
+
+<h3>db.everyone-here.is-a-geek.com</h3>
+
+<p>This one probably needs a bit more explanation, I think it&#8217;s easier if I comment it inline. Two important things to remember everything that doesn&#8217;t end in a &#8220;.&#8221; will be prepended to the base domain, and the @ is substituted for the base domain.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$TTL    604800
+</span><span class='line'>$ORIGIN everyone-here.is-a-geek.com.                            ;The base domain name (From now on = @)
+</span><span class='line'>@       IN      SOA     gir webmaster (                
+</span><span class='line'>                             1                ; Serial
+</span><span class='line'>                             604800        ; Refresh
+</span><span class='line'>                             86400          ; Retry
+</span><span class='line'>                             2419200       ; Expire
+</span><span class='line'>                             604800 )      ; Negative Cache TTL
+</span><span class='line'>;
+</span><span class='line'>@               NS         gir                  ;This is the nameserver
+</span><span class='line'>@               MX        10      gir         ;mail sent to @everyone-here.is-a-geek.com goes to this server
+</span><span class='line'>@               A          192.168.1.100   ;the "A" record specifies a direct pointer to the IP address
+</span><span class='line'>gir              CNAME   @                   ;each "CNAME" points to another entry (or domain) in this case gir points to the base domain
+</span><span class='line'>*               CNAME   gir                   ;and everything (*) points to gir
+</span><span class='line'>ben            A       192.168.1.69     ;My housemates desktop - an "A" record pointing to Ben's static IP
+</span><span class='line'>zyrtec         A       192.168.1.150   ;My desktop machine - ditto for mine</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And the reverse table works the same way as the forward ones, except with the special <em>.in-addr.arpa</em> postfix.</p>
+
+<h3>/etc/bind/db.192</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$TTL    1D
+</span><span class='line'>$ORIGIN 1.168.192.in-addr.arpa.
+</span><span class='line'>@       IN      SOA     gir.everyone-here.is-a-geek.com. hostmaster.everyone-here.is-a-geek.com. (
+</span><span class='line'>                             1                 ; Serial
+</span><span class='line'>                             604800         ; Refresh
+</span><span class='line'>                             86400           ; Retry
+</span><span class='line'>                             2419200        ; Expire
+</span><span class='line'>                             604800 )       ; Negative Cache TTL
+</span><span class='line'>;
+</span><span class='line'>@               NS      gir.everyone-here.is-a-geek.com.           ;Add entries for all known IP-&gt;hostname maps in the domain
+</span><span class='line'>100             PTR     gir.everyone-here.is-a-geek.com.
+</span><span class='line'>150             PTR     zyrtec.everyone-here.is-a-geek.com.
+</span><span class='line'>69               PTR     ben.everyone-here.is-a-geek.com.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So there you have it, thats pretty much the guts of my DNS configuration. It took some tweaking to get it right (syslog is you best friend on this one) but it now works for my needs.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Brenton Alker</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-03T04:56:19+10:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2006</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/debian/'>Debian</a>, <a class='category' href='/categories/linux/'>Linux</a>, <a class='category' href='/categories/operating-systems/'>Operating Systems</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2006/11/02/easy-deployment-from-subversion/" title="Previous Post: Easy Deployment from Subversion">&laquo; Easy Deployment from Subversion</a>
+      
+      
+        <a class="basic-alignment right" href="/2006/11/04/priority-when-multiple-css-classes-are-applied/" title="Next Post: Priority When Multiple CSS Classes are Applied">Priority When Multiple CSS Classes are Applied &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/24/reboot/">Reboot</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/06/28/building-a-modular-application-in-zend-framework-part-2/">Building a Modular Application in Zend Framework - Part 2</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $(function(){
+      getTwitterFeed("tekerson", 5, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/tekerson">@tekerson</a></p>
+  
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Brenton Alker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

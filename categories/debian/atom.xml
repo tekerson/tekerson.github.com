@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Debian | Deprecated Behaviour]]></title>
+  <link href="http://blog.tekerson.com/categories/debian/atom.xml" rel="self"/>
+  <link href="http://blog.tekerson.com/"/>
+  <updated>2013-03-27T17:48:27+10:00</updated>
+  <id>http://blog.tekerson.com/</id>
+  <author>
+    <name><![CDATA[Brenton Alker]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Configuring Software RAID With mdadm]]></title>
+    <link href="http://blog.tekerson.com/2007/04/24/configuring-software-raid-with-mdadm/"/>
+    <updated>2007-04-24T01:14:31+10:00</updated>
+    <id>http://blog.tekerson.com/2007/04/24/configuring-software-raid-with-mdadm</id>
+    <content type="html"><![CDATA[<p>Along with the old server machines I collected from the office (that this server is currently running on) came a plethora of hard disks of varying sized. I decided to put a couple of them to use in a RAID array to protect my important (not really) data.
+The motherboard in my (much newer) desktop machine comes equipped with a RAID compatible disk controller, that I have never made use of. Unfortunately, the machine I have constructed as my server does not.</p>
+
+<p>Never fear, software raid to the rescue. While I was (and still am) led to believe that software RAID is considerably slower than its hardware equivalent, my current array performs comparably, even slightly better (at least for reads), than the individual disks. So it is definitely a viable solution.</p>
+
+<p>So I now have a simple 2 disk mirrored array, and in it's creation dispelled a few more of my own misconceptions.</p>
+
+<p>RAID array can be configured using partitions on an already partitioned drive (probably even using the 2 partitions on the same disk, but I didn't try as it sort of defeats the purpose).</p>
+
+<p>Using mdadm, a newer much friendlier (than the older raidtools) solution to software RAID on linux, to set up a software RAID is actually a fairly simple task.</p>
+
+<p>As I was creating an new array from blank disks, the majority of the configuration is one command:
+<code>
+mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/hdb1 /dev/hdc1
+</code></p>
+
+<p>Where /dev/md0 is the new software raid device and /dev/hdb1 and /dev/hdc1 are the 2 partitions that are to be used to create the array. If there is already data that needs to be preservered the "Create Degraded array, Add new disk" approach (described in much more detail in an <a href="http://nst.sourceforge.net/nst/docs/user/ch14.html">article on SourceForge</a>).</p>
+
+<p>and then
+<code>
+mdadm --examine --scan &gt;&gt; /dev/mdadm/mdadm.conf
+</code>
+to save the configuration (it works without the configuration file, it just makes life a little easier)</p>
+
+<p>I am yet to set up monitoring, but according to <a href="http://www.linuxdevcenter.com/pub/a/linux/2002/12/05/RAID.html">Linux dev center</a> that is fairly simple too.</p>
+
+<p>The configuration of a RAID array was much simpler and less interesting than I anticipated, but I suppose that's a good thing for the server administration world in general.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Debian Etch Install]]></title>
+    <link href="http://blog.tekerson.com/2007/04/20/debian-etch-install/"/>
+    <updated>2007-04-20T08:05:29+10:00</updated>
+    <id>http://blog.tekerson.com/2007/04/20/debian-etch-install</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Generate SSL cerificate for Courier IMAP server]]></title>
+    <link href="http://blog.tekerson.com/2007/01/20/generate-ssl-cerificate-for-courier-imap-server/"/>
+    <updated>2007-01-20T12:03:22+10:00</updated>
+    <id>http://blog.tekerson.com/2007/01/20/generate-ssl-cerificate-for-courier-imap-server</id>
+    <content type="html"><![CDATA[<p>My SSL certificate for my mail server had been expired for a few weeks now. When I finally got a round to installing a new one, I discovered the script I used to use to generate them missing. Instead I had to call <a href="http://openssl.org">OpenSSL</a> directly. Luckily, the line wasn't too hard to find.</p>
+
+<p>After filling in the requisite fields in the configuration file -- The most important being the "CN" field, which should contain the FQDN of the mail server.</p>
+
+<p>/etc/courier/imapd.cnf:
+<code>
+RANDFILE = /usr/lib/courier/imapd.rand
+[ req ]
+default_bits = 1024
+encrypt_key = yes
+distinguished_name = req_dn
+x509_extensions = cert_type
+prompt = no
+[ req_dn ]
+C=AU
+ST=QLD
+L=Brisbane
+O=Courier Mail Server
+OU=Automatically-generated IMAP SSL key
+CN=mail.example.com
+emailAddress=postmaster@example.com
+[ cert_type ]
+nsCertType = server
+</code></p>
+
+<p>Then generate the certificate itself with this incantation:
+<code>
+/usr/bin/openssl req -new -x509 -days 365 -nodes \
+-config /etc/courier/imapd.cnf -out /usr/lib/courier/imapd.pem \
+-keyout /usr/lib/courier/imapd.pem
+</code></p>
+
+<p>Got rid of the annoying "This servers certificate is exipired" messages in my MUA anyway.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[OpenVPN, The Super SSH tunnel]]></title>
+    <link href="http://blog.tekerson.com/2006/12/22/openvpn-the-super-ssh-tunnel/"/>
+    <updated>2006-12-22T04:30:16+10:00</updated>
+    <id>http://blog.tekerson.com/2006/12/22/openvpn-the-super-ssh-tunnel</id>
+    <content type="html"><![CDATA[<p>I have long marvelled at the ability of ssh to tunnel connections, and regularly use this feature to give myself access to services behind firewalls, in offices, far far away… As such, In spite of the seeming ubiquity of the concept, I have never seen the benifit of a VPN. But recently, after discovering <a href="http://openvpn.net/">OpenVPN</a> set up on one of the servers at work (One for which I'm not the primary admin).</p>
+
+<p>I looked through the configuration and it looked significantly simpler than I had anticipated. So I took it upon myself to join my home network with that of the one in the office (Why?… Why not?)</p>
+
+<p>It was fairly simple, after reading through and following the tips in the official <a href="http://openvpn.net/howto.html">How-To</a> I had a basic VPN connection with a shared key for encryption.</p>
+
+<p>On my local box, the configuration looked like:</p>
+
+<p>/etc/openvpn/tunnel.conf
+<code>
+dev tun
+remote my.office.domain
+float
+ifconfig 10.0.0.2 10.0.0.1
+secret .keys/office.key
+verb 3
+ping 30
+route 192.168.0.0 255.255.255.0
+</code></p>
+
+<p>And on the box in the back room at work:
+<code>
+dev tun
+remote everyone-here.is-a-geek.com
+float
+ifconfig 10.0.0.1 10.0.0.2
+secret .keys/brenton.key
+verb 3
+ping 30
+</code></p>
+
+<p>Note: Both are class C networks, My home IP range is 192.168.1.xxx and the one at work is 192.168.0.xxx This makes life easier, because the networks don't overlap, otherwise I believe some form of NAT would be required. Once the Tunnels are set up and both services are started
+<code>
+/etc/init.d/openvpn start
+</code>
+the machines should be able to ping each other across the VPN</p>
+
+<p>From work:
+<code>
+$ping 10.0.0.2
+PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
+64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=45.0 ms
+64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=28.4 ms
+…
+</code></p>
+
+<p>This configuration even adds and tears down the routing rule (only set up on my local machine at the moment) that forward traffic to the "other" network through the tunnel (The "route" line in my configuration). Unfortunately, because these machines are not the default gateways for their networks, some configuration on the gateway may be required to get them to forward everyone's traffic (not just that originating from the connected systems) through the tunnel. I'll post it when I figure it out. OR if anyone knows, please comment!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[DNS (Bind9) Configuration]]></title>
+    <link href="http://blog.tekerson.com/2006/11/03/dns-bind9-configuration/"/>
+    <updated>2006-11-03T04:56:19+10:00</updated>
+    <id>http://blog.tekerson.com/2006/11/03/dns-bind9-configuration</id>
+    <content type="html"><![CDATA[<p>I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my 'hosts' files, and just to see if I could... I have worked with DNS servers mainly through web-based front-ends, so I wanted to find out what the configuration really looked like. The most helpful and complete resource I came across was the <a href="http://www.net.cmu.edu/groups/netdev/docs/bind9/Bv9ARM.html">BIND 9 Administrator Reference Manual</a> (Good title). Here is the configuration I finally came up with (and some associated notes).</p>
+
+<h2>The Configuration Files</h2>
+
+<p>The 'named.conf' file that usually contains the main configuration information is split into 3 seperate files on the debian install.</p>
+
+<h3>named.conf</h3>
+
+<p>The 'named.conf' file is located in the '/etc/bind/' directory, this is the main bind configuration directory on a debian install. The 'named.conf' file itself is written so there is probably no need to edit it. All personalisation of the service can be done using the 'named.conf.options' and 'named.conf.local' files that are referenced in the 'named.conf'.</p>
+
+<h3>named.conf.options</h3>
+
+<p>'named.conf.options' pretty much contains the <em>options</em> block that is usually found in the top of the 'named.conf' file.</p>
+
+<p>The <em>directory</em> parameter specifies the root directory where all relatively referenced files can be found (this is the default on debian)</p>
+
+<p>The <em>forwarders</em> is a list of DNS servers that this server can 'forward' the query to if it doesn't know the answer. This is pointed at my ISP's normal DNS server (in this case, via the network router)</p>
+
+<p>The <em>auth-nxdomain</em> directive instructs the server to answer as an authoritative source for non-existant (nx) records. It is generally a bad idea.</p>
+
+<p>The <em>allow-query</em> directive is fairly self-explanatory, it provides a list of IP ranges that are permitted to query this server. In this case, I have limited access to the localhost and the private network.</p>
+
+<p>The <em>listen-on</em> directive is similar, it provides a list of IPs that the server should listen on. In my case this is only the loopback and the private interface.</p>
+
+<p>```
+options {</p>
+
+<pre><code>    directory "/etc/bind";
+    forwarders {
+            192.168.1.1;
+    };
+    auth-nxdomain no;    # conform to RFC1035
+    allow-query {
+        192.168.1.0/24;    # Only allow queries from the network and local machine
+        127.0.0.0/24;
+    };
+     listen-on {
+        192.168.1.100;
+        127.0.0.1;
+    };
+</code></pre>
+
+<p>};
+```</p>
+
+<p>On the debian package the file 'named.conf.local' is referenced by the 'named.conf' to provide information about the setup specific to this server. As such, there is little or no need to edit the 'named.conf' itself. My 'named.conf.local' defines 2 zones; 'everyone-here.is-a-geek.com', whichs maps the computers on the LAN, and the '1.168.192.in-addr.arpa' zone, which provides the reverse dns information. While this is (especially on a LAN) pretty much un-used as far as I know, it's still good practice to put it in, and it can be useful at times for resolving the "Which computer connected to my server?" question.</p>
+
+<p>The <em>type</em> 'master' tells the server that it is the authority for this zone, and it should be able to answer definitively about requests for systems in it.</p>
+
+<p>The <em>file</em> points to the 'database' file containing specific information about the contents of the zone. This file is relative to the <em>path</em> given earlier, but an absolute path can also be used.</p>
+
+<p>```
+//Add the zone for normal DNS lookup
+zone "everyone-here.is-a-geek.com" {</p>
+
+<pre><code>    type master;
+    file "db.everyone-here.is-a-geek.com";
+</code></pre>
+
+<p>};
+```</p>
+
+<p>The reverse zone is exactly the same as the forward zone. All reverse DNS zones end in '.in-addr.arpa', the rest of the address is the IP in reverse (i.e 192.168.1. is my internal IP range, so to allow lookups I add entries for '1.168.192.in-addr.arpa')</p>
+
+<p>```
+//Add the zone for reverse lookups
+zone "1.168.192.in-addr.arpa" {</p>
+
+<pre><code>    type master;
+    file "db.192";
+</code></pre>
+
+<p>};
+```</p>
+
+<h2>The Database file(s)</h2>
+
+<h3>db.everyone-here.is-a-geek.com</h3>
+
+<p>This one probably needs a bit more explanation, I think it's easier if I comment it inline. Two important things to remember everything that doesn't end in a "." will be prepended to the base domain, and the @ is substituted for the base domain.</p>
+
+<p>```
+$TTL    604800
+$ORIGIN everyone-here.is-a-geek.com.                            ;The base domain name (From now on = @)
+@       IN      SOA     gir webmaster (</p>
+
+<pre><code>                         1                ; Serial
+                         604800        ; Refresh
+                         86400          ; Retry
+                         2419200       ; Expire
+                         604800 )      ; Negative Cache TTL
+</code></pre>
+
+<p>;
+@               NS         gir                  ;This is the nameserver
+@               MX        10      gir         ;mail sent to @everyone-here.is-a-geek.com goes to this server
+@               A          192.168.1.100   ;the "A" record specifies a direct pointer to the IP address
+gir              CNAME   @                   ;each "CNAME" points to another entry (or domain) in this case gir points to the base domain
+*               CNAME   gir                   ;and everything (*) points to gir
+ben            A       192.168.1.69     ;My housemates desktop - an "A" record pointing to Ben's static IP
+zyrtec         A       192.168.1.150   ;My desktop machine - ditto for mine
+```</p>
+
+<p>And the reverse table works the same way as the forward ones, except with the special <em>.in-addr.arpa</em> postfix.</p>
+
+<h3>/etc/bind/db.192</h3>
+
+<p>```
+$TTL    1D
+$ORIGIN 1.168.192.in-addr.arpa.
+@       IN      SOA     gir.everyone-here.is-a-geek.com. hostmaster.everyone-here.is-a-geek.com. (</p>
+
+<pre><code>                         1                 ; Serial
+                         604800         ; Refresh
+                         86400           ; Retry
+                         2419200        ; Expire
+                         604800 )       ; Negative Cache TTL
+</code></pre>
+
+<p>;
+@               NS      gir.everyone-here.is-a-geek.com.           ;Add entries for all known IP->hostname maps in the domain
+100             PTR     gir.everyone-here.is-a-geek.com.
+150             PTR     zyrtec.everyone-here.is-a-geek.com.
+69               PTR     ben.everyone-here.is-a-geek.com.
+```</p>
+
+<p>So there you have it, thats pretty much the guts of my DNS configuration. It took some tweaking to get it right (syslog is you best friend on this one) but it now works for my needs.</p>
+]]></content>
+  </entry>
+  
+</feed>

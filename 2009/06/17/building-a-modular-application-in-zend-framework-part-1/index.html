@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Building a Modular Application in Zend Framework - Part 1 - Deprecated Behaviour</title>
+  <meta name="author" content="Brenton Alker">
+
+  
+  <meta name="description" content="This is part one of a series exploring modular application development in Zend Framework. In this entry we&#8217;ll look at downloading and &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2296226-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Deprecated Behaviour</a></h1>
+  
+    <h2>The inane, sometimes insane, ramblings from the mind of Brenton Alker.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Building a Modular Application in Zend Framework - Part 1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-17T19:45:29+10:00" pubdate data-updated="true">Jun 17<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This is part one of a series exploring modular application development in Zend Framework. In this entry we&#8217;ll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We&#8217;ll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
+
+<h2>Install Zend Framework</h2>
+
+<p>The first step is to actually get ZF, so start by downloading the package (about 40MB in total) into our working directory and extracting it.</p>
+
+<pre><code>wget http://framework.zend.com/releases/ZendFramework-1.8.4/ZendFramework-1.8.4.tar.gz
+tar zxf ZendFramework-1.8.4.tar.gz
+</code></pre>
+
+<p>We&#8217;ll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
+
+<pre><code>ln -s ZendFramework-1.8.4 ZendFramework
+</code></pre>
+
+<h2>Install Zend_Tool</h2>
+
+<p>Creating an alias allows command &#8220;zf&#8221; to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
+
+<pre><code>alias zf=`pwd`/ZendFramework/bin/zf.sh
+</code></pre>
+
+<p>Now the installation is complete, we should be able to check what version of the framework we have just installed.</p>
+
+<pre><code>zf show version
+# Zend Framework Version: 1.8.4
+</code></pre>
+
+<p>If this works, we&#8217;re ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
+
+<h2>Create the project</h2>
+
+<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we&#8217;ll call our project &#8220;aza&#8221; (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
+
+<pre><code>zf create project aza
+</code></pre>
+
+<p>This should produce a project structure that looks like this</p>
+
+<p>[caption id=&#8221;attachment_131&#8221; align=&#8221;alignnone&#8221; width=&#8221;324&#8221; caption=&#8221;Directory Listing of new project&#8221;]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
+
+<h2>Setup the web server</h2>
+
+<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace &#8220;/WORKING/PATH/&#8221; with the absolute path to the directory in which you are working (run pwd if you&#8217;re not sure).</p>
+
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerName aza
+    DocumentRoot /WORKING/PATH/aza/public
+    &lt;Directory /WORKING/PATH/aza/public&gt;
+        php_value include_path "/WORKING/PATH/ZendFramework/library"
+        php_value magic_quotes_gpc 0
+        php_value short_open_tag "on"
+        DirectoryIndex index.php
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>Don&#8217;t forget to restart the web server to enable the site.</p>
+
+<h2>Test our page!</h2>
+
+<p>We should now be able to navigate to our site and be warmly welcomed to our new Zend Framework application!
+We&#8217;ll stop here for now. In the next post, we&#8217;ll start looking at creating our first module.</p>
+
+<h2>Updates</h2>
+
+<p>2009-06-26
+Updated for ZF Version 1.8.4</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Brenton Alker</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-17T19:45:29+10:00" pubdate data-updated="true">Jun 17<span>th</span>, 2009</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/code/'>Code</a>, <a class='category' href='/categories/php/'>PHP</a>, <a class='category' href='/categories/zend-framework/'>Zend Framework</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2009/05/26/re-sequence-a-column-in-mysql/" title="Previous Post: Re-sequence a column in MySQL">&laquo; Re-sequence a column in MySQL</a>
+      
+      
+        <a class="basic-alignment right" href="/2009/06/28/building-a-modular-application-in-zend-framework-part-2/" title="Next Post: Building a Modular Application in Zend Framework - Part 2">Building a Modular Application in Zend Framework - Part 2 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/24/reboot/">Reboot</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/06/28/building-a-modular-application-in-zend-framework-part-2/">Building a Modular Application in Zend Framework - Part 2</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $(function(){
+      getTwitterFeed("tekerson", 5, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/tekerson">@tekerson</a></p>
+  
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Brenton Alker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

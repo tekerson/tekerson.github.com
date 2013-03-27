@@ -1,0 +1,1573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Deprecated Behaviour]]></title>
+  <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
+  <link href="http://blog.tekerson.com/"/>
+  <updated>2013-03-27T17:48:27+10:00</updated>
+  <id>http://blog.tekerson.com/</id>
+  <author>
+    <name><![CDATA[Brenton Alker]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Reboot]]></title>
+    <link href="http://blog.tekerson.com/2013/03/24/reboot/"/>
+    <updated>2013-03-24T18:25:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/03/24/reboot</id>
+    <content type="html"><![CDATA[<p>Wow, it&#8217;s been over 3 years since my last post! And, like so many entertainment franchises, I think it&#8217;s time for a reboot. I stopped blogging when I moved away from PHP because I no longer felt confident enough in my work to open up anything I was doing to any kind of public scrutiny. Having since (mostly) returned to PHP, doing some consulting and contracting and embarking on a venture of my own, I feel it is time once again to put some of my experiences and thoughts into writing.</p>
+
+<p>To facilitate this, and because my Wordpress install was so hideously out of date, I&#8217;ve decided to changed to a static blogging solution: <a href="http://octopress.org/">Octopress</a>. As such, the blog is currently without much of a design. This may (or may not) be remedied at a later time. I will write in more detail about the platform and the migration in a future post.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Silver Lining of the ReadWriteWeb/Facebook Login Debacle]]></title>
+    <link href="http://blog.tekerson.com/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/"/>
+    <updated>2010-02-18T00:11:13+10:00</updated>
+    <id>http://blog.tekerson.com/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle</id>
+    <content type="html"><![CDATA[<p>The furor surrounding the amusing chaos that ensued following <a href="http://www.readwriteweb.com/archives/facebook_wants_to_be_your_one_true_loginpage5.php">ReadWriteWeb&#8217;s article on Facebook Connect</a> has been interesting, in that it brings attention to developers assumptions about the way users interact with their products.</p>
+
+<p>There have been articles debating who is the cause of the confusion; whether it&#8217;s the <a href="http://funkatron.com/site/comments/were-the-stupid-ones-facebook-google-and-our-failure-as-developers/">Developers</a> or the <a href="http://www.lastpodcast.net/2010/02/10/facebook-login-is-hard-welcome-to-idiocracy">Users</a> that need to try harder.</p>
+
+<p>But in all this, what I think has been missed is the <em>success</em> of <a href="http://developers.facebook.com/connect.php">Facebook Connect</a>. There are hundreds of comments on the ReadWriteWeb article from users who failed (for whatever reason) to find their way to Facebook, yet still managed to use Facebook Connect to leave a comment.</p>
+
+<p>Sounds like a testament to the usability of Facebook Connect to me!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework]]></title>
+    <link href="http://blog.tekerson.com/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/"/>
+    <updated>2009-09-08T01:03:53+10:00</updated>
+    <id>http://blog.tekerson.com/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework</id>
+    <content type="html"><![CDATA[<p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&#8217;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
+
+<p>Doctrine 2.0 looks like it might finally be the ORM framework I have been seeking for PHP. While the older versions of Doctrine provided great functionality, they were too intrusive for my taste. I think an ORM should provide a true <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">data mapper</a>; in which the domain entities need know nothing about their persistence.</p>
+
+<p>Matthew Weier O&#8217;Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &#8220;real&#8221; namespaces, so its classes don&#8217;t follow the (current) Zend naming standard and the ZF autoloader won&#8217;t load them for us.</p>
+
+<p>Good News, Doctrine provides its own autoloader that we can leverage to load its own classes.</p>
+
+<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&#8217;t very useful).</p>
+
+<p>Good News, it&#8217;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
+
+<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &#8220;Doctrine&#34; namespace.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_initDoctrine</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// Create the doctrine autoloader and remove it from the spl autoload stack (it adds itself)</span>
+</span><span class='line'>        <span class="k">require_once</span> <span class="s1">&#39;Doctrine/Common/ClassLoader.php&#39;</span><span class="p">;</span>
+</span><span class='line'>        <span class="nv">$doctrineAutoloader</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="k">new</span> <span class="nx">\Doctrine\Common\ClassLoader</span><span class="p">(),</span> <span class="s1">&#39;loadClass&#39;</span><span class="p">);</span>
+</span><span class='line'>        <span class="nb">spl_autoload_unregister</span><span class="p">(</span><span class="nv">$doctrineAutoloader</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// Fetch the global Zend Autoloader</span>
+</span><span class='line'>        <span class="nv">$autoloader</span> <span class="o">=</span> <span class="nx">Zend_Loader_Autoloader</span><span class="o">::</span><span class="na">getInstance</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="c1">// Push the doctrine autoloader to load for the Doctrine\ namespace</span>
+</span><span class='line'>        <span class="nv">$autoloader</span><span class="o">-&gt;</span><span class="na">pushAutoloader</span><span class="p">(</span><span class="nv">$doctrineAutoloader</span><span class="p">,</span> <span class="s1">&#39;Doctrine\\&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We can use all of Doctrine&#8217;s classes anywhere else in our code.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">use</span> <span class="nx">Doctrine\ORM</span><span class="p">;</span>
+</span><span class='line'><span class="nv">$manager</span> <span class="o">=</span> <span class="nx">EntityManager</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;driver&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;pdo_sqlite&#39;</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;:memory:/&#39;</span><span class="p">));</span>
+</span><span class='line'><span class="c1">// ...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I still have a lot to learn and the documentation on 2.0 is a little sparse as yet, but this is a start.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dependency Injection Container Resource in Zend Framework]]></title>
+    <link href="http://blog.tekerson.com/2009/07/06/dependency-injection-container-resource-in-zend-framework/"/>
+    <updated>2009-07-06T13:00:51+10:00</updated>
+    <id>http://blog.tekerson.com/2009/07/06/dependency-injection-container-resource-in-zend-framework</id>
+    <content type="html"><![CDATA[<p>A good dependency injection container is a godsend when it comes to managing the dependency tree of even a moderately complex domain model. As such, it comes as no surprise there has been much discussion about them of late in the PHP and Zend Framework communities.</p>
+
+<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei&#8217;s recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
+
+<p>The container resource copies any already instantiated objects from the old container into the new one, then replaces the default container.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Tek_Application_Resource_Container</span> <span class="k">extends</span> <span class="nx">Zend_Application_Resource_ResourceAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="nv">$_container</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getContainer</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="k">null</span> <span class="o">===</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$options</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getOptions</span><span class="p">();</span>
+</span><span class='line'>            <span class="nv">$container</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_getBootstrap</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">();</span>
+</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$container</span> <span class="nx">instanceof</span> <span class="nx">Yadif_Container</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                <span class="nv">$config</span> <span class="o">=</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$options</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="k">new</span> <span class="nx">Zend_Config</span><span class="p">(</span><span class="nv">$options</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">])</span> <span class="o">:</span> <span class="k">null</span><span class="p">;</span>
+</span><span class='line'>                <span class="nv">$container</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Yadif_Container</span><span class="p">(</span><span class="k">array</span><span class="p">(),</span> <span class="nv">$config</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>                <span class="c1">// import instances from the existing (Zend_Registry) container</span>
+</span><span class='line'>                <span class="k">foreach</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_getBootstrap</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$key</span> <span class="o">=&gt;</span> <span class="nv">$instance</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>                    <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">__set</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="nv">$instance</span><span class="p">);</span>
+</span><span class='line'>                <span class="p">}</span>
+</span><span class='line'>            <span class="p">}</span>
+</span><span class='line'>            <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">addComponents</span><span class="p">(</span><span class="nv">$options</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">]);</span>
+</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span> <span class="o">=</span> <span class="nv">$container</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">init</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">();</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_getBootstrap</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">setContainer</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span><span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_getBootstrap</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$app</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getBootstrap</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getApplication</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$app</span> <span class="nx">instanceof</span> <span class="nx">Zend_Application</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">getBootstrap</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="nv">$app</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I&#8217;ve also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
+
+<p>To use the container resource you will need to add the prefix and path to the bootstrappers plugin loader:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Bootstrap</span> <span class="k">extends</span> <span class="nx">Zend_Application_Bootstrap_Bootstrap</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="c1">// ...</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_initPlugins</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>       <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getPluginLoader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">addPrefixPath</span><span class="p">(</span>
+</span><span class='line'>           <span class="s1">&#39;Tek_Application_Resource&#39;</span><span class="p">,</span>
+</span><span class='line'>           <span class="s1">&#39;Tek/Application/Resource&#39;</span>
+</span><span class='line'>       <span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="c1">// ...</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then you can add the resources and their dependencies via the normal configuration system. This means adding lines like:</p>
+
+<pre><code>resources.container.objects.Log.class = "Zend_Log"
+resources.container.objects.Log.arguments.0 = "Log_Writer"
+
+resources.container.objects.Log_Writer.class = "Zend_Log_Writer_Stream"
+resources.container.objects.Log_Writer.arguments.0 = "%Log_Writer.stream%"
+
+resources.container.options.Log_Writer.stream = APPLICATION_PATH "/../log/application.log"
+</code></pre>
+
+<p>There are 2 resources defined here, the &#8220;Log&#8221; and the &#8220;Log_Writer&#8221;.</p>
+
+<ol>
+<li><p>Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
+<li><p>The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
+</ol>
+
+
+<p>Now, the controller can write a log like this.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="nv">$logger</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getInvokeArg</span><span class="p">(</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getResource</span><span class="p">(</span><span class="s1">&#39;Log&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="c1">// or, with the helper</span>
+</span><span class='line'><span class="nv">$logger</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_helper</span><span class="o">-&gt;</span><span class="na">resource</span><span class="p">(</span><span class="s1">&#39;Log&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$logger</span><span class="o">-&gt;</span><span class="na">log</span><span class="p">(</span><span class="s1">&#39;A log message&#39;</span><span class="p">,</span> <span class="nx">Zend_Log</span><span class="o">::</span><span class="na">NOTICE</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>While this is a simple example, it can be really beneficial when working with, for example, a service layer. The service you need might depend on another service, both of which may depend on an Authorization service. All the services depend on their data mappers (which themselves depends on a database connection) and their entity factories, etc.
+Instantiating a dependency tree like this for every object you need can lead to duplicate and hard to modify code. Dependency injection coupled with a good container can provide highly versatile code whose behaviour can be drastically changed by only modifying a configuration file.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building a Modular Application in Zend Framework - Part 2]]></title>
+    <link href="http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2/"/>
+    <updated>2009-06-28T00:43:35+10:00</updated>
+    <id>http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2</id>
+    <content type="html"><![CDATA[<p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We&#8217;re going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
+
+<p>Note, there are still some bugs in Zend_Tool that prevent this working as it should, I will note the bugs and their fixes as we encounter them.</p>
+
+<h2>Create the module</h2>
+
+<p>From the base path of our application (/WORKING/PATH/aza from the last article), we can issue the command to the Zend_Tool CLI to create our guestbook module.</p>
+
+<pre><code>zf create module guestbook
+</code></pre>
+
+<p>Then, create the index controller within the guestbook module.</p>
+
+<pre><code>zf create controller index 1 guestbook
+</code></pre>
+
+<p>The &#8220;1&#8221; argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
+
+<pre><code>zf create controller ?
+</code></pre>
+
+<p>Once the new module and controller is created we need to tell the application that we are using modules. We do this by adding two lines to the configs/application.ini. The first activates the modules resource. The second configures the front controller, telling it where the modules are located. These lines should be added to the end of the production section of the .ini file.</p>
+
+<pre><code>resources.modules = ""
+resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
+</code></pre>
+
+<p>To check our module is working, we can navigate to our guestbook at http://aza/guestbook and we should see the default view for the index action.</p>
+
+<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn&#8217;t prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
+<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn&#8217;t be but we don&#8217;t really care, we&#8217;re going to replace it anyway.</p>
+
+<h2>Create module bootstrap</h2>
+
+<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn&#8217;t create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Guestbook_Bootstrap</span> <span class="k">extends</span> <span class="nx">Zend_Application_Module_Bootstrap</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don&#8217;t need any further bootstrapping.</p>
+
+<p><strong>Important note</strong>: <strong><em>All</em> bootstrap functions</strong> for <strong>every module</strong> are run for <strong>every request</strong>.</p>
+
+<p>The bootstrap process occurs <em>before</em> routing and dispatch, so during bootstrap there is no way to know which module/controller/action is being requested. Therefore, any setup that should be done only if a particular module is requested should be done in plugins, <em>not</em> bootstrap.</p>
+
+<h2>Getting Quickstart</h2>
+
+<p>Now we have the module skeleton in place, lets start porting the guestbook code to our module. This turns out to be fairly easy; the majority of the changes involve prefixing class names with the module name.</p>
+
+<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it&#8217;s on the right hand side in zip or tar.gz form).</p>
+
+<h2>Importing Quickstart</h2>
+
+<p>Once you have downloaded and extracted the files into a temporary folder, we can start copying in the files we need.</p>
+
+<p>We need to copy the GuestbookController from the Quickstart (making it the IndexController) and all of the Quickstart models, views and forms to the appropriate places within our module.</p>
+
+<p>From (Quickstart)To (Aza)</p>
+
+<p>application/controllers/GuestbookController.php</p>
+
+<p>application/modules/guestbook/controllers/IndexController.php</p>
+
+<p>application/models/*
+application/modules/guestbook/models/</p>
+
+<p>application/views/scripts/guestbook/*
+application/modules/guestbook/views/scripts/index/</p>
+
+<p>application/forms/*
+application/modules/guestbook/forms/</p>
+
+<p>The controller and the views will require overwriting the existing files.</p>
+
+<h2>Porting Quickstart</h2>
+
+<p>Now we have the files in the right place, we need to update the files to be modular.</p>
+
+<p>We&#8217;ll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
+
+<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with &#8220;Default<em>&#8221;, but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of &#8220;Default</em>&#8221; with &#8220;Guestbook_&#8221; in the application/modules/guestbook/models/ directory is all we need.</p>
+
+<p>The controller is a little trickier because it isn&#8217;t already prefixed (controllers in the default module aren&#8217;t), but it&#8217;s still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
+
+<p>Finally, we get to the view. In our index view (application/modules/guestbook/views/scripts/index/index.phtml) we need to update the parameters passed to the url helper to reference our controller. Adding the module, and changing the controller leaves the first link looking like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;&lt;?php echo $this-&gt;url(</span>
+</span><span class='line'><span class="s">    array(</span>
+</span><span class='line'><span class="s">        &#39;module&#39;    =&gt; &#39;guestbook&#39;,</span>
+</span><span class='line'><span class="s">        &#39;controller&#39; =&gt; &#39;index&#39;,</span>
+</span><span class='line'><span class="s">        &#39;action&#39;     =&gt; &#39;sign&#39;</span>
+</span><span class='line'><span class="s">    ), </span>
+</span><span class='line'><span class="s">    &#39;default&#39;, </span>
+</span><span class='line'><span class="s">    true) ?&gt;&quot;</span><span class="nt">&gt;</span>Sign Our Guestbook<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Done!</p>
+
+<h2>Connect the database</h2>
+
+<p>I&#8217;ll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.</p>
+
+<h2>Conclusion</h2>
+
+<p>We have just ported the Quickstart guestbook application to a Zend Framework Module. Modularizing applications allows for easier code reuse across applications. Hopefully modules will become standardized to the point that there will be a repository of modules that can be added to your application and providing drop in functionality.</p>
+
+<h2>Download</h2>
+
+<p>For those who had trouble following along, I&#8217;ve made the entire application (including database) available via my <a href="http://github.com/tekerson/A-Zend-Application/tree/master">github repository</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building a Modular Application in Zend Framework - Part 1]]></title>
+    <link href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/"/>
+    <updated>2009-06-17T19:45:29+10:00</updated>
+    <id>http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1</id>
+    <content type="html"><![CDATA[<p>This is part one of a series exploring modular application development in Zend Framework. In this entry we&#8217;ll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We&#8217;ll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
+
+<h2>Install Zend Framework</h2>
+
+<p>The first step is to actually get ZF, so start by downloading the package (about 40MB in total) into our working directory and extracting it.</p>
+
+<pre><code>wget http://framework.zend.com/releases/ZendFramework-1.8.4/ZendFramework-1.8.4.tar.gz
+tar zxf ZendFramework-1.8.4.tar.gz
+</code></pre>
+
+<p>We&#8217;ll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
+
+<pre><code>ln -s ZendFramework-1.8.4 ZendFramework
+</code></pre>
+
+<h2>Install Zend_Tool</h2>
+
+<p>Creating an alias allows command &#8220;zf&#8221; to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
+
+<pre><code>alias zf=`pwd`/ZendFramework/bin/zf.sh
+</code></pre>
+
+<p>Now the installation is complete, we should be able to check what version of the framework we have just installed.</p>
+
+<pre><code>zf show version
+# Zend Framework Version: 1.8.4
+</code></pre>
+
+<p>If this works, we&#8217;re ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
+
+<h2>Create the project</h2>
+
+<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we&#8217;ll call our project &#8220;aza&#8221; (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
+
+<pre><code>zf create project aza
+</code></pre>
+
+<p>This should produce a project structure that looks like this</p>
+
+<p>[caption id=&#8221;attachment_131&#8221; align=&#8221;alignnone&#8221; width=&#8221;324&#8221; caption=&#8221;Directory Listing of new project&#8221;]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
+
+<h2>Setup the web server</h2>
+
+<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace &#8220;/WORKING/PATH/&#8221; with the absolute path to the directory in which you are working (run pwd if you&#8217;re not sure).</p>
+
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerName aza
+    DocumentRoot /WORKING/PATH/aza/public
+    &lt;Directory /WORKING/PATH/aza/public&gt;
+        php_value include_path "/WORKING/PATH/ZendFramework/library"
+        php_value magic_quotes_gpc 0
+        php_value short_open_tag "on"
+        DirectoryIndex index.php
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>Don&#8217;t forget to restart the web server to enable the site.</p>
+
+<h2>Test our page!</h2>
+
+<p>We should now be able to navigate to our site and be warmly welcomed to our new Zend Framework application!
+We&#8217;ll stop here for now. In the next post, we&#8217;ll start looking at creating our first module.</p>
+
+<h2>Updates</h2>
+
+<p>2009-06-26
+Updated for ZF Version 1.8.4</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Re-sequence a column in MySQL]]></title>
+    <link href="http://blog.tekerson.com/2009/05/26/re-sequence-a-column-in-mysql/"/>
+    <updated>2009-05-26T23:13:24+10:00</updated>
+    <id>http://blog.tekerson.com/2009/05/26/re-sequence-a-column-in-mysql</id>
+    <content type="html"><![CDATA[<p>When you have an &#8220;position&#8221; column in a table, to allow the user to select the order of elements in the table or as an optimization for pagination. They always seem to get out of sequence at some point&#8211;ending up with gaps in the sequence.
+This is something I run into not quiet often enough to remember how to do it, yet often enough to to be frustrating. So here is an easy solution to re-sequence the position column in a table, maintaining the current order, just closing any gaps.</p>
+
+<p>SET @pos := 0;
+UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
+
+<p>It simply initializes a variable (@pos) to 0, then for each row (updates are done in sequence) increments the variable and assigns it to the position column. The ORDER BY clause ensures the current ordering is maintained. WHERE clauses can also be added as required.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Following hashtags on Twitter]]></title>
+    <link href="http://blog.tekerson.com/2009/03/17/following-hashtags-on-twitter/"/>
+    <updated>2009-03-17T00:24:59+10:00</updated>
+    <id>http://blog.tekerson.com/2009/03/17/following-hashtags-on-twitter</id>
+    <content type="html"><![CDATA[<p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don&#8217;t believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the &#8220;correct&#8221; tag).</p>
+
+<p>I found that this can be done using twitter&#8217;s own search function, simply put all the tags into the &#8220;Any of these words&#8221; box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the &#8220;Feed for this query&#8221; (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
+
+<p>This allowed me to keep up with chatter at the conference, even from people I don&#8217;t usually follow.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PHP Quebec Wrap-up from a Conference Newb]]></title>
+    <link href="http://blog.tekerson.com/2009/03/11/php-quebec-wrap-up-from-a-conference-newb/"/>
+    <updated>2009-03-11T21:02:09+10:00</updated>
+    <id>http://blog.tekerson.com/2009/03/11/php-quebec-wrap-up-from-a-conference-newb</id>
+    <content type="html"><![CDATA[<p>As I am in Canada for only 3 more weeks, and we don&#8217;t get too many PHP conferences in Brisbane, I took the opportunity to attended my first ever PHP conference. I thought I would share my thoughts, and maybe those more experienced can help me do it &#8220;better&#8221; next time.</p>
+
+<p>After flying across the country we checked into the hotel, the Hilton Bonaventure in Montreal. The front desk apparently didn&#8217;t know we were there for the conference because we didn&#8217;t &#8220;book with the others&#8221;. I&#8217;m not sure what that means, or what difference it would have made? The hotel offered free wireless in the foyer and conference halls, but not in the rooms. Luckily, we were close enough to the foyer to access their wireless from our room (once I sorted out some driver issues on my laptop).</p>
+
+<h2>Day 1</h2>
+
+<p>After missing most of the openning keynote on the first day in favour of eating (I didn&#8217;t know breakfast would be available) I jumped into the sessions. Starting with <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney&#8217;s</a> <a href="http://conf.phpquebec.com/en/session#practical_zend_framework_jutsu_with_dojo">Practical Zend Framework Jutsu with Dojo</a>, which provided a practical overview to an area of the Zend Framework I have been planning on investigating, but haven&#8217;t yet got round to. This was followed up by <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall&#8217;s</a> explaining their process of <a href="http://conf.phpquebec.com/en/session#building_ria_application_in_php">Building RIA Application in PHP</a>. This wasn&#8217;t a talk I intended to attend (Sara Goleman&#8217;s talk was scheduled for this time, but was unable to attend due to illness) but it was interesting to see the differences in building a PHP application without a HTML front end.<a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall"></a></p>
+
+<p>After lunch, <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethan&#8217;s</a> looked into search and indexing. <a href="http://conf.phpquebec.com/en/session#of_haystacks_and_needles">Of Haystacks and Needles</a>, introduced MySQL full text, Selenium and Solr. While I have used Selenium, Solr seems like a useful step up for systems with higher requirements. The afternoon sessions were <a href="http://conf.phpquebec.com/en/session#a_tour_of_mysql_high_availability">A tour of MySQL High Availability</a> by <a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a>, which talked about the difference between scaling for performance and scaling for HA, and techniques for the latter, for me there wasn&#8217;t much I hadn&#8217;t used before, but some of the monitoring tools warrant further research. <a href="http://conf.phpquebec.com/en/session#stupid_browser_tricks">Stupid Browser Tricks</a> by <a href="http://conf.phpquebec.com/en/conferencier#sean_coates">Sean Coates</a>, was in a similar boat. It was a good introduction to some useful browser side tools (Firebug, YSlow! and Selenium IDE) but I had hoped for a deeper look into Selenium. Isn&#8217;t everyone using firebug by now? FirePHP is a nice addition though.</p>
+
+<h2>Day 2</h2>
+
+<p>Day 2 started with a quick breakfast (I&#8217;m a fast learner ;)), then the <a href="http://conf.phpquebec.com/en/session#php_code_review">PHP Code Review Part #1</a>, with <a href="http://conf.phpquebec.com/en/conferencier#sebastian_bergmann">Sebastian Bergmann</a> and <a href="http://conf.phpquebec.com/en/conferencier#stefan_priebsch">Stefan Priebsch</a> delving into some not particularly pretty examples of code from well known PHP applications such as Wordpress. It&#8217;s reassuring to know other people write and release bad code too :) I didn&#8217;t attend Part #2 of the session, where they took code samples from the audience and critiqued them. Instead I opted to drop in on <a href="http://conf.phpquebec.com/en/conferencier#chris_hartjes">Chris Hartjes</a> expaining why <a href="http://conf.phpquebec.com/en/session#deployment_is_not_a_4_letter_word">Deployment Is Not A 4 Letter Word</a> and that with some planning and appropriate tools, in your absence even the sysadmin should be able to deploy your application with confidence.</p>
+
+<p>The pre-lunch keynote was <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall</a> again discussing RIA in <a href="http://conf.phpquebec.com/en/session#beyond_the_browser">Beyond the Browser</a>. Is the browser dead? Not yet, but it certainly has some growing competition. After a break, I listened to <a href="http://conf.phpquebec.com/en/conferencier#ilia_alshanetsky">Ilia Alshanetsky</a> talk about <a href="http://conf.phpquebec.com/en/session#premature_optimization_mistakes">Premature Optimization Mistakes</a>, focusing on optimising the server stack itself before delving into application level optimisation. Arguing it usually provides more results without the risk of breaking the application. <a href="http://conf.phpquebec.com/en/session#php_for_the_enterprise">PHP for the Enterprise</a> then examined how PHP has reached a level where it is suitable for projects that were once considered the realm of &#8220;real&#8221; programming languages. Most of the talk discussed more technical details of scaling PHP to an enterprise level, such as database buffer sizes, performance monitoring and caching at various levels.</p>
+
+<p>The day ended with the career fair which saw a number of, primarily local, employers (including the armed forces?) set up booths and discuss their work and employment with the potential candidates at the conference. While I wasn&#8217;t actively seeking employment, I did have a chat with some of the representatives. Given the location of the conference, it wasn&#8217;t too big a surprise that the majority were bilingual and in some cases French only offices.</p>
+
+<h2>Day 3</h2>
+
+<p>My final day of the conference started with <a href="http://conf.phpquebec.com/en/conferencier#owen_byrne">Owen Byrne</a> discussing <a href="http://conf.phpquebec.com/en/session#growing_a_development_team_while_building_a_huge_app_at_500_miles/hour">Growing a Development Team While Building a Huge App at 500 miles/hour</a>; which I attended, hoping to garner an insight into building a team and managing agile development on a large project. While the project was an interesting one, Owen seemed to be more interested in giving out t-shirts and I didn&#8217;t feel we got very deep into the whole process. Being a fairly heavy user and fan of Zend Framework, I joined <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> in his search for some of <a href="http://conf.phpquebec.com/en/session#zf">Zend Framework&#8217;s Little Known Gems</a>. The talk was targeted at using the components in isolation and I discovered a number of components that may come in handy in future projects, with or without the MVC stack.</p>
+
+<p><a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a> then talked further about MySQL, this time focusing on performance as opposed to high availability. There were a few points about the inner working of the InnoDB storage engine that got my attention, including some builds available from Percona we may need to look at.</p>
+
+<p>The round-table <a href="http://conf.phpquebec.com/en/session#framework">Framework Comparison</a>, featuring <a href="http://conf.phpquebec.com/en/conferencier#fabien_potencier">Fabien Potencier</a> (Symfony) <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethans</a> (ezComponents) and <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> (Zend Framework) seemed to indicate that all 3 frameworks solve much the same problem, they even went as far as agreeing you should use components from the other frameworks when your primary framework doesn&#8217;t include one. Much different to the &#8220;my framework is better&#8221; &#8220;discussions&#8221; we too often see.</p>
+
+<p>Finally, <a href="http://conf.phpquebec.com/en/conferencier#chris_shiflett">Chris Shiflett</a> addressed <a href="http://conf.phpquebec.com/en/session#security-centered_design__dont_just_plan_for_security_design_for_it">Security-Centered Design: Don&#8217;t Just Plan for Security; Design For It</a> provided an alternative look at some interesting security topics. Instead of focusing on technical details, he primarly focused on security from a user perspective as &#8220;user perception is as important as reality&#8221;. Giving examples of various recent attacks on high profile sites that, while not actually the fault of the site, would be perceived as such by most users. He also put forward ideas about using &#8220;ambient signifiers&#8221; to assist in the fight against phishing, and how the normal (request-reload) web model can mean important information is missed due to &#8220;change blindness&#8221; including a live demonstration. He suggesting AJAX might be a suitable solution in this case (as long as it&#8217;s still accessible of course).</p>
+
+<h2>Conclusions</h2>
+
+<p>All-in-all the conference was a great experience, the hotel was really nice (especially compared to some of the hostels where I usually slum on my travels) and the talks were wide ranging and generally well presented.</p>
+
+<p>Some of the material I found too &#8220;introductory&#8221;, but I think that may be because I primarily attended sessions on topics I am familiar with hoping to learn more, whereas using the talks as introductions to new topics might have been a better idea. How do people usually select talks?</p>
+
+<p>I also didn&#8217;t attend much in the way of &#8220;extra-conference&#8221; activities; social events outside of the conference schedule. I am a little disappointed about this, as it would have been good to chat to some members of the community in a less formal setting, so this is something I think I would do much more of next time. And there will be a next time.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Converting a flat array with Parent ID's to a nested Tree]]></title>
+    <link href="http://blog.tekerson.com/2009/03/03/converting-a-flat-array-with-parent-ids-to-a-nested-tree/"/>
+    <updated>2009-03-03T21:37:32+10:00</updated>
+    <id>http://blog.tekerson.com/2009/03/03/converting-a-flat-array-with-parent-ids-to-a-nested-tree</id>
+    <content type="html"><![CDATA[<p>Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry, or a navigation menu structure). The &#8220;Adjacency List&#8221; method; probably the most common, involves storing a reference to the parent in each of the children.</p>
+
+<p>Here is a snippet for converting the rows stored using the adjacency list method into a hierarchical array in PHP. My goal was to do this in 1 pass, without recursion. I ended up using 2 passes, I think 1 pass is achievable if you can guarantee the parent will always be returned before all of its children. But since I couldn&#8217;t, the first pass is to change the id of the row to be the key of the array.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">convertToTree</span><span class="p">(</span><span class="k">array</span> <span class="nv">$flat</span><span class="p">,</span> <span class="nv">$idField</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="nv">$parentIdField</span> <span class="o">=</span> <span class="s1">&#39;parentId&#39;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="nv">$childNodesField</span> <span class="o">=</span> <span class="s1">&#39;childNodes&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nv">$indexed</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+</span><span class='line'>    <span class="c1">// first pass - get the array indexed by the primary id  </span>
+</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$flat</span> <span class="k">as</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$idField</span><span class="p">]]</span> <span class="o">=</span> <span class="nv">$row</span><span class="p">;</span>
+</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$idField</span><span class="p">]][</span><span class="nv">$childNodesField</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//second pass  </span>
+</span><span class='line'>    <span class="nv">$root</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$indexed</span> <span class="k">as</span> <span class="nv">$id</span> <span class="o">=&gt;</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$parentIdField</span><span class="p">]][</span><span class="nv">$childNodesField</span><span class="p">][</span><span class="nv">$id</span><span class="p">]</span> <span class="o">=&amp;</span> <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$id</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$parentIdField</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$root</span> <span class="o">=</span> <span class="nv">$id</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="k">array</span><span class="p">(</span><span class="nv">$root</span> <span class="o">=&gt;</span> <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$root</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Usage:</span>
+</span><span class='line'><span class="nv">$rows</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Menu&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-1&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 2-1&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-2&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">convertToTree</span><span class="p">(</span><span class="nv">$rows</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Produces:</span>
+</span><span class='line'><span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="k">NULL</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Menu&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>            <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-1&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
+</span><span class='line'>                        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>                        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-2&#39;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                        <span class="p">),</span>
+</span><span class='line'>                    <span class="p">),</span>
+</span><span class='line'>                <span class="p">),</span>
+</span><span class='line'>            <span class="p">),</span>
+</span><span class='line'>            <span class="mi">3</span> <span class="o">=&gt;</span>  <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 2-1&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                <span class="p">),</span>
+</span><span class='line'>            <span class="p">),</span>
+</span><span class='line'>        <span class="p">),</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Environment specific bootstrapping for Zend Framework ]]></title>
+    <link href="http://blog.tekerson.com/2009/02/13/environment-specific-bootstrapping-for-zend-framework/"/>
+    <updated>2009-02-13T19:40:05+10:00</updated>
+    <id>http://blog.tekerson.com/2009/02/13/environment-specific-bootstrapping-for-zend-framework</id>
+    <content type="html"><![CDATA[<p>When you build an application, it is often deployed to a number of servers each with a different set of configurations. The development and production servers, with different debug, logging, and database details is an obvious example. Many approaches I have seen to dealing with this, including Anis uddin Ahmad&#8217;s <a href="http://www.ajaxray.com/blog/2009/02/03/advanced-bootstrapping-configure-your-zend-framework-application-for-multiple-host/">post that inspired this one</a>, involve determining the domain the application is running on, and loading a pre-determined configuration for that host.</p>
+
+<p>There are 2 downfalls to that solution from my point of view;</p>
+
+<ol>
+<li><p>Each new environment involves editing the source of the application</p></li>
+<li><p>If the application involves command line components, there is no way to determine the domain, requiring a special case</p></li>
+</ol>
+
+
+<p>My solution may look familiar if you have ever looked at <a href="http://www.djangoproject.com/">python&#8217;s django</a>. It involves using environment variables, which can be set through the web server, or on the command line - even in crontab. Basically, I set an environment variable specifying the location of the configuration file to load into the application. I actually allow a list of configuration files,so you can have a &#8220;base&#8221; and only override specific configuration as required per location.</p>
+
+<p>To add and environment variable in apache, you use the mod_env module&#8217;s <a href="http://httpd.apache.org/docs/1.3/mod/mod_env.html#setenv">SetEnv directive</a>.</p>
+
+<p><code>SetEnv APPLICATION_CONFIG /path/to/config/basic.php:/path/to/config/development.php</code></p>
+
+<p>on the command line, you can use export.</p>
+
+<p><code>export APPLICATION_CONFIG=/path/to/config/basic.php:/path/to/config/development.php</code></p>
+
+<p>and very similarly in crontab (above the code that requires it)</p>
+
+<p><code>APPLICATION_CONFIG=/path/to/config/basic.php:/path/to/config/development.php</code></p>
+
+<p>To read the configuration files, from php we can simple get the environment variable with <a href="http://php.net/getenv">getenv()</a>, then merge each configuration into the applications configuration;</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$configFiles</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">&#39;APPLICATION_CONFIG&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nv">$configArray</span> <span class="o">=</span> <span class="nb">explode</span><span class="p">(</span><span class="nx">PATH_SEPARATOR</span><span class="p">,</span> <span class="nv">$configFiles</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$config</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Zend_Config</span><span class="p">(</span><span class="k">array</span><span class="p">(),</span> <span class="k">true</span><span class="p">);</span>
+</span><span class='line'><span class="k">foreach</span> <span class="p">(</span><span class="nv">$configArray</span> <span class="k">as</span> <span class="nv">$newConfig</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="nv">$config</span><span class="o">-&gt;</span><span class="na">merge</span><span class="p">(</span><span class="k">new</span> <span class="nx">Zend_Config</span><span class="p">(</span><span class="k">require</span> <span class="nv">$newConfig</span><span class="p">));</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="nv">$config</span><span class="o">-&gt;</span><span class="na">setReadOnly</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this example I am using simple PHP files to store the configuration arrays, you could also use any other format <a href="http://framework.zend.com/manual/en/zend.config.html">Zend_Config</a> can read. You could also use a simple array and <a href="http://php.net/array_merge">array_merge()</a> instead on Zend_Config if you are not using the framework.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Data Mapper Pattern in PHP]]></title>
+    <link href="http://blog.tekerson.com/2008/12/17/data-mapper-pattern-in-php/"/>
+    <updated>2008-12-17T18:58:14+10:00</updated>
+    <id>http://blog.tekerson.com/2008/12/17/data-mapper-pattern-in-php</id>
+    <content type="html"><![CDATA[<p>I have been trying to get together a post on the <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">Data Mapper</a> pattern since I started experimenting with it in a personal project. It seems to me to be a fantastic answer to the decoupling of in-memory data objects and the data store. I still don&#8217;t have all the answers, but Rob Allen&#8217;s recent post <a href="http://akrabat.com/2008/12/13/on-models-in-a-zend-framework-application/">On models in a Zend Framework application</a>, and the associated discussion provoked me to publish some of what I do have.</p>
+
+<p><em>Warning</em>: This post will be quite long and is very code heavy, but I hope it illustrates some of my current thoughts.</p>
+
+<p>Anyway, lets get down to it.</p>
+
+<p>I will be showing 4 classes. Two (2) Abstract &#8220;library&#8221; classes, and 2 examples of their use;</p>
+
+<p>And now, the code. Instead of breaking the code into little pieces, I&#8217;ll add inline comments to explain what&#8217;s going on.</p>
+
+<h2>Classes</h2>
+
+<h3>Library Classes</h3>
+
+<h4>MapperAbstract</h4>
+
+<p>MapperAbstract is the base class for mappers. It defines a standard interface for all mappers.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">abstract</span> <span class="k">class</span> <span class="nc">MapperAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Create a new instance of the DomainObject that this</span>
+</span><span class='line'><span class="sd">     * mapper is responsible for. Optionally populating it</span>
+</span><span class='line'><span class="sd">     * from a data array.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param array $data</span>
+</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">create</span><span class="p">(</span><span class="k">array</span> <span class="nv">$data</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$obj</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_create</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$obj</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">populate</span><span class="p">(</span><span class="nv">$obj</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$obj</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Save the DomainObject</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * Store the DomainObject in persistent storage. Either insert</span>
+</span><span class='line'><span class="sd">     * or update the store as required.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">save</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nb">is_null</span><span class="p">(</span><span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">getId</span><span class="p">()))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_insert</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_update</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Delete the DomainObject</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * Delete the DomainObject from persistent storage.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_delete</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Populate the DomainObject with the values</span>
+</span><span class='line'><span class="sd">     * from the data array.</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * To be implemented by the concrete mapper class</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     * @param array $data</span>
+</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">public</span> <span class="k">function</span> <span class="nf">populate</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Create a new instance of a DomainObject</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_create</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Insert the DomainObject to persistent storage </span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_insert</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Update the DomainObject in persistent storage </span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_update</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Delete the DomainObject from peristent Storage</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>DomainObjectAbstract</h4>
+
+<p>A basic class describing an object that is part of the <a href="http://martinfowler.com/eaaCatalog/domainModel.html">Domain Model</a>. This model assumes that all DomainObjects have an integer as the primary key, but it would be a trivial change to make it a GUID for example. It also ensures the ID is immutable.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">abstract</span> <span class="k">class</span> <span class="nc">DomainObjectAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="nv">$_id</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Get the ID of this object (unique to the</span>
+</span><span class='line'><span class="sd">     * object type)</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @return int</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getId</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Set the id for this object.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param int $id</span>
+</span><span class='line'><span class="sd">     * @return int</span>
+</span><span class='line'><span class="sd">     * @throws Exception If the id on the object is already set</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">setId</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">is_null</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s1">&#39;ID is immutable&#39;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span> <span class="o">=</span> <span class="nv">$id</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Example Implementation Classes</h3>
+
+<h4>User</h4>
+
+<p>A concrete DomainObject describing a user. This is a <strong>very</strong> barebones example, usually getters/setters would be used to set protected properties.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">DomainObjectAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span> <span class="nv">$firstname</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">public</span> <span class="nv">$lastname</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">public</span> <span class="nv">$username</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Get the full name of the User</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * Demonstrates how other functions can be</span>
+</span><span class='line'><span class="sd">     * added to the DomainObject</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @return string</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getName</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">firstname</span> <span class="o">.</span> <span class="s1">&#39; &#39;</span> <span class="o">.</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastname</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>UserMapper</h4>
+
+<p>A concrete implementation of a mapper between the User domain object and persistent storage.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">UserMapper</span> <span class="k">extends</span> <span class="nx">MapperAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Fetch a user object by ID</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * An example skeleton of a &quot;Fetch&quot; function showing</span>
+</span><span class='line'><span class="sd">     * how the database data ($dataFromDb) is used to</span>
+</span><span class='line'><span class="sd">     * create a new User instance via the create function.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param string $id</span>
+</span><span class='line'><span class="sd">     * @return User</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">findById</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// Query database for User with $id</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="nv">$dataFromDb</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>                <span class="s1">&#39;id&#39;</span>        <span class="o">=&gt;</span> <span class="nv">$id</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;firstname&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Brenton&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;lastname&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;username&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;Tekerson&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">create</span><span class="p">(</span><span class="nv">$dataFromDb</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Poplate the User (DomainObject) with</span>
+</span><span class='line'><span class="sd">     * the data array.</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * This is a very simple example, but the mapping </span>
+</span><span class='line'><span class="sd">     * can be as complex as required.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     * @param array $data</span>
+</span><span class='line'><span class="sd">     * @return User</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">populate</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$data</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">setId</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]);</span>
+</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">firstname</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;firstname&#39;</span><span class="p">];</span>
+</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">lastname</span>  <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;lastname&#39;</span><span class="p">];</span>
+</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">username</span>  <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$obj</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Create a new User DomainObject</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @return User</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_create</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nx">User</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Insert the DomainObject in persistent storage</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
+</span><span class='line'><span class="sd">     * and running an insert statement.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_insert</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Update the DomainObject in persistent storage</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
+</span><span class='line'><span class="sd">     * and running an update statement.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_update</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Delete the DomainObject from persistent storage</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
+</span><span class='line'><span class="sd">     * and running a delete statement.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Example</h2>
+
+<p>Ok, I realize that I&#8217;ve dumped a lot of code and we&#8217;re nearly finished. Now we finally get to see how it all fits together to do something. Here, I am creating a simple example where I fetch a User based on their ID, change the Users name, and store it back to the database.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Initialise the Mapper.</span>
+</span><span class='line'><span class="nv">$userMapper</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserMapper</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Fetch and manipulate the User object</span>
+</span><span class='line'><span class="nv">$user</span> <span class="o">=</span> <span class="nv">$userMapper</span><span class="o">-&gt;</span><span class="na">findById</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">lastname</span> <span class="o">=</span> <span class="s1">&#39;Alker&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Tell the UserMapper that the User needs to be saved.</span>
+</span><span class='line'><span class="nv">$userMapper</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">(</span><span class="nv">$user</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Well, I hope everything makes sense. This is a very simplified version of the concepts I have been working on.</p>
+
+<p>These simple examples could be expanded in may directions. Such as;</p>
+
+<p>Validation of the DomainObject fields, I haven&#8217;t decided if the validation should be contained in the DomainObject or the Mapper.</p>
+
+<p>An <a href="http://martinfowler.com/eaaCatalog/identityMap.html">identity map</a> to ensure only 1 instance of each DomainObject exists in memory at a time.</p>
+
+<p>A <a href="http://martinfowler.com/eaaCatalog/unitOfWork.html">UnitOfWork</a> to track which objects need saving, deleting and to co-ordinate roll backs on error, or the order of persistence to satisfy foreign key constraints.</p>
+
+<p>The Mapper could access many data stores; RDBMSs, Session/Cookie data or web services to name a few. Remember, the Mapper decouples the DomainObject completely from the persistent storage</p>
+
+<p>Anyway, I hope this provides a fairly simple concrete example that you can build upon to create a more complete solution that you can then share with the rest of us.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Telecommute Experience (Part 2)]]></title>
+    <link href="http://blog.tekerson.com/2008/12/16/telecommute-experience-part-2/"/>
+    <updated>2008-12-16T18:34:01+10:00</updated>
+    <id>http://blog.tekerson.com/2008/12/16/telecommute-experience-part-2</id>
+    <content type="html"><![CDATA[<p>I have been telecommuting for a bit over a month now, and things have settled quite well.</p>
+
+<p>We have set up an office, away from the entertainment area (except the foosball table, that&#8217;s in the office :)). This has been good to keep some separation between those trying to get work done and the rest of the household population.</p>
+
+<p>With the time difference, office hours work well. An 8 hour stint from 1pm to 9pm (Canada) is the same as 7am to 3pm (Australia). Giving plenty of time in the morning to enjoy the snow, while still allowing ample real-time communication with the office during business hours, and even leaving some time after the work day to relax.</p>
+
+<p>The work itself hasn&#8217;t changed much. A good issue tracker makes things much easier (We use <a href="http://eventum.mysql.org/">MySQL&#8217;s Eventum</a>) because everyone can easily see a current list of priorities and who is doing what, which is always important but even more so without real-time contact.</p>
+
+<p>A good local development environment has also been invaluable, being able to develop and test completely without a connection to the world ensures I can still be productive even when the Internet is on the fritz. Using virtual machines I have set up individual environments for each project. <a href="http://git.or.cz/">Git</a> (via git-svn) for version control allows me to work; branching, committing, merging and reverting all locally.</p>
+
+<p>Communication has primarily been via instant messenger, which was already the case in the office anyway, so no real transition there. Skype is also great if you need voice communication (I generally don&#8217;t).</p>
+
+<p>Using these tools, the transition has been smooth and painless. We have even successfully deployed a major project since I have been here. So far, so good.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Telecommute Experience (Part 1)]]></title>
+    <link href="http://blog.tekerson.com/2008/11/24/telecommute-experience-part-1/"/>
+    <updated>2008-11-24T23:27:59+10:00</updated>
+    <id>http://blog.tekerson.com/2008/11/24/telecommute-experience-part-1</id>
+    <content type="html"><![CDATA[<p>I&#8217;ve just started telecommuting, and not wanting to take it slowly, I&#8217;ve jumped straight into an international arrangement; living in Canada and working in Brisbane, Australia. This is my story&#8230;</p>
+
+<p>After almost 3 years with my current employer, I decided I needed to get out of the office. Not that there is anything particularly wrong with the office, it&#8217;s just not the most exciting environment and I was getting pretty over it.</p>
+
+<p>It just so happened that a number of my friends were in a similar situation, and a plan was hatched to move ourselves to Canada for 6 months. Once an approximate timetable was established, we approached our respective employers. After explaining the plan to make the move and maintain our current employment, for the most part we met little resistance; this was a little surprising to me.</p>
+
+<p>So the approximate plans were filled with some more details, and off we went.</p>
+
+<p>To Be Continued&#8230;</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Basic branching with git]]></title>
+    <link href="http://blog.tekerson.com/2008/09/05/basic-branching-with-git/"/>
+    <updated>2008-09-05T22:48:22+10:00</updated>
+    <id>http://blog.tekerson.com/2008/09/05/basic-branching-with-git</id>
+    <content type="html"><![CDATA[<p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it&#8217;s <strong>easy!</strong></p>
+
+<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using &#8221;<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>&#8221; to work on multiple things at once, but this is very limiting.</p>
+
+<p>So, Here we go. My basic workflow now look like this.</p>
+
+<p>Create a new branch (based on the HEAD of your current branch), and automatically switch to it:</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; -b my_branch&lt;/code&gt;
+</code></pre>
+
+<p>Then you can work within this branch as you always would.</p>
+
+<p>Work, work, work&#8230;</p>
+
+<pre><code>&lt;code&gt;&lt;a&gt;&lt;/a&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add manual page"&gt;git add&lt;/a&gt; files_i_have_edited.txt
+&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-commit.html" title="git-commit manual page"&gt;git commit&lt;/a&gt; -m 'My changes'&lt;/code&gt;
+</code></pre>
+
+<p>Repeating this step until the task is complete. Then, to get the changes back into the master branch. Switch to it</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; master&lt;/code&gt;
+</code></pre>
+
+<p>And pull the changes from the branch</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-pull.html" title="git-pull manual page"&gt;git pull&lt;/a&gt; . my_branch&lt;/code&gt;
+</code></pre>
+
+<p>Easy. No need to remember revision numbers where you branched, or which changed have already been merged. You can of course switch back to the branch and continue work with</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; my_branch&lt;/code&gt;
+</code></pre>
+
+<p>this &#8220;edit, commit, pull&#8221; cycle can continue until the task is complete. Then, once you&#8217;re satisfied you can delete the branch with</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html" title="git-branch manual page"&gt;git branch&lt;/a&gt; -d my_branch&lt;/code&gt;
+</code></pre>
+
+<p>It&#8217;s still in the history of course, but no need to keep old branches around.</p>
+
+<p>Hope that makes things clear to anyone else who was confused as I was by some of the overly complicated explanation of branching in git.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[New VPS Hosting]]></title>
+    <link href="http://blog.tekerson.com/2008/08/12/new-vps-hosting/"/>
+    <updated>2008-08-12T07:38:16+10:00</updated>
+    <id>http://blog.tekerson.com/2008/08/12/new-vps-hosting</id>
+    <content type="html"><![CDATA[<p>If you&#8217;re reading this then I have successfully migrated to my new VPS hosting on <a href="https://manage.slicehost.com/customers/new?referrer=1470153180">Slicehost</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[trim() Validation]]></title>
+    <link href="http://blog.tekerson.com/2008/07/15/trim-validation/"/>
+    <updated>2008-07-15T23:11:18+10:00</updated>
+    <id>http://blog.tekerson.com/2008/07/15/trim-validation</id>
+    <content type="html"><![CDATA[<p>While writing a fairly standard sign-up/log-in system, I got to the point of validating the password to make sure it only contained acceptable characters. Now for me this would usually mean a regular expression. But, since this system wasn&#8217;t for me I decided to make the &#8220;valid characters&#8221; configurable, and generally the people configuring it won&#8217;t be able to write a regular expression.</p>
+
+<p>My solution is to use <a href="http://php.net/trim">php&#8217;s trim()</a> (or more specifically <a href="http://php.net/rtrim">rtrim()</a>, but it doesn&#8217;t really matter) by passing the users input as the first argument, and the string of valid characters as the second; I should get an empty string in return. So the test, only allowing lowercase letters, becomes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="o">!==</span> <span class="nb">rtrim</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="s1">&#39;abcdefghijklmnopqrstuvwxyz&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Simple! I don&#8217;t know how it compares speed wise with other methods, but it seems simple and effective and I can&#8217;t imagine it&#8217;s terribly slow unless your strings get larger.</p>
+
+<p>I&#8217;m also not sure how it would handle multi-byte characters. But I don&#8217;t <strong>think</strong> it would be a problem if it doesn&#8217;t. Anyone got any insight?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[An Attempt at Restricted Auto-Login]]></title>
+    <link href="http://blog.tekerson.com/2008/07/05/an-attempt-at-restricted-auto-login/"/>
+    <updated>2008-07-05T02:33:18+10:00</updated>
+    <id>http://blog.tekerson.com/2008/07/05/an-attempt-at-restricted-auto-login</id>
+    <content type="html"><![CDATA[<p>The system I have been building is a direct marketing system (don&#8217;t hate me, it&#8217;s opt-in) and to be compliant with their ethics policy it requires &#8220;2 click unsubscribe&#8221; functionality from all its email campaigns; 1 click on the link in the email, and 1 click on a big &#8220;Don&#8217;t Ever Send Me Email Again&#8221; button. So people actually have an option to opt out at any time, as any good (and I use that word in the relative sense) email marketing system should.</p>
+
+<p>The problem this poses for me though, is how can I let a member unsubscribe without authenticating themselves? Authentication would take more than 2 clicks! The obvious solution is to not require authentication by simply adding the members identifier (email address, user name, database id, whatever can identify them uniquely) to the link. So I would have a URL something like:</p>
+
+<pre><code>http://example.com/member/unsubscribe?member=1234
+</code></pre>
+
+<p>And simply make all the options on that page act on the member identified by the identifier. Great! Until a malicious netizen comes along, seeing the scheme decides to systematically unsubscribe all my members. This would be achieved easily by guessing the identifiers, made even easier because they&#8217;re sequential, and clicking the unsubscribe button.</p>
+
+<p>The initial solution is to use some other &#8220;key&#8221; in the link, one that is not so easy to guess. So a key was added, giving the url a form like:</p>
+
+<pre><code>http://example.com/member/unsubscribe?member=1234&amp;key=SECRETKEY
+</code></pre>
+
+<p>Were SECRETKEY is a key they is generated randomly when the user signs up and stored with their account details. Using this, the system would allow a user to log in simply by clicking the link, they could then unsubscribe.</p>
+
+<p>The problem being, of course, that by simply logging the user into their account anyone who has the link has full access to the account without needing to know any more information. So they could then read (and change) email addresses, passwords etc. Not ideal.</p>
+
+<p>My solution has been to take the key a step further, and limit it to only the intended page. In this case the unsubscribe page. So my new url looks like this:</p>
+
+<pre><code>http://example.com/member/unsubscribe?token=1234:HASH
+</code></pre>
+
+<p>I&#8217;ve removed the member variable and combined it into a delimited token. This was mainly because I thought it looked a little nicer, it would function just as well as a separate variable. The real change is in the HASH. The new hash still uses the SECRETKEY that was used in the previous iteration, except it is now combined with the url that I want to give them access to, and an added salt so all tokens can be invalidated if required. In PHP, this looks something like this:</p>
+
+<pre><code>&lt;code&gt;$allowedUrl = '/member/unsubscribe';
+$hash = md5($salt . $allowedUrl . ':' . $secretKey);
+$token = $id . ':' . $hash;
+&lt;/code&gt;
+</code></pre>
+
+<p>On the page, to allow access, the token is decomposed, the member&#8217;s identifier extracted, and their key retrieved. Their key is then used in the same process to generate a hash for the URL they are requesting. If the hashes match, they have access. To make it a little more user friendly, the allowed URL is added to their session, so they still have access to the page even if they lose the token from the URL. If they hit any other page with the restricted URL in their session they are logged out and sent back to re-authenticate.</p>
+
+<p>One shortfall that I am aware of, and that was pointed out in a discussion on #phpc, is the members secret keys should ideally be rotated, so it can only be used once. This would mean that stealing a link would at worst allow one login, and only to one page. This may be implemented if it doesn&#8217;t impact too much on usability (that classic trade-off, security vs. convenience).</p>
+
+<p>Now, I am not a security expert and as such don&#8217;t recommend anyone take my advice (is this good enough for a disclaimer), but apart from the one caveat mentioned, I think this solution meets the requirements without forfeiting too much in security. Any comments or advice on the technique are, as always, appreciated.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[My Web 2.0 World]]></title>
+    <link href="http://blog.tekerson.com/2008/05/31/my-web-2-world/"/>
+    <updated>2008-05-31T02:41:40+10:00</updated>
+    <id>http://blog.tekerson.com/2008/05/31/my-web-2-world</id>
+    <content type="html"><![CDATA[<p>The last month or so I&#8217;ve been trying to actually get into the whole &#8220;Web 2.0&#8221; (I don&#8217;t like the term by the way) world. I know it&#8217;s old news, and it&#8217;s not like it&#8217;s new to me either. I just recently thought about all the web applications that seem to be so popular that I have dormant accounts on, the main ones are;</p>
+
+<ul>
+<li><p><a href="http://www.facebook.com/profile.php?id=611142997">Facebook</a></p></li>
+<li><p><a href="http://twitter.com/tekerson">Twitter</a></p></li>
+<li><p><a href="http://flickr.com/photos/26075837@N02/">Flickr</a></p></li>
+<li><p><a href="http://del.icio.us/tekerson">del.icio.us</a></p></li>
+</ul>
+
+
+<p>Facebook, well, that&#8217;s taken MySpace&#8217;s place as the social network I only passively interact with. The other three are of more interest to me, so I&#8217;ve decided to try and use them for something useful.</p>
+
+<p>Flickr is a fairly easy one, I have a large collection of digitized photographs spanning a few years which are for the most part sorted/tagged thanks to <a href="http://f-spot.org/Main_Page">F-Spot</a> which has the ability to sync with many popular image hosting sites including Flickr and <a href="http://picasaweb.google.com/Brenton.Alker/">Google&#8217;s Picasaweb</a>. So I am gradually building the on-line collection, I initially intended to just dump the lot on there (if only as a backup) but then realised that there are a few too many GB for that.</p>
+
+<p>Del.icio.us I get, but as someone who has never been a big collector of bookmarks, I don&#8217;t find too useful. My bookmarks in my browser have always been a mess, mainly because they are all just temporary. Any site I visit on a regular basis for any extended period of time, I know the address for (or at least know a good google query to find it). But, in the spirit of my trying to &#8220;giving it a go&#8221; I installed the <a href="http://del.icio.us/help/firefox/extension">firefox extension</a> and added my &#8220;recent bookmarks&#8221; to this page using the <a href="http://rick.jinlabs.com/code/delicious">wordpress plugin</a> (over there on the right somewhere). I must say I&#8217;m using it more, but still not a great deal.</p>
+
+<p>Twitter is an oddity to me, it seems incredibly popular; in spite of it&#8217;s apparent unreliability. To me it seems to sit somewhere between a very slow IRC and a short message mailing list. I think the only advantage I can see is that it can work mobile, though I&#8217;ve not had much luck keeping that working for more than a day or two. Most other people who have complained about &#8220;Not Getting It&#8221; when it comes to Twitter seem to be told to install a desktop client, as it is much more conducive to regular use than the website. So, I diligently installed <a href="http://funkatron.com/spaz">Spaz</a>, an <a href="http://www.adobe.com/products/air/">Adobe Air</a> based client, which means I now get little popups telling me when someone &#8220;tweets&#8221;. That makes it more convenient, so far it hasn&#8217;t made it more interesting.</p>
+
+<p>Although all the tools are very cool, maybe this &#8220;Social Web&#8221; thing just isn&#8217;t for me. Then again, maybe it&#8217;s this whole &#8220;Social&#8221; thing that just doesn&#8217;t work for me ;)</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Sixty Second Tech]]></title>
+    <link href="http://blog.tekerson.com/2008/05/04/sixty-second-tech/"/>
+    <updated>2008-05-04T21:48:27+10:00</updated>
+    <id>http://blog.tekerson.com/2008/05/04/sixty-second-tech</id>
+    <content type="html"><![CDATA[<p><a href="http://www.sixtysecondtech.com">Sixty Second Tech</a> is a (relatively) new podcast by prominent Zender <a href="http://blog.calevans.com/">Cal Evans</a> that promises to be the &#8220;Cure to BSS&#8221;</p>
+
+<blockquote><p>Sixty Second Tech is the only known cure for â€œBlank Stare Syndromeâ€ (BSS). BSS happens when one of your technical friends starts talking to you and unconsciously slips into geek speak. They don&#8217;t realize they&#8217;ve triggered BSS until long after your eyes glaze over. BSS is an embarrassing condition but a curable one, just spend one minute a week listening to Sixty Second Tech.</p></blockquote>
+
+<p>While I am definitely on the side of the &#8220;technical friends&#8221;, the short podcasts &#8211; almost exactly 1 minute each, quite impressive &#8211; are a great way to provoke thought about aspects of technology that may not otherwise have been brought to the fore, but probably should be; such as <a href="http://www.sixtysecondtech.com/2008/03/02/the-secret-to-cheap-and-easy-websites/">Wordpress as a CMS</a>, <a href="http://www.sixtysecondtech.com/2008/03/31/openid-and-you/">OpenID</a> and <a href="http://www.sixtysecondtech.com/2008/03/24/do-you-know-what-they-are-saying-about-you/">Google Alerts</a>
+But, my favourite is pointing anyone who speaks to me about &#8220;SEO&#8221; to the episode &#8221;<a href="http://www.sixtysecondtech.com/2008/03/10/go-relevant-or-go-home/">Go Relevant or Go Home!</a>&#8221;; which sums up very succinctly the folly of the whole practice.</p>
+
+<p>His name is Cal Evans, and he is my sixty second tech.</p>
+]]></content>
+  </entry>
+  
+</feed>

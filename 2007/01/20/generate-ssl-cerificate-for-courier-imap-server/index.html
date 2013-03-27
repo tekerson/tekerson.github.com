@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Generate SSL cerificate for Courier IMAP server - Deprecated Behaviour</title>
+  <meta name="author" content="Brenton Alker">
+
+  
+  <meta name="description" content="My SSL certificate for my mail server had been expired for a few weeks now. When I finally got a round to installing a new one, I discovered the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.tekerson.com/2007/01/20/generate-ssl-cerificate-for-courier-imap-server">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2296226-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Deprecated Behaviour</a></h1>
+  
+    <h2>The inane, sometimes insane, ramblings from the mind of Brenton Alker.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Generate SSL Cerificate for Courier IMAP Server</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-01-20T12:03:22+10:00" pubdate data-updated="true">Jan 20<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>My SSL certificate for my mail server had been expired for a few weeks now. When I finally got a round to installing a new one, I discovered the script I used to use to generate them missing. Instead I had to call <a href="http://openssl.org">OpenSSL</a> directly. Luckily, the line wasn&#8217;t too hard to find.</p>
+
+<p>After filling in the requisite fields in the configuration file &#8211; The most important being the &#8220;CN&#8221; field, which should contain the FQDN of the mail server.</p>
+
+<p>/etc/courier/imapd.cnf:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>RANDFILE = /usr/lib/courier/imapd.rand
+</span><span class='line'>[ req ]
+</span><span class='line'>default_bits = 1024
+</span><span class='line'>encrypt_key = yes
+</span><span class='line'>distinguished_name = req_dn
+</span><span class='line'>x509_extensions = cert_type
+</span><span class='line'>prompt = no
+</span><span class='line'>[ req_dn ]
+</span><span class='line'>C=AU
+</span><span class='line'>ST=QLD
+</span><span class='line'>L=Brisbane
+</span><span class='line'>O=Courier Mail Server
+</span><span class='line'>OU=Automatically-generated IMAP SSL key
+</span><span class='line'>CN=mail.example.com
+</span><span class='line'>emailAddress=postmaster@example.com
+</span><span class='line'>[ cert_type ]
+</span><span class='line'>nsCertType = server</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then generate the certificate itself with this incantation:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/usr/bin/openssl req -new -x509 -days 365 -nodes \
+</span><span class='line'>-config /etc/courier/imapd.cnf -out /usr/lib/courier/imapd.pem \
+</span><span class='line'>-keyout /usr/lib/courier/imapd.pem</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Got rid of the annoying &#8220;This servers certificate is exipired&#8221; messages in my MUA anyway.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Brenton Alker</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-01-20T12:03:22+10:00" pubdate data-updated="true">Jan 20<span>th</span>, 2007</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/debian/'>Debian</a>, <a class='category' href='/categories/linux/'>Linux</a>, <a class='category' href='/categories/operating-systems/'>Operating Systems</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2007/01/13/search-for-the-holy-grail-not-really/" title="Previous Post: Search for the Holy Grail (Not Really)">&laquo; Search for the Holy Grail (Not Really)</a>
+      
+      
+        <a class="basic-alignment right" href="/2007/02/01/installing-custom-programming-font/" title="Next Post: Installing custom programming font">Installing custom programming font &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/24/reboot/">Reboot</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/06/28/building-a-modular-application-in-zend-framework-part-2/">Building a Modular Application in Zend Framework - Part 2</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $(function(){
+      getTwitterFeed("tekerson", 5, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/tekerson">@tekerson</a></p>
+  
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Brenton Alker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

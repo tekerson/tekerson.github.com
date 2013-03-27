@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Deprecated Behaviour</title>
+  <meta name="author" content="Brenton Alker">
+
+  
+  <meta name="description" content="When you have an &#8220;position&#8221; column in a table, to allow the user to select the order of elements in the table or as an optimization for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.tekerson.com/page/3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2296226-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Deprecated Behaviour</a></h1>
+  
+    <h2>The inane, sometimes insane, ramblings from the mind of Brenton Alker.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/05/26/re-sequence-a-column-in-mysql/">Re-sequence a Column in MySQL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-26T23:13:24+10:00" pubdate data-updated="true">May 26<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When you have an &#8220;position&#8221; column in a table, to allow the user to select the order of elements in the table or as an optimization for pagination. They always seem to get out of sequence at some point&#8211;ending up with gaps in the sequence.
+This is something I run into not quiet often enough to remember how to do it, yet often enough to to be frustrating. So here is an easy solution to re-sequence the position column in a table, maintaining the current order, just closing any gaps.</p>
+
+<p>SET @pos := 0;
+UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
+
+<p>It simply initializes a variable (@pos) to 0, then for each row (updates are done in sequence) increments the variable and assigns it to the position column. The ORDER BY clause ensures the current ordering is maintained. WHERE clauses can also be added as required.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/03/17/following-hashtags-on-twitter/">Following Hashtags on Twitter</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-17T00:24:59+10:00" pubdate data-updated="true">Mar 17<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don&#8217;t believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the &#8220;correct&#8221; tag).</p>
+
+<p>I found that this can be done using twitter&#8217;s own search function, simply put all the tags into the &#8220;Any of these words&#8221; box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the &#8220;Feed for this query&#8221; (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
+
+<p>This allowed me to keep up with chatter at the conference, even from people I don&#8217;t usually follow.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/03/11/php-quebec-wrap-up-from-a-conference-newb/">PHP Quebec Wrap-up From a Conference Newb</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-11T21:02:09+10:00" pubdate data-updated="true">Mar 11<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As I am in Canada for only 3 more weeks, and we don&#8217;t get too many PHP conferences in Brisbane, I took the opportunity to attended my first ever PHP conference. I thought I would share my thoughts, and maybe those more experienced can help me do it &#8220;better&#8221; next time.</p>
+
+<p>After flying across the country we checked into the hotel, the Hilton Bonaventure in Montreal. The front desk apparently didn&#8217;t know we were there for the conference because we didn&#8217;t &#8220;book with the others&#8221;. I&#8217;m not sure what that means, or what difference it would have made? The hotel offered free wireless in the foyer and conference halls, but not in the rooms. Luckily, we were close enough to the foyer to access their wireless from our room (once I sorted out some driver issues on my laptop).</p>
+
+<h2>Day 1</h2>
+
+<p>After missing most of the openning keynote on the first day in favour of eating (I didn&#8217;t know breakfast would be available) I jumped into the sessions. Starting with <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney&#8217;s</a> <a href="http://conf.phpquebec.com/en/session#practical_zend_framework_jutsu_with_dojo">Practical Zend Framework Jutsu with Dojo</a>, which provided a practical overview to an area of the Zend Framework I have been planning on investigating, but haven&#8217;t yet got round to. This was followed up by <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall&#8217;s</a> explaining their process of <a href="http://conf.phpquebec.com/en/session#building_ria_application_in_php">Building RIA Application in PHP</a>. This wasn&#8217;t a talk I intended to attend (Sara Goleman&#8217;s talk was scheduled for this time, but was unable to attend due to illness) but it was interesting to see the differences in building a PHP application without a HTML front end.<a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall"></a></p>
+
+<p>After lunch, <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethan&#8217;s</a> looked into search and indexing. <a href="http://conf.phpquebec.com/en/session#of_haystacks_and_needles">Of Haystacks and Needles</a>, introduced MySQL full text, Selenium and Solr. While I have used Selenium, Solr seems like a useful step up for systems with higher requirements. The afternoon sessions were <a href="http://conf.phpquebec.com/en/session#a_tour_of_mysql_high_availability">A tour of MySQL High Availability</a> by <a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a>, which talked about the difference between scaling for performance and scaling for HA, and techniques for the latter, for me there wasn&#8217;t much I hadn&#8217;t used before, but some of the monitoring tools warrant further research. <a href="http://conf.phpquebec.com/en/session#stupid_browser_tricks">Stupid Browser Tricks</a> by <a href="http://conf.phpquebec.com/en/conferencier#sean_coates">Sean Coates</a>, was in a similar boat. It was a good introduction to some useful browser side tools (Firebug, YSlow! and Selenium IDE) but I had hoped for a deeper look into Selenium. Isn&#8217;t everyone using firebug by now? FirePHP is a nice addition though.</p>
+
+<h2>Day 2</h2>
+
+<p>Day 2 started with a quick breakfast (I&#8217;m a fast learner ;)), then the <a href="http://conf.phpquebec.com/en/session#php_code_review">PHP Code Review Part #1</a>, with <a href="http://conf.phpquebec.com/en/conferencier#sebastian_bergmann">Sebastian Bergmann</a> and <a href="http://conf.phpquebec.com/en/conferencier#stefan_priebsch">Stefan Priebsch</a> delving into some not particularly pretty examples of code from well known PHP applications such as Wordpress. It&#8217;s reassuring to know other people write and release bad code too :) I didn&#8217;t attend Part #2 of the session, where they took code samples from the audience and critiqued them. Instead I opted to drop in on <a href="http://conf.phpquebec.com/en/conferencier#chris_hartjes">Chris Hartjes</a> expaining why <a href="http://conf.phpquebec.com/en/session#deployment_is_not_a_4_letter_word">Deployment Is Not A 4 Letter Word</a> and that with some planning and appropriate tools, in your absence even the sysadmin should be able to deploy your application with confidence.</p>
+
+<p>The pre-lunch keynote was <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall</a> again discussing RIA in <a href="http://conf.phpquebec.com/en/session#beyond_the_browser">Beyond the Browser</a>. Is the browser dead? Not yet, but it certainly has some growing competition. After a break, I listened to <a href="http://conf.phpquebec.com/en/conferencier#ilia_alshanetsky">Ilia Alshanetsky</a> talk about <a href="http://conf.phpquebec.com/en/session#premature_optimization_mistakes">Premature Optimization Mistakes</a>, focusing on optimising the server stack itself before delving into application level optimisation. Arguing it usually provides more results without the risk of breaking the application. <a href="http://conf.phpquebec.com/en/session#php_for_the_enterprise">PHP for the Enterprise</a> then examined how PHP has reached a level where it is suitable for projects that were once considered the realm of &#8220;real&#8221; programming languages. Most of the talk discussed more technical details of scaling PHP to an enterprise level, such as database buffer sizes, performance monitoring and caching at various levels.</p>
+
+<p>The day ended with the career fair which saw a number of, primarily local, employers (including the armed forces?) set up booths and discuss their work and employment with the potential candidates at the conference. While I wasn&#8217;t actively seeking employment, I did have a chat with some of the representatives. Given the location of the conference, it wasn&#8217;t too big a surprise that the majority were bilingual and in some cases French only offices.</p>
+
+<h2>Day 3</h2>
+
+<p>My final day of the conference started with <a href="http://conf.phpquebec.com/en/conferencier#owen_byrne">Owen Byrne</a> discussing <a href="http://conf.phpquebec.com/en/session#growing_a_development_team_while_building_a_huge_app_at_500_miles/hour">Growing a Development Team While Building a Huge App at 500 miles/hour</a>; which I attended, hoping to garner an insight into building a team and managing agile development on a large project. While the project was an interesting one, Owen seemed to be more interested in giving out t-shirts and I didn&#8217;t feel we got very deep into the whole process. Being a fairly heavy user and fan of Zend Framework, I joined <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> in his search for some of <a href="http://conf.phpquebec.com/en/session#zf">Zend Framework&#8217;s Little Known Gems</a>. The talk was targeted at using the components in isolation and I discovered a number of components that may come in handy in future projects, with or without the MVC stack.</p>
+
+<p><a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a> then talked further about MySQL, this time focusing on performance as opposed to high availability. There were a few points about the inner working of the InnoDB storage engine that got my attention, including some builds available from Percona we may need to look at.</p>
+
+<p>The round-table <a href="http://conf.phpquebec.com/en/session#framework">Framework Comparison</a>, featuring <a href="http://conf.phpquebec.com/en/conferencier#fabien_potencier">Fabien Potencier</a> (Symfony) <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethans</a> (ezComponents) and <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> (Zend Framework) seemed to indicate that all 3 frameworks solve much the same problem, they even went as far as agreeing you should use components from the other frameworks when your primary framework doesn&#8217;t include one. Much different to the &#8220;my framework is better&#8221; &#8220;discussions&#8221; we too often see.</p>
+
+<p>Finally, <a href="http://conf.phpquebec.com/en/conferencier#chris_shiflett">Chris Shiflett</a> addressed <a href="http://conf.phpquebec.com/en/session#security-centered_design__dont_just_plan_for_security_design_for_it">Security-Centered Design: Don&#8217;t Just Plan for Security; Design For It</a> provided an alternative look at some interesting security topics. Instead of focusing on technical details, he primarly focused on security from a user perspective as &#8220;user perception is as important as reality&#8221;. Giving examples of various recent attacks on high profile sites that, while not actually the fault of the site, would be perceived as such by most users. He also put forward ideas about using &#8220;ambient signifiers&#8221; to assist in the fight against phishing, and how the normal (request-reload) web model can mean important information is missed due to &#8220;change blindness&#8221; including a live demonstration. He suggesting AJAX might be a suitable solution in this case (as long as it&#8217;s still accessible of course).</p>
+
+<h2>Conclusions</h2>
+
+<p>All-in-all the conference was a great experience, the hotel was really nice (especially compared to some of the hostels where I usually slum on my travels) and the talks were wide ranging and generally well presented.</p>
+
+<p>Some of the material I found too &#8220;introductory&#8221;, but I think that may be because I primarily attended sessions on topics I am familiar with hoping to learn more, whereas using the talks as introductions to new topics might have been a better idea. How do people usually select talks?</p>
+
+<p>I also didn&#8217;t attend much in the way of &#8220;extra-conference&#8221; activities; social events outside of the conference schedule. I am a little disappointed about this, as it would have been good to chat to some members of the community in a less formal setting, so this is something I think I would do much more of next time. And there will be a next time.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/page/4/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/page/2/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/24/reboot/">Reboot</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/06/28/building-a-modular-application-in-zend-framework-part-2/">Building a Modular Application in Zend Framework - Part 2</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $(function(){
+      getTwitterFeed("tekerson", 5, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/tekerson">@tekerson</a></p>
+  
+</section>
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Brenton Alker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

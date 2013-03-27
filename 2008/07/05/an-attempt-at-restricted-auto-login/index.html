@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>An Attempt at Restricted Auto-Login - Deprecated Behaviour</title>
+  <meta name="author" content="Brenton Alker">
+
+  
+  <meta name="description" content="The system I have been building is a direct marketing system (don&#8217;t hate me, it&#8217;s opt-in) and to be compliant with their ethics policy it &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.tekerson.com/2008/07/05/an-attempt-at-restricted-auto-login">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2296226-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Deprecated Behaviour</a></h1>
+  
+    <h2>The inane, sometimes insane, ramblings from the mind of Brenton Alker.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">An Attempt at Restricted Auto-Login</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-05T02:33:18+10:00" pubdate data-updated="true">Jul 5<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>The system I have been building is a direct marketing system (don&#8217;t hate me, it&#8217;s opt-in) and to be compliant with their ethics policy it requires &#8220;2 click unsubscribe&#8221; functionality from all its email campaigns; 1 click on the link in the email, and 1 click on a big &#8220;Don&#8217;t Ever Send Me Email Again&#8221; button. So people actually have an option to opt out at any time, as any good (and I use that word in the relative sense) email marketing system should.</p>
+
+<p>The problem this poses for me though, is how can I let a member unsubscribe without authenticating themselves? Authentication would take more than 2 clicks! The obvious solution is to not require authentication by simply adding the members identifier (email address, user name, database id, whatever can identify them uniquely) to the link. So I would have a URL something like:</p>
+
+<pre><code>http://example.com/member/unsubscribe?member=1234
+</code></pre>
+
+<p>And simply make all the options on that page act on the member identified by the identifier. Great! Until a malicious netizen comes along, seeing the scheme decides to systematically unsubscribe all my members. This would be achieved easily by guessing the identifiers, made even easier because they&#8217;re sequential, and clicking the unsubscribe button.</p>
+
+<p>The initial solution is to use some other &#8220;key&#8221; in the link, one that is not so easy to guess. So a key was added, giving the url a form like:</p>
+
+<pre><code>http://example.com/member/unsubscribe?member=1234&amp;key=SECRETKEY
+</code></pre>
+
+<p>Were SECRETKEY is a key they is generated randomly when the user signs up and stored with their account details. Using this, the system would allow a user to log in simply by clicking the link, they could then unsubscribe.</p>
+
+<p>The problem being, of course, that by simply logging the user into their account anyone who has the link has full access to the account without needing to know any more information. So they could then read (and change) email addresses, passwords etc. Not ideal.</p>
+
+<p>My solution has been to take the key a step further, and limit it to only the intended page. In this case the unsubscribe page. So my new url looks like this:</p>
+
+<pre><code>http://example.com/member/unsubscribe?token=1234:HASH
+</code></pre>
+
+<p>I&#8217;ve removed the member variable and combined it into a delimited token. This was mainly because I thought it looked a little nicer, it would function just as well as a separate variable. The real change is in the HASH. The new hash still uses the SECRETKEY that was used in the previous iteration, except it is now combined with the url that I want to give them access to, and an added salt so all tokens can be invalidated if required. In PHP, this looks something like this:</p>
+
+<pre><code>&lt;code&gt;$allowedUrl = '/member/unsubscribe';
+$hash = md5($salt . $allowedUrl . ':' . $secretKey);
+$token = $id . ':' . $hash;
+&lt;/code&gt;
+</code></pre>
+
+<p>On the page, to allow access, the token is decomposed, the member&#8217;s identifier extracted, and their key retrieved. Their key is then used in the same process to generate a hash for the URL they are requesting. If the hashes match, they have access. To make it a little more user friendly, the allowed URL is added to their session, so they still have access to the page even if they lose the token from the URL. If they hit any other page with the restricted URL in their session they are logged out and sent back to re-authenticate.</p>
+
+<p>One shortfall that I am aware of, and that was pointed out in a discussion on #phpc, is the members secret keys should ideally be rotated, so it can only be used once. This would mean that stealing a link would at worst allow one login, and only to one page. This may be implemented if it doesn&#8217;t impact too much on usability (that classic trade-off, security vs. convenience).</p>
+
+<p>Now, I am not a security expert and as such don&#8217;t recommend anyone take my advice (is this good enough for a disclaimer), but apart from the one caveat mentioned, I think this solution meets the requirements without forfeiting too much in security. Any comments or advice on the technique are, as always, appreciated.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Brenton Alker</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-05T02:33:18+10:00" pubdate data-updated="true">Jul 5<span>th</span>, 2008</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/code/'>Code</a>, <a class='category' href='/categories/php/'>PHP</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2008/05/31/my-web-2-world/" title="Previous Post: My Web 2.0 World">&laquo; My Web 2.0 World</a>
+      
+      
+        <a class="basic-alignment right" href="/2008/07/15/trim-validation/" title="Next Post: trim() Validation">trim() Validation &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/03/24/reboot/">Reboot</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/06/28/building-a-modular-application-in-zend-framework-part-2/">Building a Modular Application in Zend Framework - Part 2</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $(function(){
+      getTwitterFeed("tekerson", 5, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <p>Follow <a href="http://twitter.com/tekerson">@tekerson</a></p>
+  
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Brenton Alker -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

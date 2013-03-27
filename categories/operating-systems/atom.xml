@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Operating Systems | Deprecated Behaviour]]></title>
+  <link href="http://blog.tekerson.com/categories/operating-systems/atom.xml" rel="self"/>
+  <link href="http://blog.tekerson.com/"/>
+  <updated>2013-03-27T17:48:27+10:00</updated>
+  <id>http://blog.tekerson.com/</id>
+  <author>
+    <name><![CDATA[Brenton Alker]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Set Manipulation of files with uniq & sort]]></title>
+    <link href="http://blog.tekerson.com/2008/03/22/set-manipulation-of-files-with-uniq-sort/"/>
+    <updated>2008-03-22T11:24:19+10:00</updated>
+    <id>http://blog.tekerson.com/2008/03/22/set-manipulation-of-files-with-uniq-sort</id>
+    <content type="html"><![CDATA[<p>I often find myself performing operations on single column CSV files to perform tasks such as merging member id lists, or email addresses, counting unique entries, finding duplicates etc.</p>
+
+<p>By applying some set theory (remember that from math class) and some standard linux/unix command line tools, almost any operation I have ever wanted to achieve in this vain is possible. And I have found <a href="http://linux.byexamples.com/archives/127/uniq-and-basic-set-theory/">a post, over at Linux By Examples</a> that provides a simple list of operations and examples of how to achieve them on text files using sort and uniq.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Manually Deliver Email to Maildir]]></title>
+    <link href="http://blog.tekerson.com/2008/03/14/manually-deliver-email-to-maildir/"/>
+    <updated>2008-03-14T21:12:31+10:00</updated>
+    <id>http://blog.tekerson.com/2008/03/14/manually-deliver-email-to-maildir</id>
+    <content type="html"><![CDATA[<p>I have, on occasion, had need to manually drop an email into a users inbox. For example, when an over-zealous virus scanner dumps mail into "quarantine".</p>
+
+<p>After confirming that the email are, in fact, virus free, the emails are able to be injected into the users maildir with the help of <a href="http://jeenyus.net/~budney/linux/software/safecat.html">safecat</a>, which guarantees atomic copying (even from a slow standard input stream) and unique file naming.</p>
+
+<p>The basic format of the command is:
+```</p>
+
+<pre><code>safecat &lt;tmp_dir&gt; .Maildir/new/ &lt; msg.eml
+</code></pre>
+
+<p>```
+with the only restriction being that tmp_dir must be on the same file system, as the algorithm uses hard links to guarantee instant availability of the complete file.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Using procmail to apply filter mail into Maildir folders]]></title>
+    <link href="http://blog.tekerson.com/2007/12/16/using-procmail-to-apply-filter-mail-into-maildir-folders/"/>
+    <updated>2007-12-16T21:24:17+10:00</updated>
+    <id>http://blog.tekerson.com/2007/12/16/using-procmail-to-apply-filter-mail-into-maildir-folders</id>
+    <content type="html"><![CDATA[<p>This topic wasn't on my "to do" list, but it came up. So here it is.</p>
+
+<p>Use of procmail to filter emails is definitely not a new thing, that is what it does after all. But in my attempt to configure it, I found very little clear information about support for "Maildir" style delivery amongst the wealth of documentation on the subject.</p>
+
+<p>The 2 main differences in a .procmailrc that works with Maildir, is the trailing slash on the MAILDIR value and the way target folders are specified.</p>
+
+<p>eg. The start of my .procmailrc looks like this:
+```</p>
+
+<pre><code>MAILDIR=$HOME/Maildir/
+DEFAULT=$MAILDIR
+
+:0
+* ^To:.*(@lists\.danga\.com)
+.List/new
+</code></pre>
+
+<p>```</p>
+
+<p>So, the 2 points to note, as I said are. The maildir path ends in "/" and the destination is a folder within the Maildir, which is a hidden directory with its own set of cur/new emails in it.</p>
+
+<p>Thanks to procmail, I now only have one location to maintain my filtering rules. My email can then be accessed through IMAP from work, home, laptop and webmail without them being moved into the wrong folders.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Rename multiple files with a Regular Expression (Regex)]]></title>
+    <link href="http://blog.tekerson.com/2007/07/26/rename-multiple-files-with-a-regular-expression-regex/"/>
+    <updated>2007-07-26T03:00:57+10:00</updated>
+    <id>http://blog.tekerson.com/2007/07/26/rename-multiple-files-with-a-regular-expression-regex</id>
+    <content type="html"><![CDATA[<p>It is often useful to be able to rename multiple files at the same time. Typical cases include changing a file extension (eg. <em>.jpeg to </em>.jpg) or renaming a set of files moved from one server to another (such as when repairing database replication, eg. slave1-bin.<em> to slave2-bin.</em>)</p>
+
+<p>It is possible to write a shell script that will perform this task, but the ones I have seen are cumbersome and not very intuitive.</p>
+
+<p>There is a script, I believe it comes bundles with Perl installation (at least on Debian), that allows files to be renames using regular expressions. It is simple to use, but lets you harness the power of perl regular expressions.</p>
+
+<p>The basic syntax that I use most often involves using a substitute command (similar to those used in <a href="http://www.gnu.org/software/sed/">sed</a> for example)</p>
+
+<p>eg: Rename all jpeg images to jpg files in the images directory.
+<code>
+rename 's/\.jpeg$/.jpg/' images/*
+</code></p>
+
+<p>Mmm… Regex…</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Wiping MBR and Reinstalling Grub]]></title>
+    <link href="http://blog.tekerson.com/2007/05/14/wiping-mbr-and-reinstalling-grub/"/>
+    <updated>2007-05-14T03:15:00+10:00</updated>
+    <id>http://blog.tekerson.com/2007/05/14/wiping-mbr-and-reinstalling-grub</id>
+    <content type="html"><![CDATA[<p>If you have ever mistakenly installed grub (or any other boot manager) onto the MBR of the wrong drive (usually during setting up additional multi-boot OSs), you'll know it can be a pain to get rid of. Most sources out there are for when you accidentally override the windows boot manager with an common *nix one (grub or lilo). This involves using the windows "repair" console on the CD.
+When you are running a pure linux system, this isn't a useful option. This is the solution I found to wipe and re-install grub:</p>
+
+<p>This will probably need to be done from a live CD, as if your MBR is broken, you probably can't boot your installed system.</p>
+
+<h2>1. Wipe the MBR</h2>
+
+<p>The first <strong>446 bytes</strong> of the drive make up the Master Boot Record, the next 66 (totalling 512) is partition information, you probably <strong>don't</strong> want to wipe that unless you intend of re-partitioning (and/or formatting) your disk anyway.</p>
+
+<p>Use <code>dd</code> to "zero" those 446 bytes:
+<code>
+dd if=/dev/zero of=/dev/hd? ds=446 count=1
+</code></p>
+
+<h2>2. Chroot into your installed system</h2>
+
+<p>Set up and <code>chroot</code> into your main OS
+<code>
+mkdir -p /mnt/root
+mount /dev/hd? /mnt/root
+mount -t proc none /mnt/root/proc
+mount -o bind /dev /mnt/root/dev
+chroot /mnt/root /bin/bash
+</code></p>
+
+<h2>3. Reinstall grub in the correct MBR</h2>
+
+<p>Start the <code>grub</code> console
+<code>
+grub
+</code>
+then, at the grub prompt:
+<code>
+find /grub/stage1
+root (hd?,?)
+setup (hd?)
+</code>
+If you "boot" is not on a seperate partition, you the first line might need to be
+<code>
+find /boot/grub/stage1
+</code></p>
+
+<p>Assuming your configuration is correct (i.e doesn't need to be changed since before it broke) you should now be able to boot into your installed system again.</p>
+]]></content>
+  </entry>
+  
+</feed>

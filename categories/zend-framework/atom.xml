@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Zend Framework | Deprecated Behaviour]]></title>
+  <link href="http://blog.tekerson.com/categories/zend-framework/atom.xml" rel="self"/>
+  <link href="http://blog.tekerson.com/"/>
+  <updated>2013-03-27T17:48:27+10:00</updated>
+  <id>http://blog.tekerson.com/</id>
+  <author>
+    <name><![CDATA[Brenton Alker]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework]]></title>
+    <link href="http://blog.tekerson.com/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/"/>
+    <updated>2009-09-08T01:03:53+10:00</updated>
+    <id>http://blog.tekerson.com/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework</id>
+    <content type="html"><![CDATA[<p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn't automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
+
+<p>Doctrine 2.0 looks like it might finally be the ORM framework I have been seeking for PHP. While the older versions of Doctrine provided great functionality, they were too intrusive for my taste. I think an ORM should provide a true <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">data mapper</a>; in which the domain entities need know nothing about their persistence.</p>
+
+<p>Matthew Weier O'Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including "real" namespaces, so its classes don't follow the (current) Zend naming standard and the ZF autoloader won't load them for us.</p>
+
+<p>Good News, Doctrine provides its own autoloader that we can leverage to load its own classes.</p>
+
+<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn't very useful).</p>
+
+<p>Good News, it's easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
+
+<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the "Doctrine\" namespace.</p>
+
+<p>``` php
+&lt;?php</p>
+
+<pre><code>protected function _initDoctrine()
+{
+    // Create the doctrine autoloader and remove it from the spl autoload stack (it adds itself)
+    require_once 'Doctrine/Common/ClassLoader.php';
+    $doctrineAutoloader = array(new \Doctrine\Common\ClassLoader(), 'loadClass');
+    spl_autoload_unregister($doctrineAutoloader);
+
+    // Fetch the global Zend Autoloader
+    $autoloader = Zend_Loader_Autoloader::getInstance();
+
+    // Push the doctrine autoloader to load for the Doctrine\ namespace
+    $autoloader-&gt;pushAutoloader($doctrineAutoloader, 'Doctrine\\');
+}
+</code></pre>
+
+<p>```</p>
+
+<p>We can use all of Doctrine's classes anywhere else in our code.
+<code>php
+&lt;?php
+use Doctrine\ORM;
+$manager = EntityManager::create(array('driver' =&gt; 'pdo_sqlite', 'path' =&gt; ':memory:/'));
+// ...
+</code></p>
+
+<p>I still have a lot to learn and the documentation on 2.0 is a little sparse as yet, but this is a start.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dependency Injection Container Resource in Zend Framework]]></title>
+    <link href="http://blog.tekerson.com/2009/07/06/dependency-injection-container-resource-in-zend-framework/"/>
+    <updated>2009-07-06T13:00:51+10:00</updated>
+    <id>http://blog.tekerson.com/2009/07/06/dependency-injection-container-resource-in-zend-framework</id>
+    <content type="html"><![CDATA[<p>A good dependency injection container is a godsend when it comes to managing the dependency tree of even a moderately complex domain model. As such, it comes as no surprise there has been much discussion about them of late in the PHP and Zend Framework communities.</p>
+
+<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei's recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
+
+<p>The container resource copies any already instantiated objects from the old container into the new one, then replaces the default container.</p>
+
+<p>``` php
+&lt;?php
+class Tek_Application_Resource_Container extends Zend_Application_Resource_ResourceAbstract
+{</p>
+
+<pre><code>protected $_container = null;
+
+public function getContainer()
+{
+    if (null === $this-&gt;_container) {
+        $options = $this-&gt;getOptions();
+        $container = $this-&gt;_getBootstrap()-&gt;getContainer();
+        if (!$container instanceof Yadif_Container) {
+            $config = isset($options['options']) ? new Zend_Config($options['options']) : null;
+            $container = new Yadif_Container(array(), $config);
+
+            // import instances from the existing (Zend_Registry) container
+            foreach ($this-&gt;_getBootstrap()-&gt;getContainer() as $key =&gt; $instance) {
+                $container-&gt;__set($key, $instance);
+            }
+        }
+        $container-&gt;addComponents($options['objects']);
+        $this-&gt;_container = $container;
+    }
+
+    return $this-&gt;_container;
+}
+
+public function init()
+{
+    $this-&gt;getContainer();
+    $this-&gt;_getBootstrap()-&gt;setContainer($this-&gt;_container);
+    return $this-&gt;_container;
+}
+
+protected function _getBootstrap()
+{
+    $app = $this-&gt;getBootstrap()-&gt;getApplication();
+    if ($app instanceof Zend_Application) {
+        return $app-&gt;getBootstrap();
+    } else {
+        return $app;
+    }
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>I've also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
+
+<p>To use the container resource you will need to add the prefix and path to the bootstrappers plugin loader:</p>
+
+<p>``` php
+&lt;?php
+class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+{
+// ...</p>
+
+<pre><code>protected function _initPlugins()
+{
+   $this-&gt;getPluginLoader()-&gt;addPrefixPath(
+       'Tek_Application_Resource',
+       'Tek/Application/Resource'
+   );
+}
+</code></pre>
+
+<p>// ...
+}
+```</p>
+
+<p>Then you can add the resources and their dependencies via the normal configuration system. This means adding lines like:</p>
+
+<pre><code>resources.container.objects.Log.class = "Zend_Log"
+resources.container.objects.Log.arguments.0 = "Log_Writer"
+
+resources.container.objects.Log_Writer.class = "Zend_Log_Writer_Stream"
+resources.container.objects.Log_Writer.arguments.0 = "%Log_Writer.stream%"
+
+resources.container.options.Log_Writer.stream = APPLICATION_PATH "/../log/application.log"
+</code></pre>
+
+<p>There are 2 resources defined here, the "Log" and the "Log_Writer".</p>
+
+<ol>
+<li><p>Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
+<li><p>The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
+</ol>
+
+
+<p>Now, the controller can write a log like this.</p>
+
+<p>``` php
+&lt;?php
+$logger = $this->getInvokeArg('bootstrap')->getResource('Log');
+// or, with the helper
+$logger = $this->_helper->resource('Log');</p>
+
+<p>$logger->log('A log message', Zend_Log::NOTICE);
+```</p>
+
+<p>While this is a simple example, it can be really beneficial when working with, for example, a service layer. The service you need might depend on another service, both of which may depend on an Authorization service. All the services depend on their data mappers (which themselves depends on a database connection) and their entity factories, etc.
+Instantiating a dependency tree like this for every object you need can lead to duplicate and hard to modify code. Dependency injection coupled with a good container can provide highly versatile code whose behaviour can be drastically changed by only modifying a configuration file.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building a Modular Application in Zend Framework - Part 2]]></title>
+    <link href="http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2/"/>
+    <updated>2009-06-28T00:43:35+10:00</updated>
+    <id>http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2</id>
+    <content type="html"><![CDATA[<p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We're going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
+
+<p>Note, there are still some bugs in Zend_Tool that prevent this working as it should, I will note the bugs and their fixes as we encounter them.</p>
+
+<h2>Create the module</h2>
+
+<p>From the base path of our application (/WORKING/PATH/aza from the last article), we can issue the command to the Zend_Tool CLI to create our guestbook module.</p>
+
+<pre><code>zf create module guestbook
+</code></pre>
+
+<p>Then, create the index controller within the guestbook module.</p>
+
+<pre><code>zf create controller index 1 guestbook
+</code></pre>
+
+<p>The "1" argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
+
+<pre><code>zf create controller ?
+</code></pre>
+
+<p>Once the new module and controller is created we need to tell the application that we are using modules. We do this by adding two lines to the configs/application.ini. The first activates the modules resource. The second configures the front controller, telling it where the modules are located. These lines should be added to the end of the production section of the .ini file.</p>
+
+<pre><code>resources.modules = ""
+resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
+</code></pre>
+
+<p>To check our module is working, we can navigate to our guestbook at http://aza/guestbook and we should see the default view for the index action.</p>
+
+<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn't prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
+<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn't be but we don't really care, we're going to replace it anyway.</p>
+
+<h2>Create module bootstrap</h2>
+
+<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn't create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
+
+<p><code>php
+&lt;?php
+class Guestbook_Bootstrap extends Zend_Application_Module_Bootstrap
+{
+}
+</code></p>
+
+<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don't need any further bootstrapping.</p>
+
+<p><strong>Important note</strong>: <strong><em>All</em> bootstrap functions</strong> for <strong>every module</strong> are run for <strong>every request</strong>.</p>
+
+<p>The bootstrap process occurs <em>before</em> routing and dispatch, so during bootstrap there is no way to know which module/controller/action is being requested. Therefore, any setup that should be done only if a particular module is requested should be done in plugins, <em>not</em> bootstrap.</p>
+
+<h2>Getting Quickstart</h2>
+
+<p>Now we have the module skeleton in place, lets start porting the guestbook code to our module. This turns out to be fairly easy; the majority of the changes involve prefixing class names with the module name.</p>
+
+<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it's on the right hand side in zip or tar.gz form).</p>
+
+<h2>Importing Quickstart</h2>
+
+<p>Once you have downloaded and extracted the files into a temporary folder, we can start copying in the files we need.</p>
+
+<p>We need to copy the GuestbookController from the Quickstart (making it the IndexController) and all of the Quickstart models, views and forms to the appropriate places within our module.</p>
+
+<p>From (Quickstart)To (Aza)</p>
+
+<p>application/controllers/GuestbookController.php</p>
+
+<p>application/modules/guestbook/controllers/IndexController.php</p>
+
+<p>application/models/*
+application/modules/guestbook/models/</p>
+
+<p>application/views/scripts/guestbook/*
+application/modules/guestbook/views/scripts/index/</p>
+
+<p>application/forms/*
+application/modules/guestbook/forms/</p>
+
+<p>The controller and the views will require overwriting the existing files.</p>
+
+<h2>Porting Quickstart</h2>
+
+<p>Now we have the files in the right place, we need to update the files to be modular.</p>
+
+<p>We'll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
+
+<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with "Default<em>", but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of "Default</em>" with "Guestbook_" in the application/modules/guestbook/models/ directory is all we need.</p>
+
+<p>The controller is a little trickier because it isn't already prefixed (controllers in the default module aren't), but it's still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
+
+<p>Finally, we get to the view. In our index view (application/modules/guestbook/views/scripts/index/index.phtml) we need to update the parameters passed to the url helper to reference our controller. Adding the module, and changing the controller leaves the first link looking like this:
+``` html</p>
+
+<p><a href="<?php echo $this->url(
+    array(
+        'module'    => 'guestbook',
+        'controller' => 'index',
+        'action'     => 'sign'
+    ), 
+    'default', 
+    true) ?>">Sign Our Guestbook</a></p>
+```
+
+Done!
+
+
+
+## Connect the database
+
+
+I'll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.
+
+
+
+## Conclusion
+
+
+We have just ported the Quickstart guestbook application to a Zend Framework Module. Modularizing applications allows for easier code reuse across applications. Hopefully modules will become standardized to the point that there will be a repository of modules that can be added to your application and providing drop in functionality.
+
+
+
+## Download
+
+
+For those who had trouble following along, I've made the entire application (including database) available via my [github repository](http://github.com/tekerson/A-Zend-Application/tree/master).
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Building a Modular Application in Zend Framework - Part 1]]></title>
+    <link href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/"/>
+    <updated>2009-06-17T19:45:29+10:00</updated>
+    <id>http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1</id>
+    <content type="html"><![CDATA[<p>This is part one of a series exploring modular application development in Zend Framework. In this entry we'll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We'll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
+
+<h2>Install Zend Framework</h2>
+
+<p>The first step is to actually get ZF, so start by downloading the package (about 40MB in total) into our working directory and extracting it.</p>
+
+<pre><code>wget http://framework.zend.com/releases/ZendFramework-1.8.4/ZendFramework-1.8.4.tar.gz
+tar zxf ZendFramework-1.8.4.tar.gz
+</code></pre>
+
+<p>We'll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
+
+<pre><code>ln -s ZendFramework-1.8.4 ZendFramework
+</code></pre>
+
+<h2>Install Zend_Tool</h2>
+
+<p>Creating an alias allows command "zf" to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
+
+<pre><code>alias zf=`pwd`/ZendFramework/bin/zf.sh
+</code></pre>
+
+<p>Now the installation is complete, we should be able to check what version of the framework we have just installed.</p>
+
+<pre><code>zf show version
+# Zend Framework Version: 1.8.4
+</code></pre>
+
+<p>If this works, we're ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
+
+<h2>Create the project</h2>
+
+<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we'll call our project "aza" (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
+
+<pre><code>zf create project aza
+</code></pre>
+
+<p>This should produce a project structure that looks like this</p>
+
+<p>[caption id="attachment_131" align="alignnone" width="324" caption="Directory Listing of new project"]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
+
+<h2>Setup the web server</h2>
+
+<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace "/WORKING/PATH/" with the absolute path to the directory in which you are working (run pwd if you're not sure).</p>
+
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerName aza
+    DocumentRoot /WORKING/PATH/aza/public
+    &lt;Directory /WORKING/PATH/aza/public&gt;
+        php_value include_path "/WORKING/PATH/ZendFramework/library"
+        php_value magic_quotes_gpc 0
+        php_value short_open_tag "on"
+        DirectoryIndex index.php
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>Don't forget to restart the web server to enable the site.</p>
+
+<h2>Test our page!</h2>
+
+<p>We should now be able to navigate to our site and be warmly welcomed to our new Zend Framework application!
+We'll stop here for now. In the next post, we'll start looking at creating our first module.</p>
+
+<h2>Updates</h2>
+
+<p>2009-06-26
+Updated for ZF Version 1.8.4</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PHP Quebec Wrap-up from a Conference Newb]]></title>
+    <link href="http://blog.tekerson.com/2009/03/11/php-quebec-wrap-up-from-a-conference-newb/"/>
+    <updated>2009-03-11T21:02:09+10:00</updated>
+    <id>http://blog.tekerson.com/2009/03/11/php-quebec-wrap-up-from-a-conference-newb</id>
+    <content type="html"><![CDATA[<p>As I am in Canada for only 3 more weeks, and we don't get too many PHP conferences in Brisbane, I took the opportunity to attended my first ever PHP conference. I thought I would share my thoughts, and maybe those more experienced can help me do it "better" next time.</p>
+
+<p>After flying across the country we checked into the hotel, the Hilton Bonaventure in Montreal. The front desk apparently didn't know we were there for the conference because we didn't "book with the others". I'm not sure what that means, or what difference it would have made? The hotel offered free wireless in the foyer and conference halls, but not in the rooms. Luckily, we were close enough to the foyer to access their wireless from our room (once I sorted out some driver issues on my laptop).</p>
+
+<h2>Day 1</h2>
+
+<p>After missing most of the openning keynote on the first day in favour of eating (I didn't know breakfast would be available) I jumped into the sessions. Starting with <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O'Phinney's</a> <a href="http://conf.phpquebec.com/en/session#practical_zend_framework_jutsu_with_dojo">Practical Zend Framework Jutsu with Dojo</a>, which provided a practical overview to an area of the Zend Framework I have been planning on investigating, but haven't yet got round to. This was followed up by <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall's</a> explaining their process of <a href="http://conf.phpquebec.com/en/session#building_ria_application_in_php">Building RIA Application in PHP</a>. This wasn't a talk I intended to attend (Sara Goleman's talk was scheduled for this time, but was unable to attend due to illness) but it was interesting to see the differences in building a PHP application without a HTML front end.<a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall"></a></p>
+
+<p>After lunch, <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethan's</a> looked into search and indexing. <a href="http://conf.phpquebec.com/en/session#of_haystacks_and_needles">Of Haystacks and Needles</a>, introduced MySQL full text, Selenium and Solr. While I have used Selenium, Solr seems like a useful step up for systems with higher requirements. The afternoon sessions were <a href="http://conf.phpquebec.com/en/session#a_tour_of_mysql_high_availability">A tour of MySQL High Availability</a> by <a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a>, which talked about the difference between scaling for performance and scaling for HA, and techniques for the latter, for me there wasn't much I hadn't used before, but some of the monitoring tools warrant further research. <a href="http://conf.phpquebec.com/en/session#stupid_browser_tricks">Stupid Browser Tricks</a> by <a href="http://conf.phpquebec.com/en/conferencier#sean_coates">Sean Coates</a>, was in a similar boat. It was a good introduction to some useful browser side tools (Firebug, YSlow! and Selenium IDE) but I had hoped for a deeper look into Selenium. Isn't everyone using firebug by now? FirePHP is a nice addition though.</p>
+
+<h2>Day 2</h2>
+
+<p>Day 2 started with a quick breakfast (I'm a fast learner ;)), then the <a href="http://conf.phpquebec.com/en/session#php_code_review">PHP Code Review Part #1</a>, with <a href="http://conf.phpquebec.com/en/conferencier#sebastian_bergmann">Sebastian Bergmann</a> and <a href="http://conf.phpquebec.com/en/conferencier#stefan_priebsch">Stefan Priebsch</a> delving into some not particularly pretty examples of code from well known PHP applications such as Wordpress. It's reassuring to know other people write and release bad code too :) I didn't attend Part #2 of the session, where they took code samples from the audience and critiqued them. Instead I opted to drop in on <a href="http://conf.phpquebec.com/en/conferencier#chris_hartjes">Chris Hartjes</a> expaining why <a href="http://conf.phpquebec.com/en/session#deployment_is_not_a_4_letter_word">Deployment Is Not A 4 Letter Word</a> and that with some planning and appropriate tools, in your absence even the sysadmin should be able to deploy your application with confidence.</p>
+
+<p>The pre-lunch keynote was <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall</a> again discussing RIA in <a href="http://conf.phpquebec.com/en/session#beyond_the_browser">Beyond the Browser</a>. Is the browser dead? Not yet, but it certainly has some growing competition. After a break, I listened to <a href="http://conf.phpquebec.com/en/conferencier#ilia_alshanetsky">Ilia Alshanetsky</a> talk about <a href="http://conf.phpquebec.com/en/session#premature_optimization_mistakes">Premature Optimization Mistakes</a>, focusing on optimising the server stack itself before delving into application level optimisation. Arguing it usually provides more results without the risk of breaking the application. <a href="http://conf.phpquebec.com/en/session#php_for_the_enterprise">PHP for the Enterprise</a> then examined how PHP has reached a level where it is suitable for projects that were once considered the realm of "real" programming languages. Most of the talk discussed more technical details of scaling PHP to an enterprise level, such as database buffer sizes, performance monitoring and caching at various levels.</p>
+
+<p>The day ended with the career fair which saw a number of, primarily local, employers (including the armed forces?) set up booths and discuss their work and employment with the potential candidates at the conference. While I wasn't actively seeking employment, I did have a chat with some of the representatives. Given the location of the conference, it wasn't too big a surprise that the majority were bilingual and in some cases French only offices.</p>
+
+<h2>Day 3</h2>
+
+<p>My final day of the conference started with <a href="http://conf.phpquebec.com/en/conferencier#owen_byrne">Owen Byrne</a> discussing <a href="http://conf.phpquebec.com/en/session#growing_a_development_team_while_building_a_huge_app_at_500_miles/hour">Growing a Development Team While Building a Huge App at 500 miles/hour</a>; which I attended, hoping to garner an insight into building a team and managing agile development on a large project. While the project was an interesting one, Owen seemed to be more interested in giving out t-shirts and I didn't feel we got very deep into the whole process. Being a fairly heavy user and fan of Zend Framework, I joined <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O'Phinney</a> in his search for some of <a href="http://conf.phpquebec.com/en/session#zf">Zend Framework's Little Known Gems</a>. The talk was targeted at using the components in isolation and I discovered a number of components that may come in handy in future projects, with or without the MVC stack.</p>
+
+<p><a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a> then talked further about MySQL, this time focusing on performance as opposed to high availability. There were a few points about the inner working of the InnoDB storage engine that got my attention, including some builds available from Percona we may need to look at.</p>
+
+<p>The round-table <a href="http://conf.phpquebec.com/en/session#framework">Framework Comparison</a>, featuring <a href="http://conf.phpquebec.com/en/conferencier#fabien_potencier">Fabien Potencier</a> (Symfony) <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethans</a> (ezComponents) and <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O'Phinney</a> (Zend Framework) seemed to indicate that all 3 frameworks solve much the same problem, they even went as far as agreeing you should use components from the other frameworks when your primary framework doesn't include one. Much different to the "my framework is better" "discussions" we too often see.</p>
+
+<p>Finally, <a href="http://conf.phpquebec.com/en/conferencier#chris_shiflett">Chris Shiflett</a> addressed <a href="http://conf.phpquebec.com/en/session#security-centered_design__dont_just_plan_for_security_design_for_it">Security-Centered Design: Don't Just Plan for Security; Design For It</a> provided an alternative look at some interesting security topics. Instead of focusing on technical details, he primarly focused on security from a user perspective as "user perception is as important as reality". Giving examples of various recent attacks on high profile sites that, while not actually the fault of the site, would be perceived as such by most users. He also put forward ideas about using "ambient signifiers" to assist in the fight against phishing, and how the normal (request-reload) web model can mean important information is missed due to "change blindness" including a live demonstration. He suggesting AJAX might be a suitable solution in this case (as long as it's still accessible of course).</p>
+
+<h2>Conclusions</h2>
+
+<p>All-in-all the conference was a great experience, the hotel was really nice (especially compared to some of the hostels where I usually slum on my travels) and the talks were wide ranging and generally well presented.</p>
+
+<p>Some of the material I found too "introductory", but I think that may be because I primarily attended sessions on topics I am familiar with hoping to learn more, whereas using the talks as introductions to new topics might have been a better idea. How do people usually select talks?</p>
+
+<p>I also didn't attend much in the way of "extra-conference" activities; social events outside of the conference schedule. I am a little disappointed about this, as it would have been good to chat to some members of the community in a less formal setting, so this is something I think I would do much more of next time. And there will be a next time.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: General | Deprecated Behaviour]]></title>
+  <link href="http://blog.tekerson.com/categories/general/atom.xml" rel="self"/>
+  <link href="http://blog.tekerson.com/"/>
+  <updated>2013-03-27T17:48:27+10:00</updated>
+  <id>http://blog.tekerson.com/</id>
+  <author>
+    <name><![CDATA[Brenton Alker]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Reboot]]></title>
+    <link href="http://blog.tekerson.com/2013/03/24/reboot/"/>
+    <updated>2013-03-24T18:25:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/03/24/reboot</id>
+    <content type="html"><![CDATA[<p>Wow, it's been over 3 years since my last post! And, like so many entertainment franchises, I think it's time for a reboot. I stopped blogging when I moved away from PHP because I no longer felt confident enough in my work to open up anything I was doing to any kind of public scrutiny. Having since (mostly) returned to PHP, doing some consulting and contracting and embarking on a venture of my own, I feel it is time once again to put some of my experiences and thoughts into writing.</p>
+
+<p>To facilitate this, and because my Wordpress install was so hideously out of date, I've decided to changed to a static blogging solution: <a href="http://octopress.org/">Octopress</a>. As such, the blog is currently without much of a design. This may (or may not) be remedied at a later time. I will write in more detail about the platform and the migration in a future post.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[New VPS Hosting]]></title>
+    <link href="http://blog.tekerson.com/2008/08/12/new-vps-hosting/"/>
+    <updated>2008-08-12T07:38:16+10:00</updated>
+    <id>http://blog.tekerson.com/2008/08/12/new-vps-hosting</id>
+    <content type="html"><![CDATA[<p>If you're reading this then I have successfully migrated to my new VPS hosting on <a href="https://manage.slicehost.com/customers/new?referrer=1470153180">Slicehost</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[New Design and a New Domain]]></title>
+    <link href="http://blog.tekerson.com/2008/04/19/new-design-and-a-new-domain/"/>
+    <updated>2008-04-19T05:17:26+10:00</updated>
+    <id>http://blog.tekerson.com/2008/04/19/new-design-and-a-new-domain</id>
+    <content type="html"><![CDATA[<p>Well, I finally bought myself a domain. You can now find me at my new home on the web: <a href="http://blog.tekerson.com/">blog.tekerson.com</a> (Not that you get a choice in the matter, the old domain redirects).
+To go along with it, I've got a new design (for those of you that actually come back). I think it's better suited than the old one.
+That is all!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Much ado about nothing]]></title>
+    <link href="http://blog.tekerson.com/2007/12/05/much-ado-about-nothing/"/>
+    <updated>2007-12-05T05:44:57+10:00</updated>
+    <id>http://blog.tekerson.com/2007/12/05/much-ado-about-nothing</id>
+    <content type="html"><![CDATA[<p>This blog entry doesn't actually contain any technical notes, which is a first for me. I think I might do posts of the style more often, as my posts will hopefully be more frequent if I allow myself the freedom to discuss ideas in general, and not have to delve into a particular topic.</p>
+
+<p>On that note, it's been a hectic few months and doesn't look like slowing down before the end of the year. Unfortunately, my blog is one of the many aspects of life that has been neglected. However, I have been busy doing, and learning, different things and should have some interesting topics to write about when I do eventually get around to putting something together.</p>
+
+<p>A short list of tools, technologies and techniques crossing my path recently that I intend to blog (more) about include:</p>
+
+<ul>
+<li><p>Caching (memcached/apc)</p></li>
+<li><p>MySQL 5 Features (clusters, replication, stored procedures, triggers)</p></li>
+<li><p>Zend Framework</p></li>
+<li><p>Xen virtualisation</p></li>
+<li><p>HA -- heartbeat et. al</p></li>
+<li><p>Load balancing</p></li>
+<li><p>Advanced Apache mod_rewrite (Rewrite mappers)</p></li>
+<li><p>PHP multi-processing (forking)</p></li>
+<li><p>Web services (SOA)</p></li>
+</ul>
+
+
+<p>And possibly others. That should give you an idea of what to look forward to, as well as a list to help me remember. I hope to post on at least one or two of those topics before the end of the year, and maybe some other lighter material as well.
+Then I'm off on holidays to Canada for 5 weeks, snowboarding and doing the general tourist thing. Should be great fun and much needed break, but until then… I've got a project to hack on!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Example Subdomain back online]]></title>
+    <link href="http://blog.tekerson.com/2007/05/15/example-subdomain-back-online/"/>
+    <updated>2007-05-15T01:06:01+10:00</updated>
+    <id>http://blog.tekerson.com/2007/05/15/example-subdomain-back-online</id>
+    <content type="html"><![CDATA[<p>I noticed today that my example subdomain, where my online code examples are (currently only my <a href="http://example.blog.everyone-here.is-a-geek.com/yui-dragdrop-subscribe/">YUI example</a>) served from was down. Probably since my server upgrade. Oh well, for anyone who cares, it's back online now.</p>
+]]></content>
+  </entry>
+  
+</feed>
