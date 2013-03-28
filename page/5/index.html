@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I have been telecommuting for a bit over a month now, and things have settled quite well. We have set up an office, away from the entertainment area &hellip;">
+  <meta name="description" content="I have been trying to get together a post on the Data Mapper pattern since I started experimenting with it in a personal project. It seems to me to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,595 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/12/17/data-mapper-pattern-in-php/">Data Mapper Pattern in PHP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-17T18:58:14+10:00" pubdate data-updated="true">Dec 17<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have been trying to get together a post on the <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">Data Mapper</a> pattern since I started experimenting with it in a personal project. It seems to me to be a fantastic answer to the decoupling of in-memory data objects and the data store. I still don&#8217;t have all the answers, but Rob Allen&#8217;s recent post <a href="http://akrabat.com/2008/12/13/on-models-in-a-zend-framework-application/">On models in a Zend Framework application</a>, and the associated discussion provoked me to publish some of what I do have.</p>
+
+<p><em>Warning</em>: This post will be quite long and is very code heavy, but I hope it illustrates some of my current thoughts.</p>
+
+<p>Anyway, lets get down to it.</p>
+
+<p>I will be showing 4 classes. Two (2) Abstract &#8220;library&#8221; classes, and 2 examples of their use;</p>
+
+<p>And now, the code. Instead of breaking the code into little pieces, I&#8217;ll add inline comments to explain what&#8217;s going on.</p>
+
+<h2>Classes</h2>
+
+<h3>Library Classes</h3>
+
+<h4>MapperAbstract</h4>
+
+<p>MapperAbstract is the base class for mappers. It defines a standard interface for all mappers.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">abstract</span> <span class="k">class</span> <span class="nc">MapperAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Create a new instance of the DomainObject that this</span>
+</span><span class='line'><span class="sd">     * mapper is responsible for. Optionally populating it</span>
+</span><span class='line'><span class="sd">     * from a data array.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param array $data</span>
+</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">create</span><span class="p">(</span><span class="k">array</span> <span class="nv">$data</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$obj</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_create</span><span class="p">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$obj</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">populate</span><span class="p">(</span><span class="nv">$obj</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$obj</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Save the DomainObject</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * Store the DomainObject in persistent storage. Either insert</span>
+</span><span class='line'><span class="sd">     * or update the store as required.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">save</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nb">is_null</span><span class="p">(</span><span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">getId</span><span class="p">()))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_insert</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_update</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Delete the DomainObject</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * Delete the DomainObject from persistent storage.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_delete</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Populate the DomainObject with the values</span>
+</span><span class='line'><span class="sd">     * from the data array.</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * To be implemented by the concrete mapper class</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     * @param array $data</span>
+</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">public</span> <span class="k">function</span> <span class="nf">populate</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$data</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Create a new instance of a DomainObject</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_create</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Insert the DomainObject to persistent storage </span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_insert</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Update the DomainObject in persistent storage </span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_update</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Delete the DomainObject from peristent Storage</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>DomainObjectAbstract</h4>
+
+<p>A basic class describing an object that is part of the <a href="http://martinfowler.com/eaaCatalog/domainModel.html">Domain Model</a>. This model assumes that all DomainObjects have an integer as the primary key, but it would be a trivial change to make it a GUID for example. It also ensures the ID is immutable.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">abstract</span> <span class="k">class</span> <span class="nc">DomainObjectAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="nv">$_id</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Get the ID of this object (unique to the</span>
+</span><span class='line'><span class="sd">     * object type)</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @return int</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getId</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Set the id for this object.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param int $id</span>
+</span><span class='line'><span class="sd">     * @return int</span>
+</span><span class='line'><span class="sd">     * @throws Exception If the id on the object is already set</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">setId</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">is_null</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s1">&#39;ID is immutable&#39;</span><span class="p">);</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span> <span class="o">=</span> <span class="nv">$id</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Example Implementation Classes</h3>
+
+<h4>User</h4>
+
+<p>A concrete DomainObject describing a user. This is a <strong>very</strong> barebones example, usually getters/setters would be used to set protected properties.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">DomainObjectAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">public</span> <span class="nv">$firstname</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">public</span> <span class="nv">$lastname</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">public</span> <span class="nv">$username</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Get the full name of the User</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * Demonstrates how other functions can be</span>
+</span><span class='line'><span class="sd">     * added to the DomainObject</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @return string</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getName</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">firstname</span> <span class="o">.</span> <span class="s1">&#39; &#39;</span> <span class="o">.</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastname</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>UserMapper</h4>
+
+<p>A concrete implementation of a mapper between the User domain object and persistent storage.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">UserMapper</span> <span class="k">extends</span> <span class="nx">MapperAbstract</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Fetch a user object by ID</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * An example skeleton of a &quot;Fetch&quot; function showing</span>
+</span><span class='line'><span class="sd">     * how the database data ($dataFromDb) is used to</span>
+</span><span class='line'><span class="sd">     * create a new User instance via the create function.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param string $id</span>
+</span><span class='line'><span class="sd">     * @return User</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">findById</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// Query database for User with $id</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>        <span class="nv">$dataFromDb</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>                <span class="s1">&#39;id&#39;</span>        <span class="o">=&gt;</span> <span class="nv">$id</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;firstname&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Brenton&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;lastname&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;username&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;Tekerson&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="p">);</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">create</span><span class="p">(</span><span class="nv">$dataFromDb</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Poplate the User (DomainObject) with</span>
+</span><span class='line'><span class="sd">     * the data array.</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * This is a very simple example, but the mapping </span>
+</span><span class='line'><span class="sd">     * can be as complex as required.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     * @param array $data</span>
+</span><span class='line'><span class="sd">     * @return User</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">populate</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$data</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">setId</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]);</span>
+</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">firstname</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;firstname&#39;</span><span class="p">];</span>
+</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">lastname</span>  <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;lastname&#39;</span><span class="p">];</span>
+</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">username</span>  <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">return</span> <span class="nv">$obj</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Create a new User DomainObject</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @return User</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_create</span><span class="p">()</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nx">User</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Insert the DomainObject in persistent storage</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
+</span><span class='line'><span class="sd">     * and running an insert statement.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_insert</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Update the DomainObject in persistent storage</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
+</span><span class='line'><span class="sd">     * and running an update statement.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_update</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="sd">/**</span>
+</span><span class='line'><span class="sd">     * Delete the DomainObject from persistent storage</span>
+</span><span class='line'><span class="sd">     * </span>
+</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
+</span><span class='line'><span class="sd">     * and running a delete statement.</span>
+</span><span class='line'><span class="sd">     *</span>
+</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
+</span><span class='line'><span class="sd">     */</span>
+</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
+</span><span class='line'>    <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// ...</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Example</h2>
+
+<p>Ok, I realize that I&#8217;ve dumped a lot of code and we&#8217;re nearly finished. Now we finally get to see how it all fits together to do something. Here, I am creating a simple example where I fetch a User based on their ID, change the Users name, and store it back to the database.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Initialise the Mapper.</span>
+</span><span class='line'><span class="nv">$userMapper</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserMapper</span><span class="p">();</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Fetch and manipulate the User object</span>
+</span><span class='line'><span class="nv">$user</span> <span class="o">=</span> <span class="nv">$userMapper</span><span class="o">-&gt;</span><span class="na">findById</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">lastname</span> <span class="o">=</span> <span class="s1">&#39;Alker&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Tell the UserMapper that the User needs to be saved.</span>
+</span><span class='line'><span class="nv">$userMapper</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">(</span><span class="nv">$user</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Well, I hope everything makes sense. This is a very simplified version of the concepts I have been working on.</p>
+
+<p>These simple examples could be expanded in may directions. Such as;</p>
+
+<p>Validation of the DomainObject fields, I haven&#8217;t decided if the validation should be contained in the DomainObject or the Mapper.</p>
+
+<p>An <a href="http://martinfowler.com/eaaCatalog/identityMap.html">identity map</a> to ensure only 1 instance of each DomainObject exists in memory at a time.</p>
+
+<p>A <a href="http://martinfowler.com/eaaCatalog/unitOfWork.html">UnitOfWork</a> to track which objects need saving, deleting and to co-ordinate roll backs on error, or the order of persistence to satisfy foreign key constraints.</p>
+
+<p>The Mapper could access many data stores; RDBMSs, Session/Cookie data or web services to name a few. Remember, the Mapper decouples the DomainObject completely from the persistent storage</p>
+
+<p>Anyway, I hope this provides a fairly simple concrete example that you can build upon to create a more complete solution that you can then share with the rest of us.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -165,83 +754,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/09/05/basic-branching-with-git/">Basic Branching With Git</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-09-05T22:48:22+10:00" pubdate data-updated="true">Sep 5<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it&#8217;s <strong>easy!</strong></p>
-
-<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using &#8221;<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>&#8221; to work on multiple things at once, but this is very limiting.</p>
-
-<p>So, Here we go. My basic workflow now look like this.</p>
-
-<p>Create a new branch (based on the HEAD of your current branch), and automatically switch to it:</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; -b my_branch&lt;/code&gt;
-</code></pre>
-
-<p>Then you can work within this branch as you always would.</p>
-
-<p>Work, work, work&#8230;</p>
-
-<pre><code>&lt;code&gt;&lt;a&gt;&lt;/a&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add manual page"&gt;git add&lt;/a&gt; files_i_have_edited.txt
-&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-commit.html" title="git-commit manual page"&gt;git commit&lt;/a&gt; -m 'My changes'&lt;/code&gt;
-</code></pre>
-
-<p>Repeating this step until the task is complete. Then, to get the changes back into the master branch. Switch to it</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; master&lt;/code&gt;
-</code></pre>
-
-<p>And pull the changes from the branch</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-pull.html" title="git-pull manual page"&gt;git pull&lt;/a&gt; . my_branch&lt;/code&gt;
-</code></pre>
-
-<p>Easy. No need to remember revision numbers where you branched, or which changed have already been merged. You can of course switch back to the branch and continue work with</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; my_branch&lt;/code&gt;
-</code></pre>
-
-<p>this &#8220;edit, commit, pull&#8221; cycle can continue until the task is complete. Then, once you&#8217;re satisfied you can delete the branch with</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html" title="git-branch manual page"&gt;git branch&lt;/a&gt; -d my_branch&lt;/code&gt;
-</code></pre>
-
-<p>It&#8217;s still in the history of course, but no need to keep old branches around.</p>
-
-<p>Hope that makes things clear to anyone else who was confused as I was by some of the overly complicated explanation of branching in git.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/6/">&larr; Older</a>
@@ -259,6 +771,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/03/24/reboot/">Reboot</a>
       </li>
     
@@ -272,10 +788,6 @@
     
       <li class="post">
         <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2009/06/28/building-a-modular-application-in-zend-framework-part-2/">Building a Modular Application in Zend Framework - Part 2</a>
       </li>
     
   </ul>

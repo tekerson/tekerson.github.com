@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-03-28T00:26:26+10:00</updated>
+  <updated>2013-03-28T23:17:07+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ideas of March: Where's the love?]]></title>
+    <link href="http://blog.tekerson.com/2013/03/28/ideas-of-march-wheres-the-love/"/>
+    <updated>2013-03-28T21:43:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/03/28/ideas-of-march-wheres-the-love</id>
+    <content type="html"><![CDATA[<p>As I previously blogged, I&#8217;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
+
+<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; &#8220;You never know when it&#8217;s going to disappear.&#8221; citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell&#8217;s suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">&#8220;don&#8217;t read the comments&#8221;</a>, I have to wonder if having comments is worth the effort involved?</p>
+
+<p>For now, it looks like I&#8217;m going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where&#8217;s the love?</p>
+
+<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes &#8220;turn off comments and encourage others to respond by writing [&#8230;] on their own blog.&#8221; I think this is a fantastic idea (I&#8217;m doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, &#8220;trackbacks&#8221; were an attempt at solving this issue, but I&#8217;m not sure that worked too well.</p>
+
+<p>This is one advantage the &#8220;walled gardens&#8221; currently hold - they have the ability to aggregate the posts into a single congruous conversation.</p>
+
+<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I&#8217;ll&#8230; Probably never see it&#8230; Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Reboot]]></title>
@@ -1551,22 +1570,6 @@ $token = $id . ':' . $hash;
 <p>Twitter is an oddity to me, it seems incredibly popular; in spite of it&#8217;s apparent unreliability. To me it seems to sit somewhere between a very slow IRC and a short message mailing list. I think the only advantage I can see is that it can work mobile, though I&#8217;ve not had much luck keeping that working for more than a day or two. Most other people who have complained about &#8220;Not Getting It&#8221; when it comes to Twitter seem to be told to install a desktop client, as it is much more conducive to regular use than the website. So, I diligently installed <a href="http://funkatron.com/spaz">Spaz</a>, an <a href="http://www.adobe.com/products/air/">Adobe Air</a> based client, which means I now get little popups telling me when someone &#8220;tweets&#8221;. That makes it more convenient, so far it hasn&#8217;t made it more interesting.</p>
 
 <p>Although all the tools are very cool, maybe this &#8220;Social Web&#8221; thing just isn&#8217;t for me. Then again, maybe it&#8217;s this whole &#8220;Social&#8221; thing that just doesn&#8217;t work for me ;)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Sixty Second Tech]]></title>
-    <link href="http://blog.tekerson.com/2008/05/04/sixty-second-tech/"/>
-    <updated>2008-05-04T21:48:27+10:00</updated>
-    <id>http://blog.tekerson.com/2008/05/04/sixty-second-tech</id>
-    <content type="html"><![CDATA[<p><a href="http://www.sixtysecondtech.com">Sixty Second Tech</a> is a (relatively) new podcast by prominent Zender <a href="http://blog.calevans.com/">Cal Evans</a> that promises to be the &#8220;Cure to BSS&#8221;</p>
-
-<blockquote><p>Sixty Second Tech is the only known cure for â€œBlank Stare Syndromeâ€ (BSS). BSS happens when one of your technical friends starts talking to you and unconsciously slips into geek speak. They don&#8217;t realize they&#8217;ve triggered BSS until long after your eyes glaze over. BSS is an embarrassing condition but a curable one, just spend one minute a week listening to Sixty Second Tech.</p></blockquote>
-
-<p>While I am definitely on the side of the &#8220;technical friends&#8221;, the short podcasts &#8211; almost exactly 1 minute each, quite impressive &#8211; are a great way to provoke thought about aspects of technology that may not otherwise have been brought to the fore, but probably should be; such as <a href="http://www.sixtysecondtech.com/2008/03/02/the-secret-to-cheap-and-easy-websites/">Wordpress as a CMS</a>, <a href="http://www.sixtysecondtech.com/2008/03/31/openid-and-you/">OpenID</a> and <a href="http://www.sixtysecondtech.com/2008/03/24/do-you-know-what-they-are-saying-about-you/">Google Alerts</a>
-But, my favourite is pointing anyone who speaks to me about &#8220;SEO&#8221; to the episode &#8221;<a href="http://www.sixtysecondtech.com/2008/03/10/go-relevant-or-go-home/">Go Relevant or Go Home!</a>&#8221;; which sums up very succinctly the folly of the whole practice.</p>
-
-<p>His name is Cal Evans, and he is my sixty second tech.</p>
 ]]></content>
   </entry>
   

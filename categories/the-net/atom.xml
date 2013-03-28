@@ -4,7 +4,7 @@
   <title><![CDATA[Category: The Net | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/the-net/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-03-28T00:26:26+10:00</updated>
+  <updated>2013-03-28T23:17:07+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ideas of March: Where's the love?]]></title>
+    <link href="http://blog.tekerson.com/2013/03/28/ideas-of-march-wheres-the-love/"/>
+    <updated>2013-03-28T21:43:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/03/28/ideas-of-march-wheres-the-love</id>
+    <content type="html"><![CDATA[<p>As I previously blogged, I've recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
+
+<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; "You never know when it's going to disappear." citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell's suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">"don't read the comments"</a>, I have to wonder if having comments is worth the effort involved?</p>
+
+<p>For now, it looks like I'm going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where's the love?</p>
+
+<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes "turn off comments and encourage others to respond by writing [...] on their own blog." I think this is a fantastic idea (I'm doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, "trackbacks" were an attempt at solving this issue, but I'm not sure that worked too well.</p>
+
+<p>This is one advantage the "walled gardens" currently hold - they have the ability to aggregate the posts into a single congruous conversation.</p>
+
+<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I'll... Probably never see it... Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Silver Lining of the ReadWriteWeb/Facebook Login Debacle]]></title>
