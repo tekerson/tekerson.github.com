@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="It is often useful to be able to rename multiple files at the same time. Typical cases include changing a file extension (eg. .jpeg to .jpg) or &hellip;">
+  <meta name="description" content="A few months back, when I was first starting with the Zend Framework, I posted my extension to the ViewRenderer helper. This is the helper that the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,366 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/09/19/updated-extension-to-zend-frameworks-viewrenderer-to-add-layouts/">Updated Extension to Zend Framework&#8217;s ViewRenderer to Add Layouts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-19T23:33:34+10:00" pubdate data-updated="true">Sep 19<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A few months back, when I was first starting with the Zend Framework, I posted my <a href="/2007/06/26/extending-zend-frameworks-viewrenderer-helper-to-allow-application-and-controller-page-layouts/">extension to the ViewRenderer helper</a>. This is the helper that the Controller uses to work with the View. My extension was in order to implement site-wide and controller-wide layouts, allowing a consistent look and feel in an application.</p>
+
+<p>I have been fairly happily using this extension since then, more recently though, I got back to fixing some problems with it. One problem I noted (and updated the previous post to reflect), was it&#8217;s double calling of the action. After further investigation, it turns out it wasn&#8217;t calling it twice, but had an image with an empty src tag in the layout, causing the browser to request the page twice.</p>
+
+<p>However, It still gave me an excuse to have another look at it, and fix up some other issues. So here I am posting the revised code. If you are using the old one, it isn&#8217;t backwards compatible, but there isn&#8217;t much to change and I think it&#8217;s a much nicer implementation. It uses a stack to render the layouts in order, and is therefore much more extensible to multi-level layouts.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>class Custom_Controller_Action_Helper_ViewRenderer extends Zend_Controller_Action_Helper_ViewRenderer
+</span><span class='line'>{
+</span><span class='line'>    /**
+</span><span class='line'>     * Defaults stack of layout scripts, listed with the innermost
+</span><span class='line'>     * layout first.
+</span><span class='line'>     *
+</span><span class='line'>     * @var array
+</span><span class='line'>     */
+</span><span class='line'>    protected $_defaultStack = array(
+</span><span class='line'>        ':controller/layout',
+</span><span class='line'>        'layout',
+</span><span class='line'>    );
+</span><span class='line'>    
+</span><span class='line'>    /**
+</span><span class='line'>     * The stack of layout scripts, listed with the innermost first.
+</span><span class='line'>     * 
+</span><span class='line'>     * @var array
+</span><span class='line'>     */
+</span><span class='line'>    protected $_stack = null;
+</span><span class='line'>    
+</span><span class='line'>    /**
+</span><span class='line'>     * If the layouts should be rendered or not
+</span><span class='line'>     * 
+</span><span class='line'>     * @var boolean
+</span><span class='line'>     */
+</span><span class='line'>    protected $_renderLayout = true;
+</span><span class='line'>
+</span><span class='line'>    /**
+</span><span class='line'>     * Constructor
+</span><span class='line'>     *
+</span><span class='line'>     * Set the viewSuffix to "tpl.php" unless a viewSuffix option is
+</span><span class='line'>     * provided in the $options parameter. And set the stack to the default
+</span><span class='line'>     *
+</span><span class='line'>     * @param  Zend_View_Interface $view
+</span><span class='line'>     * @param  array $options
+</span><span class='line'>     * @return void
+</span><span class='line'>     */
+</span><span class='line'>    public function __construct(Zend_View_Interface $view = null, array $options = array())
+</span><span class='line'>    {
+</span><span class='line'>        if (!isset($options['viewSuffix'])) {
+</span><span class='line'>            $options['viewSuffix'] = 'tpl.php';
+</span><span class='line'>        }
+</span><span class='line'>        parent::__construct($view, $options);
+</span><span class='line'>        
+</span><span class='line'>        $this-&gt;_stack = $this-&gt;_defaultStack;
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    
+</span><span class='line'>    /**
+</span><span class='line'>     * Add a layout to the stack
+</span><span class='line'>     * 
+</span><span class='line'>     * Add a layout to be rendered inside the current stack 
+</span><span class='line'>     * of layouts
+</span><span class='line'>     * 
+</span><span class='line'>     * @see Zend_Controller_Action_Helper_ViewRenderer::_translateSpec()
+</span><span class='line'>     * 
+</span><span class='line'>     * @param string  The filename, possibly using variables as described for _translateSpec(...)
+</span><span class='line'>     * 
+</span><span class='line'>     * @return    boolean The same as array_unshift 
+</span><span class='line'>     */
+</span><span class='line'>    public function addLayout($script)
+</span><span class='line'>    {
+</span><span class='line'>        return array_unshift($this-&gt;_stack, $script);
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    
+</span><span class='line'>    /**
+</span><span class='line'>     * Clears the layout stack, removing the default stack and any
+</span><span class='line'>     * layouts that have been added.
+</span><span class='line'>     * 
+</span><span class='line'>     * @return array  The previous layout stack
+</span><span class='line'>     */
+</span><span class='line'>    public function clearLayout()
+</span><span class='line'>    {
+</span><span class='line'>        $stack = $this-&gt;_stack;
+</span><span class='line'>        $this-&gt;_stack = array();
+</span><span class='line'>        return $stack;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    
+</span><span class='line'>    /**
+</span><span class='line'>     * Render the action script, then each of the layouts in the stack in
+</span><span class='line'>     * order, assigning the content of each to the content variable in
+</span><span class='line'>     * the next. Append the result to the Response's body.
+</span><span class='line'>     *
+</span><span class='line'>     * @param string $script
+</span><span class='line'>     * @param string $name        The response segment to append to
+</span><span class='line'>     */
+</span><span class='line'>    public function renderScript($script, $name = null)
+</span><span class='line'>    {
+</span><span class='line'>        $this-&gt;view-&gt;baseUrl = $this-&gt;_request-&gt;getBaseUrl();
+</span><span class='line'>        if (null === $name) {
+</span><span class='line'>            $name = $this-&gt;getResponseSegment();
+</span><span class='line'>        }
+</span><span class='line'>        
+</span><span class='line'>        // get the content of the action
+</span><span class='line'>        $content = $this-&gt;view-&gt;render($script);
+</span><span class='line'>        $this-&gt;view-&gt;content = $content;
+</span><span class='line'>        
+</span><span class='line'>        if ($this-&gt;_renderLayout) {
+</span><span class='line'>            foreach ($this-&gt;_stack as $layout) {
+</span><span class='line'>                $layoutScript = $this-&gt;_translateSpec($layout.'.:suffix');
+</span><span class='line'>                $content = $this-&gt;view-&gt;render($layoutScript);
+</span><span class='line'>                $this-&gt;view-&gt;content = $content;
+</span><span class='line'>          }
+</span><span class='line'>        }
+</span><span class='line'>        
+</span><span class='line'>        $this-&gt;getResponse()-&gt;appendBody($content, $name);
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    /**
+</span><span class='line'>     * Enable, or disable the rendering of layouts
+</span><span class='line'>     * 
+</span><span class='line'>     * @param boolean Whether the layouts should be rendered or not
+</span><span class='line'>     */
+</span><span class='line'>    public function setLayoutEnabled($enabled = true)
+</span><span class='line'>    {
+</span><span class='line'>        $this-&gt;_renderLayout = $enabled;
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The implementation in the view script is very similar to the previous incarnation, except the view is no longer responsible for rendering the children itself, this is done beforehand, and is passed to the layout in the &#8220;content&#8221; variable. Leaving the layout to look something like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+</span><span class='line'>"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>&lt;head&gt;
+</span><span class='line'>  &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+</span><span class='line'>  &lt;title&gt;&lt;?php echo (isset($this-&gt;title)) ? $this-&gt;escape($this-&gt;title) : 'Untitled'; ?&gt;&lt;/title&gt;
+</span><span class='line'>&lt;/head&gt;
+</span><span class='line'>    &lt;body&gt;
+</span><span class='line'>        &lt;?php echo $this-&gt;content; ?&gt;
+</span><span class='line'>    &lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And, unlike the previous version, all levels of layout work the same way. So the controller layout would look like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Default Controller&lt;/h1&gt;
+</span><span class='line'>&lt;h2&gt;&lt;?php echo $this-&gt;escape($this-&gt;title); ?&gt;&lt;/h2&gt;
+</span><span class='line'>&lt;?php echo $this-&gt;content; ?&gt;
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>To use these layouts, they can be added to the stack, like so (from the controller):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>$this-&gt;_helper-&gt;viewRenderer-&gt;clearLayout(); // clear the existing layouts
+</span><span class='line'>$this-&gt;_helper-&gt;viewRenderer-&gt;addLayout(':controller/layout');
+</span><span class='line'>$this-&gt;_helper-&gt;viewRenderer-&gt;addLayout('layout');
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But this is the default anyway.</p>
+
+<p>Until the Zend framework standardizes the layout situation, with <a href="http://framework.zend.com/wiki/pages/viewpage.action?pageId=33071">Zend_View_Enhanced</a> or <a href="http://framework.zend.com/wiki/display/ZFPROP/Zend_Layout">Zend_Layout</a>, or any combination thereof, this method will feature in my applications.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -403,42 +763,6 @@ This code is broken. During some debugging, I discovered that this method of cal
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/05/15/example-subdomain-back-online/">Example Subdomain Back Online</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-05-15T01:06:01+10:00" pubdate data-updated="true">May 15<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I noticed today that my example subdomain, where my online code examples are (currently only my <a href="http://example.blog.everyone-here.is-a-geek.com/yui-dragdrop-subscribe/">YUI example</a>) served from was down. Probably since my server upgrade. Oh well, for anyone who cares, it&#8217;s back online now.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/12/">&larr; Older</a>
@@ -456,6 +780,10 @@ This code is broken. During some debugging, I discovered that this method of cal
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
@@ -469,10 +797,6 @@ This code is broken. During some debugging, I discovered that this method of cal
     
       <li class="post">
         <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
       </li>
     
   </ul>

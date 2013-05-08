@@ -9,8 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Well, It&#8217;s that time of year again. Time to visit the family, eat and drink too much and have a holiday.
-Hope everyone has a safe and happy &hellip;">
+  <meta name="description" content="Back from the Christmas/New Year festivities, I have been playing around (at a very basic level) with a few programming languages, with the goal of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +72,65 @@ Hope everyone has a safe and happy &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/01/13/search-for-the-holy-grail-not-really/">Search for the Holy Grail (Not Really)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-01-13T02:17:38+10:00" pubdate data-updated="true">Jan 13<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Back from the Christmas/New Year festivities, I have been playing around (at a very basic level) with a few programming languages, with the goal of learning something new. All of the languages I have been playing with I have looked at in the past very briefly, but never ventured any deeper. This time I intend to pick one and hopefully learn it to a level where is might be useful.</p>
+
+<p>Of the languages I am looking at, none are particularly unusual or oscure, they are all fairly common scripting languages used for web development.</p>
+
+<p>My list so far consists of (in no particular order):</p>
+
+<ul>
+<li><p><a href="http://perl.org/">Perl</a></p></li>
+<li><p><a href="http://python.org/">Python</a></p></li>
+<li><p><a href="http://ruby-lang.org/">Ruby</a></p></li>
+</ul>
+
+
+<p>I have chosen these languages because as I said, they are common scripting languages, often used in web development. And I am looking to expand my repetoire. Learning a new language not only teaches the symantics of the language, but programming methods, structures and paradigms that can be implemented in any language.</p>
+
+<p>With that in mind, I have decided to look at Ruby (at least for now).</p>
+
+<p>Deciding to do web development with Ruby invariably leads to <a href="http://rubyonrails.org/">Ruby on Rails</a>. Not wanting to get (too) caught up in the hype, I decided to have a look at the raw language first. So, I had a read through the quite unusual (have a look and see) <a href="http://poignantguide.net/ruby/">Why&#8217;s (Poignant) Guide to Ruby</a>. After sifting through this odd compilation to find the actual useful content (The humour &#8211; cartoons, stories and the like &#8211; throughout the book make it an interesting read, but maybe not the best reference manual) I had an overview of Ruby and liked what I saw.</p>
+
+<p>After some initial playing around, reading up on the &#8220;raw&#8221; way of developing web sites in Ruby (raw text and with cgi extensions) I did end up installing rails.</p>
+
+<p>I have experimented briefly with rails in the past, previously though, I had not bothered to learn anything at all about Ruby as a language. So, while the basic functionality of rails, the model/view/controller scaffolding was really impressive (it still is), if I wanted to do anything more adventurous, or if something broke, I was lost.</p>
+
+<p>I am hoping that with a slightly better understanding of Ruby (and a willingness to learn the language this time) I will have more success with rails. If it doesn&#8217;t work for me… I&#8217;ll try somethign else.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -195,110 +253,6 @@ Hope everyone has a safe and happy Christmas!</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2006/12/22/openvpn-the-super-ssh-tunnel/">OpenVPN, the Super SSH Tunnel</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2006-12-22T04:30:16+10:00" pubdate data-updated="true">Dec 22<span>nd</span>, 2006</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have long marvelled at the ability of ssh to tunnel connections, and regularly use this feature to give myself access to services behind firewalls, in offices, far far away… As such, In spite of the seeming ubiquity of the concept, I have never seen the benifit of a VPN. But recently, after discovering <a href="http://openvpn.net/">OpenVPN</a> set up on one of the servers at work (One for which I&#8217;m not the primary admin).</p>
-
-<p>I looked through the configuration and it looked significantly simpler than I had anticipated. So I took it upon myself to join my home network with that of the one in the office (Why?… Why not?)</p>
-
-<p>It was fairly simple, after reading through and following the tips in the official <a href="http://openvpn.net/howto.html">How-To</a> I had a basic VPN connection with a shared key for encryption.</p>
-
-<p>On my local box, the configuration looked like:</p>
-
-<p>/etc/openvpn/tunnel.conf</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>dev tun
-</span><span class='line'>remote my.office.domain
-</span><span class='line'>float
-</span><span class='line'>ifconfig 10.0.0.2 10.0.0.1
-</span><span class='line'>secret .keys/office.key
-</span><span class='line'>verb 3
-</span><span class='line'>ping 30
-</span><span class='line'>route 192.168.0.0 255.255.255.0</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And on the box in the back room at work:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>dev tun
-</span><span class='line'>remote everyone-here.is-a-geek.com
-</span><span class='line'>float
-</span><span class='line'>ifconfig 10.0.0.1 10.0.0.2
-</span><span class='line'>secret .keys/brenton.key
-</span><span class='line'>verb 3
-</span><span class='line'>ping 30</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Note: Both are class C networks, My home IP range is 192.168.1.xxx and the one at work is 192.168.0.xxx This makes life easier, because the networks don&#8217;t overlap, otherwise I believe some form of NAT would be required. Once the Tunnels are set up and both services are started</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/etc/init.d/openvpn start</span></code></pre></td></tr></table></div></figure>
-
-
-<p>the machines should be able to ping each other across the VPN</p>
-
-<p>From work:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ping 10.0.0.2
-</span><span class='line'>PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.
-</span><span class='line'>64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=45.0 ms
-</span><span class='line'>64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=28.4 ms
-</span><span class='line'>…</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This configuration even adds and tears down the routing rule (only set up on my local machine at the moment) that forward traffic to the &#8220;other&#8221; network through the tunnel (The &#8220;route&#8221; line in my configuration). Unfortunately, because these machines are not the default gateways for their networks, some configuration on the gateway may be required to get them to forward everyone&#8217;s traffic (not just that originating from the connected systems) through the tunnel. I&#8217;ll post it when I figure it out. OR if anyone knows, please comment!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/16/">&larr; Older</a>
@@ -316,6 +270,10 @@ Hope everyone has a safe and happy Christmas!</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
@@ -329,10 +287,6 @@ Hope everyone has a safe and happy Christmas!</p>
     
       <li class="post">
         <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
       </li>
     
   </ul>

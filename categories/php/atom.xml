@@ -4,7 +4,7 @@
   <title><![CDATA[Category: PHP | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/php/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-03-29T01:22:45+10:00</updated>
+  <updated>2013-05-08T17:08:36+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA["PHP Web Services" by Lorna Mitchell]]></title>
+    <link href="http://blog.tekerson.com/2013/05/08/php-web-services-by-lorna-mitchell/"/>
+    <updated>2013-05-08T16:40:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/05/08/php-web-services-by-lorna-mitchell</id>
+    <content type="html"><![CDATA[<h2>Introduction</h2>
+
+<p>I recently grabbed the pre-print release of Lorna Jane Mitchell's new book "PHP Web Services: APIs for the Modern Web", now available in Print and Ebook formats <a href="http://shop.oreilly.com/product/0636920028291.do">through O'Reilly</a>. APIs are such an integral part of modern web application development. Lorna herself specialises in API development and integration, rarely working on anything that could be called front-end.</p>
+
+<p>Every system I have worked on recently has been heavily API based. With the current trend in single-page JavaScript web applications and client-side MV*, the server is being relegated more and more to the role of data provider through custom APIs.</p>
+
+<h2>Content</h2>
+
+<p>In the preface, Lorna enumerates many scenarios in which building APIs is a prudent strategy and why PHP is a pragmatic way to "solve the web problem"; being built with the web in mind from the beginning it comes with many useful tools for delivering and consuming web services built in.</p>
+
+<p>With this introduction (as well as the usual typographical conventions) out of the way, we are thrown straight into the nuts-and-bolts of the basics of HTTP request/response and how the browser/web server is analogous to the API consumer/provider we will be building. A very practical and useful part of the chapter is the introduction to a number of tools and techniques for making and inspecting requests against HTTP servers, I have personally used the section on Curl as a reference a number of times already.</p>
+
+<p>No introduction to HTTP, especially as a platform for APIs, would be complete without an explanation of the HTTP verbs and this book doesn't disappoint, with a thorough explanation of the common verbs and PHP code examples of their usage. Delving deeper into the HTTP protocol, we find a much more comprehensive look at request and response headers, a look at a number of common headers and a detailed look at the very important, but in my experience - underutilised, <code>Accept</code> header for content negotiation, including example code to parse it correctly taking into accounts the weighting of the preferences. This is great low level information for building a flexible API service.</p>
+
+<p>A chapter each is given to XML and JSON data formats, the advantages and disadvantages of each. Asking the question, "which format is superior?" (Hint: it depends); Some useful guidelines regarding the scenarios in which each format may be an appropriate choice are provided. There are, of course, code snippets showing how to work with each format.</p>
+
+<p>The chapter on RPC and SOAP provides a substantial look into these styles of services with examples of real-world APIs, snippets to create and consume them and tools to make working with them more friendly. In spite of the book appearing somewhat biased towards REST style services (or maybe that's just me), this chapter is full of great information and tips for REST and SOAP style services, but if this is your primary interest there are probably better books.</p>
+
+<p>The REST chapter brings together many of the concepts explored in the previous chapters about HTTP, verbs, headers, URLs and data formats to describe REST services in a useful, accurate and fairly succinct way. Thorough explanations of how to implement the standard CRUD operations so fundamental to REST are provided. Special mention is also given to hypermedia and content negotiation/media types, which are important aspects of "pure" REST services. Ever pragmatic, the chapter concludes with a section reminding readers to remember not to be caught up in the "trendy", and that it is more important for an API to be "useful" than it is to be "RESTful".</p>
+
+<p>The debugging chapter looks into what to do when it all goes wrong. As APIs are generally hidden behind the actual application interface the techniques for debugging them can be a bit different. Lorna introduces a couple of tools for inspecting the requests and responses on the wire to allow the tracking of anomalies without interrupting the data flow and breaking request/response formats.</p>
+
+<p>Towards the end of the book, we step away from the code for a couple of chapters and discuss the design decisions based on the options provided earlier in the book. Including chapters discussing robust, predictable, user/developer friendly APIs, handling errors and writing documentation.</p>
+
+<h2>Conclusion &amp; Recommendations</h2>
+
+<p>That was longer than I intended, but I see that as testament to the breadth of information contained within the seemingly modest tome, every chapter has something. Weighing in at a little over 100 pages "PHP Web Services" provides a great foundation to the practicalities of using PHP to build modern web services.</p>
+
+<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn't dive deep enough for the seasoned professions. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
+
+<p>All in all, I think the book provides a solid overview of many of the considerations of web service development and would be a great guide to anyone venturing into building such services in PHP.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework]]></title>
@@ -390,49 +429,6 @@ We'll stop here for now. In the next post, we'll start looking at creating our f
 
 <p>2009-06-26
 Updated for ZF Version 1.8.4</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PHP Quebec Wrap-up from a Conference Newb]]></title>
-    <link href="http://blog.tekerson.com/2009/03/11/php-quebec-wrap-up-from-a-conference-newb/"/>
-    <updated>2009-03-11T21:02:09+10:00</updated>
-    <id>http://blog.tekerson.com/2009/03/11/php-quebec-wrap-up-from-a-conference-newb</id>
-    <content type="html"><![CDATA[<p>As I am in Canada for only 3 more weeks, and we don't get too many PHP conferences in Brisbane, I took the opportunity to attended my first ever PHP conference. I thought I would share my thoughts, and maybe those more experienced can help me do it "better" next time.</p>
-
-<p>After flying across the country we checked into the hotel, the Hilton Bonaventure in Montreal. The front desk apparently didn't know we were there for the conference because we didn't "book with the others". I'm not sure what that means, or what difference it would have made? The hotel offered free wireless in the foyer and conference halls, but not in the rooms. Luckily, we were close enough to the foyer to access their wireless from our room (once I sorted out some driver issues on my laptop).</p>
-
-<h2>Day 1</h2>
-
-<p>After missing most of the openning keynote on the first day in favour of eating (I didn't know breakfast would be available) I jumped into the sessions. Starting with <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O'Phinney's</a> <a href="http://conf.phpquebec.com/en/session#practical_zend_framework_jutsu_with_dojo">Practical Zend Framework Jutsu with Dojo</a>, which provided a practical overview to an area of the Zend Framework I have been planning on investigating, but haven't yet got round to. This was followed up by <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall's</a> explaining their process of <a href="http://conf.phpquebec.com/en/session#building_ria_application_in_php">Building RIA Application in PHP</a>. This wasn't a talk I intended to attend (Sara Goleman's talk was scheduled for this time, but was unable to attend due to illness) but it was interesting to see the differences in building a PHP application without a HTML front end.<a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall"></a></p>
-
-<p>After lunch, <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethan's</a> looked into search and indexing. <a href="http://conf.phpquebec.com/en/session#of_haystacks_and_needles">Of Haystacks and Needles</a>, introduced MySQL full text, Selenium and Solr. While I have used Selenium, Solr seems like a useful step up for systems with higher requirements. The afternoon sessions were <a href="http://conf.phpquebec.com/en/session#a_tour_of_mysql_high_availability">A tour of MySQL High Availability</a> by <a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a>, which talked about the difference between scaling for performance and scaling for HA, and techniques for the latter, for me there wasn't much I hadn't used before, but some of the monitoring tools warrant further research. <a href="http://conf.phpquebec.com/en/session#stupid_browser_tricks">Stupid Browser Tricks</a> by <a href="http://conf.phpquebec.com/en/conferencier#sean_coates">Sean Coates</a>, was in a similar boat. It was a good introduction to some useful browser side tools (Firebug, YSlow! and Selenium IDE) but I had hoped for a deeper look into Selenium. Isn't everyone using firebug by now? FirePHP is a nice addition though.</p>
-
-<h2>Day 2</h2>
-
-<p>Day 2 started with a quick breakfast (I'm a fast learner ;)), then the <a href="http://conf.phpquebec.com/en/session#php_code_review">PHP Code Review Part #1</a>, with <a href="http://conf.phpquebec.com/en/conferencier#sebastian_bergmann">Sebastian Bergmann</a> and <a href="http://conf.phpquebec.com/en/conferencier#stefan_priebsch">Stefan Priebsch</a> delving into some not particularly pretty examples of code from well known PHP applications such as Wordpress. It's reassuring to know other people write and release bad code too :) I didn't attend Part #2 of the session, where they took code samples from the audience and critiqued them. Instead I opted to drop in on <a href="http://conf.phpquebec.com/en/conferencier#chris_hartjes">Chris Hartjes</a> expaining why <a href="http://conf.phpquebec.com/en/session#deployment_is_not_a_4_letter_word">Deployment Is Not A 4 Letter Word</a> and that with some planning and appropriate tools, in your absence even the sysadmin should be able to deploy your application with confidence.</p>
-
-<p>The pre-lunch keynote was <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall</a> again discussing RIA in <a href="http://conf.phpquebec.com/en/session#beyond_the_browser">Beyond the Browser</a>. Is the browser dead? Not yet, but it certainly has some growing competition. After a break, I listened to <a href="http://conf.phpquebec.com/en/conferencier#ilia_alshanetsky">Ilia Alshanetsky</a> talk about <a href="http://conf.phpquebec.com/en/session#premature_optimization_mistakes">Premature Optimization Mistakes</a>, focusing on optimising the server stack itself before delving into application level optimisation. Arguing it usually provides more results without the risk of breaking the application. <a href="http://conf.phpquebec.com/en/session#php_for_the_enterprise">PHP for the Enterprise</a> then examined how PHP has reached a level where it is suitable for projects that were once considered the realm of "real" programming languages. Most of the talk discussed more technical details of scaling PHP to an enterprise level, such as database buffer sizes, performance monitoring and caching at various levels.</p>
-
-<p>The day ended with the career fair which saw a number of, primarily local, employers (including the armed forces?) set up booths and discuss their work and employment with the potential candidates at the conference. While I wasn't actively seeking employment, I did have a chat with some of the representatives. Given the location of the conference, it wasn't too big a surprise that the majority were bilingual and in some cases French only offices.</p>
-
-<h2>Day 3</h2>
-
-<p>My final day of the conference started with <a href="http://conf.phpquebec.com/en/conferencier#owen_byrne">Owen Byrne</a> discussing <a href="http://conf.phpquebec.com/en/session#growing_a_development_team_while_building_a_huge_app_at_500_miles/hour">Growing a Development Team While Building a Huge App at 500 miles/hour</a>; which I attended, hoping to garner an insight into building a team and managing agile development on a large project. While the project was an interesting one, Owen seemed to be more interested in giving out t-shirts and I didn't feel we got very deep into the whole process. Being a fairly heavy user and fan of Zend Framework, I joined <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O'Phinney</a> in his search for some of <a href="http://conf.phpquebec.com/en/session#zf">Zend Framework's Little Known Gems</a>. The talk was targeted at using the components in isolation and I discovered a number of components that may come in handy in future projects, with or without the MVC stack.</p>
-
-<p><a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a> then talked further about MySQL, this time focusing on performance as opposed to high availability. There were a few points about the inner working of the InnoDB storage engine that got my attention, including some builds available from Percona we may need to look at.</p>
-
-<p>The round-table <a href="http://conf.phpquebec.com/en/session#framework">Framework Comparison</a>, featuring <a href="http://conf.phpquebec.com/en/conferencier#fabien_potencier">Fabien Potencier</a> (Symfony) <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethans</a> (ezComponents) and <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O'Phinney</a> (Zend Framework) seemed to indicate that all 3 frameworks solve much the same problem, they even went as far as agreeing you should use components from the other frameworks when your primary framework doesn't include one. Much different to the "my framework is better" "discussions" we too often see.</p>
-
-<p>Finally, <a href="http://conf.phpquebec.com/en/conferencier#chris_shiflett">Chris Shiflett</a> addressed <a href="http://conf.phpquebec.com/en/session#security-centered_design__dont_just_plan_for_security_design_for_it">Security-Centered Design: Don't Just Plan for Security; Design For It</a> provided an alternative look at some interesting security topics. Instead of focusing on technical details, he primarly focused on security from a user perspective as "user perception is as important as reality". Giving examples of various recent attacks on high profile sites that, while not actually the fault of the site, would be perceived as such by most users. He also put forward ideas about using "ambient signifiers" to assist in the fight against phishing, and how the normal (request-reload) web model can mean important information is missed due to "change blindness" including a live demonstration. He suggesting AJAX might be a suitable solution in this case (as long as it's still accessible of course).</p>
-
-<h2>Conclusions</h2>
-
-<p>All-in-all the conference was a great experience, the hotel was really nice (especially compared to some of the hostels where I usually slum on my travels) and the talks were wide ranging and generally well presented.</p>
-
-<p>Some of the material I found too "introductory", but I think that may be because I primarily attended sessions on topics I am familiar with hoping to learn more, whereas using the talks as introductions to new topics might have been a better idea. How do people usually select talks?</p>
-
-<p>I also didn't attend much in the way of "extra-conference" activities; social events outside of the conference schedule. I am a little disappointed about this, as it would have been good to chat to some members of the community in a less formal setting, so this is something I think I would do much more of next time. And there will be a next time.</p>
 ]]></content>
   </entry>
   

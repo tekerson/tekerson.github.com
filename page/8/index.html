@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Well, I finally bought myself a domain. You can now find me at my new home on the web: blog.tekerson.com (Not that you get a choice in the matter, &hellip;">
+  <meta name="description" content="Sixty Second Tech is a (relatively) new podcast by prominent Zender Cal Evans that promises to be the &#8220;Cure to BSS&#8221; Sixty Second Tech is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/05/04/sixty-second-tech/">Sixty Second Tech</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-05-04T21:48:27+10:00" pubdate data-updated="true">May 4<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://www.sixtysecondtech.com">Sixty Second Tech</a> is a (relatively) new podcast by prominent Zender <a href="http://blog.calevans.com/">Cal Evans</a> that promises to be the &#8220;Cure to BSS&#8221;</p>
+
+<blockquote><p>Sixty Second Tech is the only known cure for â€œBlank Stare Syndromeâ€ (BSS). BSS happens when one of your technical friends starts talking to you and unconsciously slips into geek speak. They don&#8217;t realize they&#8217;ve triggered BSS until long after your eyes glaze over. BSS is an embarrassing condition but a curable one, just spend one minute a week listening to Sixty Second Tech.</p></blockquote>
+
+<p>While I am definitely on the side of the &#8220;technical friends&#8221;, the short podcasts &#8211; almost exactly 1 minute each, quite impressive &#8211; are a great way to provoke thought about aspects of technology that may not otherwise have been brought to the fore, but probably should be; such as <a href="http://www.sixtysecondtech.com/2008/03/02/the-secret-to-cheap-and-easy-websites/">Wordpress as a CMS</a>, <a href="http://www.sixtysecondtech.com/2008/03/31/openid-and-you/">OpenID</a> and <a href="http://www.sixtysecondtech.com/2008/03/24/do-you-know-what-they-are-saying-about-you/">Google Alerts</a>
+But, my favourite is pointing anyone who speaks to me about &#8220;SEO&#8221; to the episode &#8221;<a href="http://www.sixtysecondtech.com/2008/03/10/go-relevant-or-go-home/">Go Relevant or Go Home!</a>&#8221;; which sums up very succinctly the folly of the whole practice.</p>
+
+<p>His name is Cal Evans, and he is my sixty second tech.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -153,76 +196,6 @@ That is all!</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/04/08/using-a-mysql-table-as-a-thread-safe-queue/">Using a MySQL Table as a Thread-safe Queue</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-04-08T20:56:50+10:00" pubdate data-updated="true">Apr 8<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As part of the current application I am developing, I have the need for a reliable queue that is not going to allow duplicate reads when <em>popped</em> from multiple threads or processes.</p>
-
-<p>The queue in this case is an outgoing mail queue. The system needs to read the task from the queue, generate the email by substituting in the member&#8217;s details, and then send it to the mail server.</p>
-
-<p>When reading the queue with only 1 process, it is easy &#8211; read the queue, process the email, delete the queue entry, repeat. Concurrency adds the problem that 2 (or more) processes could read the same email, and we really <strong>don&#8217;t</strong> want an email going to a member 2 or 3 times.</p>
-
-<p>My first solution involved a single &#8220;master&#8221; thread that would read the queue and delegate the processing to worker threads. While this worked, it was complicated and error prone. After some discussion with some people on <a href="irc://irc.freenode.net/#mysql">#mysql on freenode</a>. I found what should be a suitable database level method.</p>
-
-<p>By selecting the queue entry with the <em>FOR UPDATE</em> modifier, the row is placed under an exclusive lock &#8211; the same lock used when a row is being updated, and won&#8217;t be allowed to be read until it is updated  (N.B. only works when using the INNODB storage engine)</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>
-</span><span class='line'>SELECT id, task FROM queue WHERE processing = 0 FOR UPDATE;
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The process now has a lock on that row, and it won&#8217;t be read by any others. It can then be updated to mark it as &#8220;being processed&#8221; or deleted from the queue, depending on your needs.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>
-</span><span class='line'>UPDATE queue SET processing = 1 WHERE id = :id;
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>With the queue entry safely belonging to the thread, it can now take as long as it needs to process. By keeping the time between the SELECT…FOR UPDATE and UPDATE to a minimum the throughput should be increased significantly from the original non-concurrent solution.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/9/">&larr; Older</a>
@@ -240,6 +213,10 @@ That is all!</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
@@ -253,10 +230,6 @@ That is all!</p>
     
       <li class="post">
         <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a>
       </li>
     
   </ul>
