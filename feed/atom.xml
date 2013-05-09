@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-05-08T17:12:44+10:00</updated>
+  <updated>2013-05-09T15:44:17+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -46,7 +46,7 @@
 
 <p>That was longer than I intended, but I see that as testament to the breadth of information contained within the seemingly modest tome, every chapter has something. Weighing in at a little over 100 pages &#8220;PHP Web Services&#8221; provides a great foundation to the practicalities of using PHP to build modern web services.</p>
 
-<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn&#8217;t dive deep enough for the seasoned professions. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
+<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn&#8217;t dive deep enough for the seasoned professionals. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
 
 <p>All in all, I think the book provides a solid overview of many of the considerations of web service development and would be a great guide to anyone venturing into building such services in PHP.</p>
 ]]></content>
