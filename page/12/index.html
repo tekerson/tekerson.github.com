@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I noticed today that my example subdomain, where my online code examples are (currently only my YUI example) served from was down. Probably since my &hellip;">
+  <meta name="description" content="I intend to do a write-up of my experiences choosing a PHP framework, but for now, I just thought I would share this. One of the out-of-the-box &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,286 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/06/26/extending-zend-frameworks-viewrenderer-helper-to-allow-application-and-controller-page-layouts/">Extending Zend Framework&#8217;s ViewRenderer Helper to Allow Application and Controller Page Layouts</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-06-26T11:48:17+10:00" pubdate data-updated="true">Jun 26<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I intend to do a write-up of my experiences choosing a PHP framework, but for now, I just thought I would share this.</p>
+
+<p>One of the out-of-the-box features that the <a href="http://framework.zend.com/">Zend Framework</a> is missing is &#8220;layouts&#8221;. These are the templates that contain the elements that are present on every (or at least almost every) page of the application. Things like headers, main menu&#8217;s, footers etc.</p>
+
+<p>I looked at a number of different ways to implement this in Zend, the most obvious idea involves adding header and footer calls (possible a helper) in every view. While this will work, it is a lot of duplicated code.</p>
+
+<p><a href="http://blog.astrumfutura.com/archives/291-Complex-Views-with-the-Zend-Framework-Part-6-Setting-The-Terminology.html">Maugrim the Reaper&#8217;s blog</a> contains a fairly comprehensive investigation (in 6 parts so far, the 7th hopefully coming soon) into &#8220;Complex Views&#8221;. Unfortunately, there is not (as yet) any solid implementation of most of the concepts available there, but it does provide much to think about.</p>
+
+<p>The most elegant implementation (IMHO) of a layout system to meet my needs that I have found (and believe me I&#8217;ve looked) comes from <a href="http://akrabat.com/2007/06/02/extending-viewrenderer-to-support-layout-templates/">Akra&#8217;s Devnotes</a> and involves extending the ViewRenderer <a href="http://framework.zend.com/manual/en/zend.controller.actionhelpers.html">Action Helper</a> to render the layout template.</p>
+
+<p>This works very similarly to my initial stab at an implementation, but does so in a much cleaner way (I initially had separate top and bottom templates, instead of the call to render the content in the layout). However, it does lack one feature that my implementation had, it only allows <em>application level</em> layouts. I also implemented <em>controller level</em> layouts; A 3-level view structure.</p>
+
+<p>This allows the controllers to contain their own structure within the applications main structure. I extended Rob&#8217;s class (as in added to, not in the OO sense) to incorporate this 3-level view structure.</p>
+
+<p>My current code looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>    
+</span><span class='line'>    
+</span><span class='line'>    &lt;?php
+</span><span class='line'>    class Custom_Controller_Action_Helper_ViewRenderer extends Zend_Controller_Action_Helper_ViewRenderer
+</span><span class='line'>    {
+</span><span class='line'>        /**
+</span><span class='line'>         * Name of layout script to render. Defaults to 'layout'.
+</span><span class='line'>         *
+</span><span class='line'>         * @var string
+</span><span class='line'>         */
+</span><span class='line'>        protected $_layoutScript = 'layout.tpl.php';
+</span><span class='line'>        
+</span><span class='line'>        
+</span><span class='line'>        /**
+</span><span class='line'>         * Constructor
+</span><span class='line'>         *
+</span><span class='line'>         * Set the viewSuffix to "tpl.php" unless a viewSuffix option is 
+</span><span class='line'>         * provided in the $options parameter.
+</span><span class='line'>         * 
+</span><span class='line'>         * @param  Zend_View_Interface $view 
+</span><span class='line'>         * @param  array $options 
+</span><span class='line'>         * @return void
+</span><span class='line'>         */
+</span><span class='line'>        public function __construct(Zend_View_Interface $view = null, 
+</span><span class='line'>                                    array $options = array())
+</span><span class='line'>        {
+</span><span class='line'>            if (!isset($options['viewSuffix'])) {
+</span><span class='line'>                $options['viewSuffix'] = 'tpl.php';
+</span><span class='line'>            }
+</span><span class='line'>            parent::__construct($view, $options);
+</span><span class='line'>        }
+</span><span class='line'>        
+</span><span class='line'>        /**
+</span><span class='line'>         * Set the layout script to be rendered.
+</span><span class='line'>         *
+</span><span class='line'>         * @param string $script
+</span><span class='line'>         */
+</span><span class='line'>        public function setLayoutScript($script)
+</span><span class='line'>        {
+</span><span class='line'>            $this-&gt;_layoutScript = $script;
+</span><span class='line'>        }
+</span><span class='line'>        
+</span><span class='line'>        /**
+</span><span class='line'>         * Retreive the name of the layout script to be rendered.
+</span><span class='line'>         *
+</span><span class='line'>         * @return string
+</span><span class='line'>         */
+</span><span class='line'>        public function getLayoutScript()
+</span><span class='line'>        {
+</span><span class='line'>            return $this-&gt;_layoutScript;
+</span><span class='line'>        }
+</span><span class='line'>        
+</span><span class='line'>        /**
+</span><span class='line'>         * Render the action script and assign the the view for use
+</span><span class='line'>         * in the layout script. Render the layout script and append
+</span><span class='line'>         * to the Response's body.
+</span><span class='line'>         *
+</span><span class='line'>         * @param string $script
+</span><span class='line'>         * @param string $name
+</span><span class='line'>         */
+</span><span class='line'>        public function renderScript($script, $name = null)
+</span><span class='line'>        {
+</span><span class='line'>            $this-&gt;view-&gt;baseUrl = $this-&gt;_request-&gt;getBaseUrl();
+</span><span class='line'>            if (null === $name) {
+</span><span class='line'>                $name = $this-&gt;getResponseSegment();
+</span><span class='line'>            }
+</span><span class='line'>    
+</span><span class='line'>            //assign controller script name to view
+</span><span class='line'>            $this-&gt;view-&gt;controllerScript = $this-&gt;_translateSpec(':controller/' . $this-&gt;_layoutScript);
+</span><span class='line'>            
+</span><span class='line'>            // assign action script name to view.
+</span><span class='line'>            $this-&gt;view-&gt;actionScript = $script;
+</span><span class='line'>            
+</span><span class='line'>            // render layout script and append to Response's body
+</span><span class='line'>            $layoutScript = $this-&gt;getLayoutScript();        
+</span><span class='line'>            $layoutContent = $this-&gt;view-&gt;render($layoutScript);
+</span><span class='line'>            $this-&gt;getResponse()-&gt;appendBody($layoutContent, $name);
+</span><span class='line'>            
+</span><span class='line'>            $this-&gt;setNoRender();
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As an example of its use:</p>
+
+<p>The Application Layout (views/scripts/layout.tpl.php) looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+</span><span class='line'>"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>&lt;head&gt;
+</span><span class='line'>  &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+</span><span class='line'>  &lt;title&gt;&lt;?php echo (isset($this-&gt;title)) ? $this-&gt;escape($this-&gt;title) : 'Untitled'; ?&gt;&lt;/title&gt;
+</span><span class='line'>&lt;/head&gt;
+</span><span class='line'>    &lt;body&gt;
+</span><span class='line'>        &lt;?php echo $this-&gt;render($this-&gt;controllerScript); ?&gt;
+</span><span class='line'>    &lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The Controller (for the default &#8220;index&#8221; controller) layout (views/scripts/index/layout.tpl.php) looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;Default Controller&lt;/h1&gt;
+</span><span class='line'>&lt;h2&gt;&lt;?php echo $this-&gt;escape($this-&gt;title); ?&gt;&lt;/h2&gt;
+</span><span class='line'>&lt;?php echo $this-&gt;render($this-&gt;actionScript); ?&gt;
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that of course leaves the action&#8217;s view to only display the items specific to that action.</p>
+
+<p>UPDATE:
+This code is broken. During some debugging, I discovered that this method of calling the render function from the view causes the action function to be run twice. It also prevents the action function (or view) from manipulating variables that can be used by the layout script, so preventing things like the action requesting javascript or stylesheet includes in the html head section.</p>
+
+<p>I have re-worked the script to overcome these problems, and will post it soon.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -200,100 +480,6 @@ When you are running a pure linux system, this isn&#8217;t a useful option. This
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/04/29/automated-incremental-backups-with-rsync/">Automated Incremental Backups With Rsync</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-04-29T01:28:37+10:00" pubdate data-updated="true">Apr 29<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When I <a href="/2007/04/23/configuring-software-raid-with-mdadm/">installed my software RAID array</a>, I was a little unsure of stability, mainly because I&#8217;ve never configured RAID before, not because the software is unstable. So as a precaution, I decided to create a backup scheme (which I should have had anyway).</p>
-
-<p>Using some tools found on almost every Linux system, &#8220;rsync&#8221; and &#8220;cp&#8221;, I wrote a script, to create incremental backups of my /home directory.</p>
-
-<p>My code looks like this:</p>
-
-<p>/usr/local/sbin/backup.sh
- `</p>
-
-<h1>!/bin/sh</h1>
-
-<p>SRC_DIR=/home
-BACKUP_DIR=/backup
-BACKUPS=14</p>
-
-<h1>Delete the oldest backup</h1>
-
-<p>if [ -d ${BACKUP_DIR}${SRC_DIR}.${BACKUPS} ]
-then</p>
-
-<pre><code>    rm -rf ${BACKUP_DIR}${SRC_DIR}.${BACKUPS}
-</code></pre>
-
-<p>fi
-SRC=0
-for i in <code>seq ${BACKUPS} -1 2</code>
-do</p>
-
-<pre><code>    let SRC=$i-1
-    if [ -d ${BACKUP_DIR}${SRC_DIR}.${SRC} ]
-    then
-            mv ${BACKUP_DIR}${SRC_DIR}.${SRC} ${BACKUP_DIR}${SRC_DIR}.${i}
-    fi
-</code></pre>
-
-<p>done
-if [ -d ${BACKUP_DIR}${SRC_DIR}.0 ]
-then</p>
-
-<pre><code>    cp -al ${BACKUP_DIR}${SRC_DIR}.0 ${BACKUP_DIR}${SRC_DIR}.1
-</code></pre>
-
-<p>fi
-rsync -a &#8211;update &#8211;delete ${SRC_DIR}/ ${BACKUP_DIR}${SRC_DIR}.0
-touch ${BACKUP_DIR}${SRC_DIR}.0</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>It incrementally backs up the entire /home directory to /backup, by placing it in my crontab:</span></code></pre></td></tr></table></div></figure>
-
-
-<p>@daily /usr/local/sbin/backup.sh
-&#8220;`
-I can, without intervention, maintain 2 weeks worth of backups.</p>
-
-<p>Since this is basically a single user system, and the backups are only meant to protect against my stupidity, I haven&#8217;t gone to the trouble of making the backups read-only. But this would certainly be an improvement to the system. A couple of solutions are discussed in <a href="http://gja.space4me.com/things/Backups_With_Rsync.html">the article</a> that my script is based on. Mine only backs up to a different directory (which is mounted on a different drive), not to a separate system/location (although, this is a good idea if possible).</p>
-
-<p>As a side note, I haven&#8217;t had any trouble with the RAID, but backups are still reassuring.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/13/">&larr; Older</a>
@@ -311,6 +497,10 @@ I can, without intervention, maintain 2 weeks worth of backups.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
       </li>
     
@@ -324,10 +514,6 @@ I can, without intervention, maintain 2 weeks worth of backups.</p>
     
       <li class="post">
         <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
       </li>
     
   </ul>

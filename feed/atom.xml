@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-05-09T15:44:17+10:00</updated>
+  <updated>2013-05-28T18:03:23+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,36 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Share tmux Windows Across Sessions]]></title>
+    <link href="http://blog.tekerson.com/2013/05/28/share-tmux-windows-across-sessions/"/>
+    <updated>2013-05-28T16:01:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/05/28/share-tmux-windows-across-sessions</id>
+    <content type="html"><![CDATA[<p>When working in a terminal (the vast majority of the time) I run the terminal multiplexer <a href="http://tmux.sourceforge.net/">tmux</a>, with one session for each project I am currently working on. I like to have a window for my IRC client in every session, so I can keep an eye on it. The best way to do this is to share the tmux window across multiple tmux sessions.</p>
+
+<p>To perform this setup, we can create a new session for &#8220;shared&#8221; applications, opening irssi in a window named &#8220;irc&#8221;. Either manually create the windows and open the applications in them, or, if you&#8217;re lazy and use the same setup regularly. Script it, something like so:</p>
+
+<pre><code>tmux new-session -s shared "tmux new-window -n irc irssi"
+</code></pre>
+
+<p>You can use the automatically-assigned window names, but since I&#8217;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
+
+<p>Once the applications are running, we can link the windows to the working session using tmux&#8217;s <code>link-window</code> command, which has the basic form:</p>
+
+<pre><code>tmux link-window -s &lt;src-window&gt; -t &lt;dst-window&gt;
+</code></pre>
+
+<p>Any time a tmux command requires a reference to a window, we can provide an absolute reference to any window in any session using the <code>session:window</code> format where <code>session</code> is the name of the session and <code>window</code> is the name (or number) of the window in that session.</p>
+
+<p>Using this, we can use the <code>link-window</code> our &#8220;shared:irc&#8221; window to index &#8220;9&#8221; in the current session. Which looks like:</p>
+
+<pre><code>tmux link-window -s shared:irc -t 9
+</code></pre>
+
+<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&#8217;t get in the way of my &#8220;real work&#8221;.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA["PHP Web Services" by Lorna Mitchell]]></title>
@@ -1538,50 +1568,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 <p>Simple! I don&#8217;t know how it compares speed wise with other methods, but it seems simple and effective and I can&#8217;t imagine it&#8217;s terribly slow unless your strings get larger.</p>
 
 <p>I&#8217;m also not sure how it would handle multi-byte characters. But I don&#8217;t <strong>think</strong> it would be a problem if it doesn&#8217;t. Anyone got any insight?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[An Attempt at Restricted Auto-Login]]></title>
-    <link href="http://blog.tekerson.com/2008/07/05/an-attempt-at-restricted-auto-login/"/>
-    <updated>2008-07-05T02:33:18+10:00</updated>
-    <id>http://blog.tekerson.com/2008/07/05/an-attempt-at-restricted-auto-login</id>
-    <content type="html"><![CDATA[<p>The system I have been building is a direct marketing system (don&#8217;t hate me, it&#8217;s opt-in) and to be compliant with their ethics policy it requires &#8220;2 click unsubscribe&#8221; functionality from all its email campaigns; 1 click on the link in the email, and 1 click on a big &#8220;Don&#8217;t Ever Send Me Email Again&#8221; button. So people actually have an option to opt out at any time, as any good (and I use that word in the relative sense) email marketing system should.</p>
-
-<p>The problem this poses for me though, is how can I let a member unsubscribe without authenticating themselves? Authentication would take more than 2 clicks! The obvious solution is to not require authentication by simply adding the members identifier (email address, user name, database id, whatever can identify them uniquely) to the link. So I would have a URL something like:</p>
-
-<pre><code>http://example.com/member/unsubscribe?member=1234
-</code></pre>
-
-<p>And simply make all the options on that page act on the member identified by the identifier. Great! Until a malicious netizen comes along, seeing the scheme decides to systematically unsubscribe all my members. This would be achieved easily by guessing the identifiers, made even easier because they&#8217;re sequential, and clicking the unsubscribe button.</p>
-
-<p>The initial solution is to use some other &#8220;key&#8221; in the link, one that is not so easy to guess. So a key was added, giving the url a form like:</p>
-
-<pre><code>http://example.com/member/unsubscribe?member=1234&amp;key=SECRETKEY
-</code></pre>
-
-<p>Were SECRETKEY is a key they is generated randomly when the user signs up and stored with their account details. Using this, the system would allow a user to log in simply by clicking the link, they could then unsubscribe.</p>
-
-<p>The problem being, of course, that by simply logging the user into their account anyone who has the link has full access to the account without needing to know any more information. So they could then read (and change) email addresses, passwords etc. Not ideal.</p>
-
-<p>My solution has been to take the key a step further, and limit it to only the intended page. In this case the unsubscribe page. So my new url looks like this:</p>
-
-<pre><code>http://example.com/member/unsubscribe?token=1234:HASH
-</code></pre>
-
-<p>I&#8217;ve removed the member variable and combined it into a delimited token. This was mainly because I thought it looked a little nicer, it would function just as well as a separate variable. The real change is in the HASH. The new hash still uses the SECRETKEY that was used in the previous iteration, except it is now combined with the url that I want to give them access to, and an added salt so all tokens can be invalidated if required. In PHP, this looks something like this:</p>
-
-<pre><code>&lt;code&gt;$allowedUrl = '/member/unsubscribe';
-$hash = md5($salt . $allowedUrl . ':' . $secretKey);
-$token = $id . ':' . $hash;
-&lt;/code&gt;
-</code></pre>
-
-<p>On the page, to allow access, the token is decomposed, the member&#8217;s identifier extracted, and their key retrieved. Their key is then used in the same process to generate a hash for the URL they are requesting. If the hashes match, they have access. To make it a little more user friendly, the allowed URL is added to their session, so they still have access to the page even if they lose the token from the URL. If they hit any other page with the restricted URL in their session they are logged out and sent back to re-authenticate.</p>
-
-<p>One shortfall that I am aware of, and that was pointed out in a discussion on #phpc, is the members secret keys should ideally be rotated, so it can only be used once. This would mean that stealing a link would at worst allow one login, and only to one page. This may be implemented if it doesn&#8217;t impact too much on usability (that classic trade-off, security vs. convenience).</p>
-
-<p>Now, I am not a security expert and as such don&#8217;t recommend anyone take my advice (is this good enough for a disclaimer), but apart from the one caveat mentioned, I think this solution meets the requirements without forfeiting too much in security. Any comments or advice on the technique are, as always, appreciated.</p>
 ]]></content>
   </entry>
   

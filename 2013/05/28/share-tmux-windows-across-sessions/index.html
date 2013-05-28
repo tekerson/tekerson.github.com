@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>It's been a while - Deprecated Behaviour</title>
+  <title>Share tmux Windows Across Sessions - Deprecated Behaviour</title>
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Well, It&#8217;s been a while since I&#8217;ve added anything new. There are a few reasons (read: &#8220;Excuses&#8221;). I&#8217;ve been uninspired &hellip;">
+  <meta name="description" content="When working in a terminal (the vast majority of the time) I run the terminal multiplexer tmux, with one session for each project I am currently &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.tekerson.com/2007/03/28/its-been-a-while">
+  <link rel="canonical" href="http://blog.tekerson.com/2013/05/28/share-tmux-windows-across-sessions">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/feed/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
@@ -75,7 +75,7 @@
   
   <header>
     
-      <h1 class="entry-title">It's Been a While</h1>
+      <h1 class="entry-title">Share Tmux Windows Across Sessions</h1>
     
     
       <p class="meta">
@@ -91,32 +91,35 @@
   
 
 
-<time datetime="2007-03-28T02:57:06+10:00" pubdate data-updated="true">Mar 28<span>th</span>, 2007</time>
+<time datetime="2013-05-28T16:01:00+10:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>Well, It&#8217;s been a while since I&#8217;ve added anything new. There are a few reasons (read: &#8220;Excuses&#8221;).</p>
+<div class="entry-content"><p>When working in a terminal (the vast majority of the time) I run the terminal multiplexer <a href="http://tmux.sourceforge.net/">tmux</a>, with one session for each project I am currently working on. I like to have a window for my IRC client in every session, so I can keep an eye on it. The best way to do this is to share the tmux window across multiple tmux sessions.</p>
 
-<ol>
-<li><p>I&#8217;ve been uninspired</p></li>
-<li><p>I&#8217;ve been busy</p></li>
-<li><p>I&#8217;ve been migrating to/playing with my new server</p></li>
-</ol>
+<p>To perform this setup, we can create a new session for &#8220;shared&#8221; applications, opening irssi in a window named &#8220;irc&#8221;. Either manually create the windows and open the applications in them, or, if you&#8217;re lazy and use the same setup regularly. Script it, something like so:</p>
 
+<pre><code>tmux new-session -s shared "tmux new-window -n irc irssi"
+</code></pre>
 
-<p>That&#8217;s right I&#8217;ve finally upgraded from my fantastic 200Mhz machine.
-I didn&#8217;t even realise it was so low spec until I checked during the upgrade. To check you can:</p>
+<p>You can use the automatically-assigned window names, but since I&#8217;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cat /proc/cpuinfo</span></code></pre></td></tr></table></div></figure>
+<p>Once the applications are running, we can link the windows to the working session using tmux&#8217;s <code>link-window</code> command, which has the basic form:</p>
 
+<pre><code>tmux link-window -s &lt;src-window&gt; -t &lt;dst-window&gt;
+</code></pre>
 
-<p>(I feel the need to include something useful here.)</p>
+<p>Any time a tmux command requires a reference to a window, we can provide an absolute reference to any window in any session using the <code>session:window</code> format where <code>session</code> is the name of the session and <code>window</code> is the name (or number) of the window in that session.</p>
 
-<p>So, there should (hopefully) be a few posts in the near future about the (re-)installation/configuration process of the new server.</p>
+<p>Using this, we can use the <code>link-window</code> our &#8220;shared:irc&#8221; window to index &#8220;9&#8221; in the current session. Which looks like:</p>
+
+<pre><code>tmux link-window -s shared:irc -t 9
+</code></pre>
+
+<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&#8217;t get in the way of my &#8220;real work&#8221;.</p>
 </div>
 
 
@@ -139,12 +142,12 @@ I didn&#8217;t even realise it was so low spec until I checked during the upgrad
   
 
 
-<time datetime="2007-03-28T02:57:06+10:00" pubdate data-updated="true">Mar 28<span>th</span>, 2007</time>
+<time datetime="2013-05-28T16:01:00+10:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/categories/general/'>General</a>
+    <a class='category' href='/categories/linux/'>Linux</a>, <a class='category' href='/categories/software/'>Software</a>
   
 </span>
 
@@ -160,10 +163,8 @@ I didn&#8217;t even realise it was so low spec until I checked during the upgrad
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/2007/02/19/single-or-double-quotes-for-html-attributes/" title="Previous Post: Single or double quotes for HTML attributes?">&laquo; Single or double quotes for HTML attributes?</a>
+        <a class="basic-alignment left" href="/2013/05/08/php-web-services-by-lorna-mitchell/" title="Previous Post: "PHP Web Services" by Lorna Mitchell">&laquo; "PHP Web Services" by Lorna Mitchell</a>
       
-      
-        <a class="basic-alignment right" href="/2007/04/20/debian-etch-install/" title="Next Post: Debian Etch Install">Debian Etch Install &raquo;</a>
       
     </p>
   </footer>

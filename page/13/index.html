@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Along with the old server machines I collected from the office (that this server is currently running on) came a plethora of hard disks of varying &hellip;">
+  <meta name="description" content="When I installed my software RAID array, I was a little unsure of stability, mainly because I&#8217;ve never configured RAID before, not because the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,100 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/04/29/automated-incremental-backups-with-rsync/">Automated Incremental Backups With Rsync</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-04-29T01:28:37+10:00" pubdate data-updated="true">Apr 29<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When I <a href="/2007/04/23/configuring-software-raid-with-mdadm/">installed my software RAID array</a>, I was a little unsure of stability, mainly because I&#8217;ve never configured RAID before, not because the software is unstable. So as a precaution, I decided to create a backup scheme (which I should have had anyway).</p>
+
+<p>Using some tools found on almost every Linux system, &#8220;rsync&#8221; and &#8220;cp&#8221;, I wrote a script, to create incremental backups of my /home directory.</p>
+
+<p>My code looks like this:</p>
+
+<p>/usr/local/sbin/backup.sh
+ `</p>
+
+<h1>!/bin/sh</h1>
+
+<p>SRC_DIR=/home
+BACKUP_DIR=/backup
+BACKUPS=14</p>
+
+<h1>Delete the oldest backup</h1>
+
+<p>if [ -d ${BACKUP_DIR}${SRC_DIR}.${BACKUPS} ]
+then</p>
+
+<pre><code>    rm -rf ${BACKUP_DIR}${SRC_DIR}.${BACKUPS}
+</code></pre>
+
+<p>fi
+SRC=0
+for i in <code>seq ${BACKUPS} -1 2</code>
+do</p>
+
+<pre><code>    let SRC=$i-1
+    if [ -d ${BACKUP_DIR}${SRC_DIR}.${SRC} ]
+    then
+            mv ${BACKUP_DIR}${SRC_DIR}.${SRC} ${BACKUP_DIR}${SRC_DIR}.${i}
+    fi
+</code></pre>
+
+<p>done
+if [ -d ${BACKUP_DIR}${SRC_DIR}.0 ]
+then</p>
+
+<pre><code>    cp -al ${BACKUP_DIR}${SRC_DIR}.0 ${BACKUP_DIR}${SRC_DIR}.1
+</code></pre>
+
+<p>fi
+rsync -a &#8211;update &#8211;delete ${SRC_DIR}/ ${BACKUP_DIR}${SRC_DIR}.0
+touch ${BACKUP_DIR}${SRC_DIR}.0</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>It incrementally backs up the entire /home directory to /backup, by placing it in my crontab:</span></code></pre></td></tr></table></div></figure>
+
+
+<p>@daily /usr/local/sbin/backup.sh
+&#8220;`
+I can, without intervention, maintain 2 weeks worth of backups.</p>
+
+<p>Since this is basically a single user system, and the backups are only meant to protect against my stupidity, I haven&#8217;t gone to the trouble of making the backups read-only. But this would certainly be an improvement to the system. A couple of solutions are discussed in <a href="http://gja.space4me.com/things/Backups_With_Rsync.html">the article</a> that my script is based on. Mine only backs up to a different directory (which is mounted on a different drive), not to a separate system/location (although, this is a good idea if possible).</p>
+
+<p>As a side note, I haven&#8217;t had any trouble with the RAID, but backups are still reassuring.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -174,60 +268,6 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/03/28/its-been-a-while/">It&#8217;s Been a While</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-03-28T02:57:06+10:00" pubdate data-updated="true">Mar 28<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Well, It&#8217;s been a while since I&#8217;ve added anything new. There are a few reasons (read: &#8220;Excuses&#8221;).</p>
-
-<ol>
-<li><p>I&#8217;ve been uninspired</p></li>
-<li><p>I&#8217;ve been busy</p></li>
-<li><p>I&#8217;ve been migrating to/playing with my new server</p></li>
-</ol>
-
-
-<p>That&#8217;s right I&#8217;ve finally upgraded from my fantastic 200Mhz machine.
-I didn&#8217;t even realise it was so low spec until I checked during the upgrade. To check you can:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cat /proc/cpuinfo</span></code></pre></td></tr></table></div></figure>
-
-
-<p>(I feel the need to include something useful here.)</p>
-
-<p>So, there should (hopefully) be a few posts in the near future about the (re-)installation/configuration process of the new server.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/14/">&larr; Older</a>
@@ -245,6 +285,10 @@ I didn&#8217;t even realise it was so low spec until I checked during the upgrad
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
       </li>
     
@@ -258,10 +302,6 @@ I didn&#8217;t even realise it was so low spec until I checked during the upgrad
     
       <li class="post">
         <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
       </li>
     
   </ul>

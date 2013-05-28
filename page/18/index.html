@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I&#8217;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the &hellip;">
+  <meta name="description" content="I was trying to install something or other tonight, using the (usually very simple) apt-get system on my web box, but it kept showing up with this &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2006/11/24/there-are-no-public-key-available-for-the-following-key-ids/">&#8220;There Are No Public Key Available for the Following Key IDs&#8221;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-24T09:43:13+10:00" pubdate data-updated="true">Nov 24<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was trying to install something or other tonight, using the (usually very simple) apt-get system on my web box, but it kept showing up with this error</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>There are no public key available for the following key IDs:
+</span><span class='line'>XXXXXXXXXX</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Where the X&#8217;s are a hash/key of some description.
+After some searching, The solution appears to be to import a key from a key-server (makes sense), here&#8217;s how:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># gpg --keyserver hkp://wwwkeys.eu.pgp.net --recv-keys XXXXXXXXXX
+</span><span class='line'># apt-key add /root/.gnupg/pubring.gpg
+</span><span class='line'># apt-get update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Substituting in the same hash/key.
+Then, it just works&#8230;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -435,64 +491,6 @@ The test page looked like this:</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2006/11/02/easy-deployment-from-subversion/">Easy Deployment From Subversion</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2006-11-02T10:11:19+10:00" pubdate data-updated="true">Nov 2<span>nd</span>, 2006</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After recently discovering the ways in which a version control server, combined with a sensible set of deployment scripts, can development easier (up until now the ones I have used have all been poorly configured and more of a hindrance then a help). I moved some of my personal projects onto my subversion server.</p>
-
-<p>I have been using <a href="http://subversion.tigris.org/">subversion</a> for some years to manage the configuration files on my Linux boxen, on the suggestion of an article I read at one time but can&#8217;t now find a link for (there are some similar ones available), all those fiddly kernel configs and xorg.conf files that you tweak until they break, then can&#8217;t remember what you changed.</p>
-
-<p>Being in charge of the version control systems at work, I am always looking for better and easier ways to keep the latest versions checked in and easily deploy to the live servers (and be able to roll it back if it all goes up in flames). So with the help of a few simple shell scripts, I finally have a system that allows my to edit and test locally before committing and deploying to the live sites.</p>
-
-<p>The most basic of which sits in ~/bin/ and looks something like this:</p>
-
-<p><em>deploy-project</em></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>svn export svn://svn.repository.server/project/trunk/ /tmp/project/
-</span><span class='line'>rsync -vrz --rhs=ssh --progress /tmp/project/public_html user@remote.live.site.com:~/public_html
-</span><span class='line'>rm -rf /tmp/project/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course this is only the basic form, with all values hard coded, there are more advanced scripts that take arguments, for example I use <em>&#8211;live</em> to deploy to the live server as opposed to the (default) staging/test server, or allow the the name of the branch/tag and revision to be specified.</p>
-
-<p>This allows easy deployment of code bases in a fairly efficient manner. I am still struggling with control of database structures, I currently start with an SQL dump of the schema, and then incrementally store SQL scripts to update the database to newer versions to allow deployment on various sites. I am considering writing a tool to compare the schema of 2 databases and provide SQL code to transform one into the other&#8230; when I get time.</p>
-
-<p>Now I just need to convince the developers to use it.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/19/">&larr; Older</a>
@@ -510,6 +508,10 @@ The test page looked like this:</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
       </li>
     
@@ -523,10 +525,6 @@ The test page looked like this:</p>
     
       <li class="post">
         <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a>
       </li>
     
   </ul>
