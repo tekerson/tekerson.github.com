@@ -255,16 +255,22 @@
         <lastmod>2013-05-28T18:02:44+10:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://blog.tekerson.com/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/
+        </loc>
+        <lastmod>2013-07-10T17:42:28+10:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.tekerson.com/about/</loc>
         <lastmod>2013-03-29T01:29:00+10:00</lastmod>
     </url>
     <url>
         <loc>http://blog.tekerson.com/blog/archives/</loc>
-        <lastmod>2013-05-28T18:02:44+10:00</lastmod>
+        <lastmod>2013-07-10T17:42:28+10:00</lastmod>
     </url>
     <url>
         <loc>http://blog.tekerson.com/</loc>
-        <lastmod>2013-05-28T18:02:44+10:00</lastmod>
+        <lastmod>2013-07-10T17:42:28+10:00</lastmod>
     </url>
     <url>
         <loc>http://blog.tekerson.com/robots.txt</loc>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Javascript | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/javascript/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-05-28T18:03:23+10:00</updated>
+  <updated>2013-07-10T17:41:11+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Post-fetch Manipulation (sorting) of ngResources in AngularJS]]></title>
+    <link href="http://blog.tekerson.com/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/"/>
+    <updated>2013-07-10T17:06:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs</id>
+    <content type="html"><![CDATA[<p>Just a quick tip that I found useful in a recent Angular.js application.</p>
+
+<p>I was trying to randomize the order of elements within a list retrieved from a <a href="http://docs.angularjs.org/api/ngResource.$resource">ngResource</a> (answers in a quiz or poll application). The naive approach would be to write the code as if the resource fetch is synchronous.</p>
+
+<p>``` js
+angular.module('myApp').controller('MyCtrl', function ($scope, $resource, $routeParams) {</p>
+
+<pre><code>var shuffle = function (list) { /* ... */ };
+var repo = $resource('/api/question/:id', {id: '@id'});
+$scope.question = repo.get({id: $routeParams.id});
+shuffle(question.anwers);
+</code></pre>
+
+<p>});
+```</p>
+
+<p>The problem that will soon become apparent, is that the <code>get</code> is <em>not</em> synchronous. So, when the <code>shuffle(question.answer)</code> is called, the <code>question</code> object is not yet populated.</p>
+
+<p>One approach that I encountered to circumvent the issue is to use the built in <a href="http://docs.angularjs.org/api/ng.filter:orderBy">orderBy filter</a> with a callback that randomly chooses the order. This works, because the filter is run when the returning data triggers a new digest. This may be good enough in some circumstances. The problem I encountered with this approach however, is the list is re-sorted every digest cycle. So, if there is anything much going on in the scope, the list will re-sort itself causing the bound elements in the page to jump around.</p>
+
+<p>The solution for me, was to sort the list once, after it is retrieved. This can be accomplished by passing a callback, as the second argument to <code>$resource.get</code>, that will be called with the returned data once it becomes available. This allows you to perform any required manipulation on the data before it is assigned to the <code>$scope</code>.</p>
+
+<p>``` js
+angular.module('myApp').controller('MyCtrl', function ($scope, $resource, $routeParams) {</p>
+
+<pre><code>var shuffle = function (list) { /* ... */ };
+var repo = $resource('/api/question/:id', {id: '@id'});
+$scope.question = repo.get({id: $routeParams.id}, function (question) {
+    shuffle(question.anwers);
+});
+</code></pre>
+
+<p>});
+```</p>
+
+<p>In this instance, the answers to the question are shuffled, but the pattern is useful any time you want to perform an action only <em>after</em> the data if fetched. This may include calculating aggregates or even fetching extra, dependant data.</p>
+
+<p>As an aside, I don't believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using "fat" services and "lean" controllers in a future post.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Yahoo YUI Subscribe to drag drop events]]></title>

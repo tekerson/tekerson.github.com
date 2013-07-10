@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I have, on occasion, had need to manually drop an email into a users inbox. For example, when an over-zealous virus scanner dumps mail into &#8220; &hellip;">
+  <meta name="description" content="I often find myself performing operations on single column CSV files to perform tasks such as merging member id lists, or email addresses, counting &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,44 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/03/22/set-manipulation-of-files-with-uniq-sort/">Set Manipulation of Files With Uniq & Sort</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-22T11:24:19+10:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I often find myself performing operations on single column CSV files to perform tasks such as merging member id lists, or email addresses, counting unique entries, finding duplicates etc.</p>
+
+<p>By applying some set theory (remember that from math class) and some standard linux/unix command line tools, almost any operation I have ever wanted to achieve in this vain is possible. And I have found <a href="http://linux.byexamples.com/archives/127/uniq-and-basic-set-theory/">a post, over at Linux By Examples</a> that provides a simple list of operations and examples of how to achieve them on text files using sort and uniq.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -168,73 +206,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/12/16/using-procmail-to-apply-filter-mail-into-maildir-folders/">Using Procmail to Apply Filter Mail Into Maildir Folders</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-12-16T21:24:17+10:00" pubdate data-updated="true">Dec 16<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This topic wasn&#8217;t on my &#8220;to do&#8221; list, but it came up. So here it is.</p>
-
-<p>Use of procmail to filter emails is definitely not a new thing, that is what it does after all. But in my attempt to configure it, I found very little clear information about support for &#8220;Maildir&#8221; style delivery amongst the wealth of documentation on the subject.</p>
-
-<p>The 2 main differences in a .procmailrc that works with Maildir, is the trailing slash on the MAILDIR value and the way target folders are specified.</p>
-
-<p>eg. The start of my .procmailrc looks like this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>
-</span><span class='line'>MAILDIR=$HOME/Maildir/
-</span><span class='line'>DEFAULT=$MAILDIR
-</span><span class='line'>
-</span><span class='line'>:0
-</span><span class='line'>* ^To:.*(@lists\.danga\.com)
-</span><span class='line'>.List/new
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So, the 2 points to note, as I said are. The maildir path ends in &#8220;/&#8221; and the destination is a folder within the Maildir, which is a hidden directory with its own set of cur/new emails in it.</p>
-
-<p>Thanks to procmail, I now only have one location to maintain my filtering rules. My email can then be accessed through IMAP from work, home, laptop and webmail without them being moved into the wrong folders.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/11/">&larr; Older</a>
@@ -252,6 +223,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
       </li>
     
@@ -265,10 +240,6 @@
     
       <li class="post">
         <a href="/2013/03/24/reboot/">Reboot</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
       </li>
     
   </ul>

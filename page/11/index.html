@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="This blog entry doesn&#8217;t actually contain any technical notes, which is a first for me. I think I might do posts of the style more often, as my &hellip;">
+  <meta name="description" content="This topic wasn&#8217;t on my &#8220;to do&#8221; list, but it came up. So here it is. Use of procmail to filter emails is definitely not a new thing &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/12/16/using-procmail-to-apply-filter-mail-into-maildir-folders/">Using Procmail to Apply Filter Mail Into Maildir Folders</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-12-16T21:24:17+10:00" pubdate data-updated="true">Dec 16<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This topic wasn&#8217;t on my &#8220;to do&#8221; list, but it came up. So here it is.</p>
+
+<p>Use of procmail to filter emails is definitely not a new thing, that is what it does after all. But in my attempt to configure it, I found very little clear information about support for &#8220;Maildir&#8221; style delivery amongst the wealth of documentation on the subject.</p>
+
+<p>The 2 main differences in a .procmailrc that works with Maildir, is the trailing slash on the MAILDIR value and the way target folders are specified.</p>
+
+<p>eg. The start of my .procmailrc looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>MAILDIR=$HOME/Maildir/
+</span><span class='line'>DEFAULT=$MAILDIR
+</span><span class='line'>
+</span><span class='line'>:0
+</span><span class='line'>* ^To:.*(@lists\.danga\.com)
+</span><span class='line'>.List/new
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So, the 2 points to note, as I said are. The maildir path ends in &#8220;/&#8221; and the destination is a folder within the Maildir, which is a hidden directory with its own set of cur/new emails in it.</p>
+
+<p>Thanks to procmail, I now only have one location to maintain my filtering rules. My email can then be accessed through IMAP from work, home, laptop and webmail without them being moved into the wrong folders.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -489,56 +556,6 @@ Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/07/26/rename-multiple-files-with-a-regular-expression-regex/">Rename Multiple Files With a Regular Expression (Regex)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-07-26T03:00:57+10:00" pubdate data-updated="true">Jul 26<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>It is often useful to be able to rename multiple files at the same time. Typical cases include changing a file extension (eg. <em>.jpeg to </em>.jpg) or renaming a set of files moved from one server to another (such as when repairing database replication, eg. slave1-bin.<em> to slave2-bin.</em>)</p>
-
-<p>It is possible to write a shell script that will perform this task, but the ones I have seen are cumbersome and not very intuitive.</p>
-
-<p>There is a script, I believe it comes bundles with Perl installation (at least on Debian), that allows files to be renames using regular expressions. It is simple to use, but lets you harness the power of perl regular expressions.</p>
-
-<p>The basic syntax that I use most often involves using a substitute command (similar to those used in <a href="http://www.gnu.org/software/sed/">sed</a> for example)</p>
-
-<p>eg: Rename all jpeg images to jpg files in the images directory.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>rename 's/\.jpeg$/.jpg/' images/*</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Mmm… Regex…</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/12/">&larr; Older</a>
@@ -556,6 +573,10 @@ Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
       </li>
     
@@ -569,10 +590,6 @@ Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the
     
       <li class="post">
         <a href="/2013/03/24/reboot/">Reboot</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
       </li>
     
   </ul>

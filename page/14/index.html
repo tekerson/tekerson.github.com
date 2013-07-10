@@ -9,7 +9,8 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Well, It&#8217;s been a while since I&#8217;ve added anything new. There are a few reasons (read: &#8220;Excuses&#8221;). I&#8217;ve been uninspired &hellip;">
+  <meta name="description" content="
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +73,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/04/20/debian-etch-install/">Debian Etch Install</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-04-20T08:05:29+10:00" pubdate data-updated="true">Apr 20<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -219,72 +256,6 @@ In certain cases, authors may specify the value of an attribute without any quot
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/02/01/installing-custom-programming-font/">Installing Custom Programming Font</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-02-01T02:45:12+10:00" pubdate data-updated="true">Feb 1<span>st</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Every so often I find a new font that I want to use for something on my system.</p>
-
-<p>This time it was a new programming font in <a href="http://vim.org">gvim</a>. The font I was interested in is <a href="http://www.tobias-jung.de/seekingprofont/">ProFont</a>I use this font at work, and it is far superior to the default terminal font.</p>
-
-<p>But ever time I go to install a new font, I need to look up how. It&#8217;s one of those things that I don&#8217;t do often enough for it to be worth remembering I guess.</p>
-
-<p>So here it is, for my reference… Ok, you can read it too I suppose.</p>
-
-<p>This applies to truetype fonts but, as far as I am aware, the process should be similar, if not the same, for other font types.</p>
-
-<p>The first step is to obtain the font files and place them into one of your system font folders.</p>
-
-<p>Your font folders can be found by:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>grep FontPath /etc/X11/xorg.conf</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I decided to use /usr/share/fonts/truetype/custom/ so after copying the .ttf file(s) into there.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sudo cp newfont.ttf /usr/share/fonts/truetype/custom/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It was a simple matter of running:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>sudo fc-cache -f</span></code></pre></td></tr></table></div></figure>
-
-
-<p>to update the fonts and they were available to use where I wanted them (in Vim).</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/15/">&larr; Older</a>
@@ -302,6 +273,10 @@ In certain cases, authors may specify the value of an attribute without any quot
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
       </li>
     
@@ -315,10 +290,6 @@ In certain cases, authors may specify the value of an attribute without any quot
     
       <li class="post">
         <a href="/2013/03/24/reboot/">Reboot</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
       </li>
     
   </ul>

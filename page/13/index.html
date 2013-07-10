@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="When I installed my software RAID array, I was a little unsure of stability, mainly because I&#8217;ve never configured RAID before, not because the &hellip;">
+  <meta name="description" content="If you have ever mistakenly installed grub (or any other boot manager) onto the MBR of the wrong drive (usually during setting up additional multi- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,97 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/05/14/wiping-mbr-and-reinstalling-grub/">Wiping MBR and Reinstalling Grub</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-14T03:15:00+10:00" pubdate data-updated="true">May 14<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you have ever mistakenly installed grub (or any other boot manager) onto the MBR of the wrong drive (usually during setting up additional multi-boot OSs), you&#8217;ll know it can be a pain to get rid of. Most sources out there are for when you accidentally override the windows boot manager with an common *nix one (grub or lilo). This involves using the windows &#8220;repair&#8221; console on the CD.
+When you are running a pure linux system, this isn&#8217;t a useful option. This is the solution I found to wipe and re-install grub:</p>
+
+<p>This will probably need to be done from a live CD, as if your MBR is broken, you probably can&#8217;t boot your installed system.</p>
+
+<h2>1. Wipe the MBR</h2>
+
+<p>The first <strong>446 bytes</strong> of the drive make up the Master Boot Record, the next 66 (totalling 512) is partition information, you probably <strong>don&#8217;t</strong> want to wipe that unless you intend of re-partitioning (and/or formatting) your disk anyway.</p>
+
+<p>Use <code>dd</code> to &#8220;zero&#8221; those 446 bytes:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>dd if=/dev/zero of=/dev/hd? ds=446 count=1</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>2. Chroot into your installed system</h2>
+
+<p>Set up and <code>chroot</code> into your main OS</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mkdir -p /mnt/root
+</span><span class='line'>mount /dev/hd? /mnt/root
+</span><span class='line'>mount -t proc none /mnt/root/proc
+</span><span class='line'>mount -o bind /dev /mnt/root/dev
+</span><span class='line'>chroot /mnt/root /bin/bash</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>3. Reinstall grub in the correct MBR</h2>
+
+<p>Start the <code>grub</code> console</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>grub</span></code></pre></td></tr></table></div></figure>
+
+
+<p>then, at the grub prompt:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>find /grub/stage1
+</span><span class='line'>root (hd?,?)
+</span><span class='line'>setup (hd?)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you &#8220;boot&#8221; is not on a seperate partition, you the first line might need to be</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>find /boot/grub/stage1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Assuming your configuration is correct (i.e doesn&#8217;t need to be changed since before it broke) you should now be able to boot into your installed system again.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -232,42 +323,6 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/04/20/debian-etch-install/">Debian Etch Install</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-04-20T08:05:29+10:00" pubdate data-updated="true">Apr 20<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/14/">&larr; Older</a>
@@ -285,6 +340,10 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
       </li>
     
@@ -298,10 +357,6 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
     
       <li class="post">
         <a href="/2013/03/24/reboot/">Reboot</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a>
       </li>
     
   </ul>

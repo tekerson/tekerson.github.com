@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Deprecated Behaviour</title>
+  <title>Post-fetch Manipulation (sorting) of ngResources in AngularJS - Deprecated Behaviour</title>
   <meta name="author" content="Brenton Alker">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.tekerson.com">
+  <link rel="canonical" href="http://blog.tekerson.com/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/feed/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
@@ -70,15 +70,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (Sorting) of ngResources in AngularJS</a></h1>
+      <h1 class="entry-title">Post-fetch Manipulation (Sorting) of ngResources in AngularJS</h1>
     
     
       <p class="meta">
@@ -101,7 +98,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Just a quick tip that I found useful in a recent Angular.js application.</p>
+<div class="entry-content"><p>Just a quick tip that I found useful in a recent Angular.js application.</p>
 
 <p>I was trying to randomize the order of elements within a list retrieved from a <a href="http://docs.angularjs.org/api/ngResource.$resource">ngResource</a> (answers in a quiz or poll application). The naive approach would be to write the code as if the resource fetch is synchronous.</p>
 
@@ -147,79 +144,16 @@
 
 <p>As an aside, I don&#8217;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &#8220;fat&#8221; services and &#8220;lean&#8221; controllers in a future post.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/05/28/share-tmux-windows-across-sessions/">Share Tmux Windows Across Sessions</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Brenton Alker</span></span>
 
-<time datetime="2013-05-28T16:01:00+10:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When working in a terminal (the vast majority of the time) I run the terminal multiplexer <a href="http://tmux.sourceforge.net/">tmux</a>, with one session for each project I am currently working on. I like to have a window for my IRC client in every session, so I can keep an eye on it. The best way to do this is to share the tmux window across multiple tmux sessions.</p>
-
-<p>To perform this setup, we can create a new session for &#8220;shared&#8221; applications, opening irssi in a window named &#8220;irc&#8221;. Either manually create the windows and open the applications in them, or, if you&#8217;re lazy and use the same setup regularly. Script it, something like so:</p>
-
-<pre><code>tmux new-session -s shared "tmux new-window -n irc irssi"
-</code></pre>
-
-<p>You can use the automatically-assigned window names, but since I&#8217;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
-
-<p>Once the applications are running, we can link the windows to the working session using tmux&#8217;s <code>link-window</code> command, which has the basic form:</p>
-
-<pre><code>tmux link-window -s &lt;src-window&gt; -t &lt;dst-window&gt;
-</code></pre>
-
-<p>Any time a tmux command requires a reference to a window, we can provide an absolute reference to any window in any session using the <code>session:window</code> format where <code>session</code> is the name of the session and <code>window</code> is the name (or number) of the window in that session.</p>
-
-<p>Using this, we can use the <code>link-window</code> our &#8220;shared:irc&#8221; window to index &#8220;9&#8221; in the current session. Which looks like:</p>
-
-<pre><code>tmux link-window -s shared:irc -t 9
-</code></pre>
-
-<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&#8217;t get in the way of my &#8220;real work&#8221;.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -231,59 +165,36 @@
   
 
 
-<time datetime="2013-05-08T16:40:00+10:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
-        
-      </p>
+<time datetime="2013-07-10T17:06:00+10:00" pubdate data-updated="true">Jul 10<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/code/'>Code</a>, <a class='category' href='/categories/javascript/'>Javascript</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><h2>Introduction</h2>
-
-<p>I recently grabbed the pre-print release of Lorna Jane Mitchell&#8217;s new book &#8220;PHP Web Services: APIs for the Modern Web&#8221;, now available in Print and Ebook formats <a href="http://shop.oreilly.com/product/0636920028291.do">through O&#8217;Reilly</a>. APIs are such an integral part of modern web application development. Lorna herself specialises in API development and integration, rarely working on anything that could be called front-end.</p>
-
-<p>Every system I have worked on recently has been heavily API based. With the current trend in single-page JavaScript web applications and client-side MV*, the server is being relegated more and more to the role of data provider through custom APIs.</p>
-
-<h2>Content</h2>
-
-<p>In the preface, Lorna enumerates many scenarios in which building APIs is a prudent strategy and why PHP is a pragmatic way to &#8220;solve the web problem&#8221;; being built with the web in mind from the beginning it comes with many useful tools for delivering and consuming web services built in.</p>
-
-<p>With this introduction (as well as the usual typographical conventions) out of the way, we are thrown straight into the nuts-and-bolts of the basics of HTTP request/response and how the browser/web server is analogous to the API consumer/provider we will be building. A very practical and useful part of the chapter is the introduction to a number of tools and techniques for making and inspecting requests against HTTP servers, I have personally used the section on Curl as a reference a number of times already.</p>
-
-<p>No introduction to HTTP, especially as a platform for APIs, would be complete without an explanation of the HTTP verbs and this book doesn&#8217;t disappoint, with a thorough explanation of the common verbs and PHP code examples of their usage. Delving deeper into the HTTP protocol, we find a much more comprehensive look at request and response headers, a look at a number of common headers and a detailed look at the very important, but in my experience - underutilised, <code>Accept</code> header for content negotiation, including example code to parse it correctly taking into accounts the weighting of the preferences. This is great low level information for building a flexible API service.</p>
-
-<p>A chapter each is given to XML and JSON data formats, the advantages and disadvantages of each. Asking the question, &#8220;which format is superior?&#8221; (Hint: it depends); Some useful guidelines regarding the scenarios in which each format may be an appropriate choice are provided. There are, of course, code snippets showing how to work with each format.</p>
-
-<p>The chapter on RPC and SOAP provides a substantial look into these styles of services with examples of real-world APIs, snippets to create and consume them and tools to make working with them more friendly. In spite of the book appearing somewhat biased towards REST style services (or maybe that&#8217;s just me), this chapter is full of great information and tips for REST and SOAP style services, but if this is your primary interest there are probably better books.</p>
-
-<p>The REST chapter brings together many of the concepts explored in the previous chapters about HTTP, verbs, headers, URLs and data formats to describe REST services in a useful, accurate and fairly succinct way. Thorough explanations of how to implement the standard CRUD operations so fundamental to REST are provided. Special mention is also given to hypermedia and content negotiation/media types, which are important aspects of &#8220;pure&#8221; REST services. Ever pragmatic, the chapter concludes with a section reminding readers to remember not to be caught up in the &#8220;trendy&#8221;, and that it is more important for an API to be &#8220;useful&#8221; than it is to be &#8220;RESTful&#8221;.</p>
-
-<p>The debugging chapter looks into what to do when it all goes wrong. As APIs are generally hidden behind the actual application interface the techniques for debugging them can be a bit different. Lorna introduces a couple of tools for inspecting the requests and responses on the wire to allow the tracking of anomalies without interrupting the data flow and breaking request/response formats.</p>
-
-<p>Towards the end of the book, we step away from the code for a couple of chapters and discuss the design decisions based on the options provided earlier in the book. Including chapters discussing robust, predictable, user/developer friendly APIs, handling errors and writing documentation.</p>
-
-<h2>Conclusion &amp; Recommendations</h2>
-
-<p>That was longer than I intended, but I see that as testament to the breadth of information contained within the seemingly modest tome, every chapter has something. Weighing in at a little over 100 pages &#8220;PHP Web Services&#8221; provides a great foundation to the practicalities of using PHP to build modern web services.</p>
-
-<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn&#8217;t dive deep enough for the seasoned professionals. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
-
-<p>All in all, I think the book provides a solid overview of many of the considerations of web service development and would be a great guide to anyone venturing into building such services in PHP.</p>
+      <div class="sharing">
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2013/05/28/share-tmux-windows-across-sessions/" title="Previous Post: Share tmux Windows Across Sessions">&laquo; Share tmux Windows Across Sessions</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/page/2/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -299,11 +210,11 @@
       </li>
     
       <li class="post">
-        <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
+        <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">"PHP Web Services" by Lorna Mitchell</a>
       </li>
     
       <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
+        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where's the love?</a>
       </li>
     
       <li class="post">
@@ -316,7 +227,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   <script type="text/javascript">
     $(function(){
@@ -332,6 +243,7 @@
 
   
 </aside>
+
 
     </div>
   </div>
