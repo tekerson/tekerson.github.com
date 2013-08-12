@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Code | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/code/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-08-12T23:47:22+10:00</updated>
+  <updated>2013-08-12T23:47:42+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -30,7 +30,7 @@
 
 <p>These referentially transparent "pure" functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can't have changed anything outside of itself.</p>
 
-<p>So, while the languages most of us use daily don't offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. And wouldn't that be nice.</p>
+<p>So, while the languages most of us use daily don't offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn't that be nice.</p>
 ]]></content>
   </entry>
   

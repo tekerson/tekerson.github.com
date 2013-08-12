@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional Programming | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-08-12T23:42:25+10:00</updated>
+  <updated>2013-08-12T23:47:42+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,7 +18,7 @@
     <link href="http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/"/>
     <updated>2013-08-12T23:34:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation</id>
-    <content type="html"><![CDATA[<p>Well, I've been studying functional programming lately (it's trendy) and while it's great to just learn new languages and paradigm, it's always nice when the principles can be applied to everyday work.</p>
+    <content type="html"><![CDATA[<p>I've been studying functional programming lately (it's trendy) and while it's great to just learn new languages and paradigm, it's always nice when the principles can be applied to everyday work.</p>
 
 <p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in "Object Oriented Software Construction", it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler's discussion of the principle</a> he mentions that "it would be nice if the language itself would support this notion".</p>
 
@@ -30,7 +30,7 @@
 
 <p>These referentially transparent "pure" functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can't have changed anything outside of itself.</p>
 
-<p>So, while the languages most of us use daily don't offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. And wouldn't that be nice.</p>
+<p>So, while the languages most of us use daily don't offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn't that be nice.</p>
 ]]></content>
   </entry>
   
