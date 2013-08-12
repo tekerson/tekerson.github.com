@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &#8216;hosts&#8217; files, and just to &hellip;">
+  <meta name="description" content="I&#8217;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,172 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2006/11/04/priority-when-multiple-css-classes-are-applied/">Priority When Multiple CSS Classes Are Applied</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-04T02:16:59+10:00" pubdate data-updated="true">Nov 4<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I&#8217;ve checked it out and it works like this.</p>
+
+<p>I had a page, who&#8217;s table cells all had a CSS class that applied a background colour, some font attributes and what have you.
+The class (from an external stylesheet file):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>td.listCell
+</span><span class='line'>{
+</span><span class='line'>    …
+</span><span class='line'>    color: black;
+</span><span class='line'>    background-color: grey;
+</span><span class='line'>    …
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>was applied individually to each cell like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;td class="listCell"&gt;&lt;/td&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I needed to apply a second class on certain cells to change the background colour, this is part of an on-page Javascript search. This page has lots of content, a large form, most of which is hidden and only small parts are used at a time. The search is supposed to highlight the cells that contain the text in the search field.</p>
+
+<p>So, I added a searchHighlight style to the head of the page, making it look like:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;head&gt;
+</span><span class='line'>    …
+</span><span class='line'>    &lt;style type="text/css"&gt;
+</span><span class='line'>        .searchHighlight { background-color: red }
+</span><span class='line'>    &lt;/style&gt;
+</span><span class='line'>    &lt;link rel="stylesheet" type="text/css" href="stylesheet.css" /&gt;
+</span><span class='line'>&lt;/head&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On my way I went, coded the javascript to search the table and add the &#8216;searchHighlight&#8217; class to the cells that needed hightlighting. Easy. Except it didn&#8217;t work.</p>
+
+<p>When the Javascript found it&#8217;s target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
+
+<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it&#8217;s normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
+
+<p>So I created a simple test page, to make sure I was wasn&#8217;t going (more) insane, and that multiple CSS styles ever worked.
+The test page looked like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+</span><span class='line'>&lt;html&gt;
+</span><span class='line'>    &lt;head&gt;
+</span><span class='line'>        &lt;title&gt;Multiple CSS Class Test&lt;/title&gt;
+</span><span class='line'>        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;&lt;/meta&gt;
+</span><span class='line'>        &lt;style type="text/css"&gt;
+</span><span class='line'>            .normal { font-weight: bold; background-color: red;}
+</span><span class='line'>            .special { background-color: blue }
+</span><span class='line'>        &lt;/style&gt;
+</span><span class='line'>    &lt;/head&gt;
+</span><span class='line'>    &lt;body&gt;
+</span><span class='line'>        &lt;div class="normal"&gt;class=&quot;normal&quot;&lt;/div&gt;
+</span><span class='line'>        &lt;div class="special"&gt;class=&quot;special&quot;&lt;/div&gt;
+</span><span class='line'>        &lt;div class="normal special"&gt;class=&quot;normal special&quot;&lt;/div&gt;
+</span><span class='line'>        &lt;div class="special normal"&gt;class=&quot;special normal&quot;&lt;/div&gt;
+</span><span class='line'>    &lt;/body&gt;
+</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The results are sort of what I expected&#8230; the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn&#8217;t matter. So they are getting the bold from the normal style, and the background from the special style.</p>
+
+<p>Great. So why didn&#8217;t it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that &#8216;special&#8217; is declared first) and the results are very different, the &#8216;special&#8217; class is ignored completely.</p>
+
+<p>That&#8217;s right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn&#8217;t know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
+
+<p>For example, if (from my test page) I remove the special style, and put it in an external style sheet, and include it like so:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>…
+</span><span class='line'>&lt;style type="text/css"&gt;
+</span><span class='line'>        .normal { font-weight: bold; background-color: red;}
+</span><span class='line'>&lt;/style&gt;
+</span><span class='line'>&lt;link rel="stylesheet" type="text/css" href="stylesheet.css" /&gt;
+</span><span class='line'>…</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It works, but doing this doesn&#8217;t:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>…
+</span><span class='line'>&lt;link rel="stylesheet" type="text/css" href="stylesheet.css" /&gt;
+</span><span class='line'>&lt;style type="text/css"&gt;
+</span><span class='line'>        .normal { font-weight: bold; background-color: red;}
+</span><span class='line'>&lt;/style&gt;
+</span><span class='line'>…</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So the include is exactly the same as typing in the style in the file. Whereas I was under the impression that styles in the file took precedence over those in external (linked) stylesheets (where they overlap of course). But it seems I was wrong. Now I know.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -327,47 +493,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2006/10/26/obligatory-greeting/">Obligatory Greeting</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2006-10-26T09:24:42+10:00" pubdate data-updated="true">Oct 26<span>th</span>, 2006</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Well. Here it is, the obligatory welcome to the <em>&#8216;blogosphere&#8217;</em></p>
-
-<p>This blog will probably be mainly for my benefit, a place to store snippets of code and ideas that I discover on my journey. But it might be useful to others, or on the odd occasion mildly amusing, so here it is.</p>
-
-<p>Hooray!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/page/20/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -380,6 +508,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
+      </li>
     
       <li class="post">
         <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
@@ -395,10 +527,6 @@
     
       <li class="post">
         <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/24/reboot/">Reboot</a>
       </li>
     
   </ul>

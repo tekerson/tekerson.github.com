@@ -261,16 +261,22 @@
         <lastmod>2013-07-10T17:42:28+10:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/
+        </loc>
+        <lastmod>2013-08-12T23:42:00+10:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.tekerson.com/about/</loc>
         <lastmod>2013-03-29T01:29:00+10:00</lastmod>
     </url>
     <url>
         <loc>http://blog.tekerson.com/blog/archives/</loc>
-        <lastmod>2013-07-10T17:42:28+10:00</lastmod>
+        <lastmod>2013-08-12T23:42:00+10:00</lastmod>
     </url>
     <url>
         <loc>http://blog.tekerson.com/</loc>
-        <lastmod>2013-07-10T17:42:28+10:00</lastmod>
+        <lastmod>2013-08-12T23:42:00+10:00</lastmod>
     </url>
     <url>
         <loc>http://blog.tekerson.com/robots.txt</loc>

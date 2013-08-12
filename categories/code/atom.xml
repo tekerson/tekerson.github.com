@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Code | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/code/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-07-10T17:41:11+10:00</updated>
+  <updated>2013-08-12T23:42:25+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,27 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation]]></title>
+    <link href="http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/"/>
+    <updated>2013-08-12T23:34:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation</id>
+    <content type="html"><![CDATA[<p>Well, I've been studying functional programming lately (it's trendy) and while it's great to just learn new languages and paradigm, it's always nice when the principles can be applied to everyday work.</p>
+
+<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in "Object Oriented Software Construction", it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler's discussion of the principle</a> he mentions that "it would be nice if the language itself would support this notion".</p>
+
+<p>If occurs to me that functional languages do indeed grant Mr. Fowler his wish.</p>
+
+<p>Functional programmers aim to compose programs using "pure" functions. In this case, "pure" is used to mean a functions that are "referentially transparent", that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
+
+<p>Of course, a program that takes no input, can't access a data store and produces no output isn't very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by Monads. I won't go into what a Monad is, it doesn't matter, and I'm not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that "only" perform calculation.</p>
+
+<p>These referentially transparent "pure" functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can't have changed anything outside of itself.</p>
+
+<p>So, while the languages most of us use daily don't offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. And wouldn't that be nice.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Post-fetch Manipulation (sorting) of ngResources in AngularJS]]></title>
@@ -357,85 +378,6 @@ We have just ported the Quickstart guestbook application to a Zend Framework Mod
 
 For those who had trouble following along, I've made the entire application (including database) available via my [github repository](http://github.com/tekerson/A-Zend-Application/tree/master).
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Modular Application in Zend Framework - Part 1]]></title>
-    <link href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/"/>
-    <updated>2009-06-17T19:45:29+10:00</updated>
-    <id>http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1</id>
-    <content type="html"><![CDATA[<p>This is part one of a series exploring modular application development in Zend Framework. In this entry we'll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We'll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
-
-<h2>Install Zend Framework</h2>
-
-<p>The first step is to actually get ZF, so start by downloading the package (about 40MB in total) into our working directory and extracting it.</p>
-
-<pre><code>wget http://framework.zend.com/releases/ZendFramework-1.8.4/ZendFramework-1.8.4.tar.gz
-tar zxf ZendFramework-1.8.4.tar.gz
-</code></pre>
-
-<p>We'll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
-
-<pre><code>ln -s ZendFramework-1.8.4 ZendFramework
-</code></pre>
-
-<h2>Install Zend_Tool</h2>
-
-<p>Creating an alias allows command "zf" to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
-
-<pre><code>alias zf=`pwd`/ZendFramework/bin/zf.sh
-</code></pre>
-
-<p>Now the installation is complete, we should be able to check what version of the framework we have just installed.</p>
-
-<pre><code>zf show version
-# Zend Framework Version: 1.8.4
-</code></pre>
-
-<p>If this works, we're ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
-
-<h2>Create the project</h2>
-
-<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we'll call our project "aza" (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
-
-<pre><code>zf create project aza
-</code></pre>
-
-<p>This should produce a project structure that looks like this</p>
-
-<p>[caption id="attachment_131" align="alignnone" width="324" caption="Directory Listing of new project"]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
-
-<h2>Setup the web server</h2>
-
-<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace "/WORKING/PATH/" with the absolute path to the directory in which you are working (run pwd if you're not sure).</p>
-
-<pre><code>&lt;VirtualHost *:80&gt;
-    ServerName aza
-    DocumentRoot /WORKING/PATH/aza/public
-    &lt;Directory /WORKING/PATH/aza/public&gt;
-        php_value include_path "/WORKING/PATH/ZendFramework/library"
-        php_value magic_quotes_gpc 0
-        php_value short_open_tag "on"
-        DirectoryIndex index.php
-        AllowOverride All
-        Order allow,deny
-        Allow from all
-    &lt;/Directory&gt;
-&lt;/VirtualHost&gt;
-</code></pre>
-
-<p>Don't forget to restart the web server to enable the site.</p>
-
-<h2>Test our page!</h2>
-
-<p>We should now be able to navigate to our site and be warmly welcomed to our new Zend Framework application!
-We'll stop here for now. In the next post, we'll start looking at creating our first module.</p>
-
-<h2>Updates</h2>
-
-<p>2009-06-26
-Updated for ZF Version 1.8.4</p>
 ]]></content>
   </entry>
   

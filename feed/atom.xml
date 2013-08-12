@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-07-10T17:41:11+10:00</updated>
+  <updated>2013-08-12T23:42:25+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,27 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation]]></title>
+    <link href="http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/"/>
+    <updated>2013-08-12T23:34:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation</id>
+    <content type="html"><![CDATA[<p>Well, I&#8217;ve been studying functional programming lately (it&#8217;s trendy) and while it&#8217;s great to just learn new languages and paradigm, it&#8217;s always nice when the principles can be applied to everyday work.</p>
+
+<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &#8220;Object Oriented Software Construction&#8221;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&#8217;s discussion of the principle</a> he mentions that &#8220;it would be nice if the language itself would support this notion&#8221;.</p>
+
+<p>If occurs to me that functional languages do indeed grant Mr. Fowler his wish.</p>
+
+<p>Functional programmers aim to compose programs using &#8220;pure&#8221; functions. In this case, &#8220;pure&#8221; is used to mean a functions that are &#8220;referentially transparent&#8221;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
+
+<p>Of course, a program that takes no input, can&#8217;t access a data store and produces no output isn&#8217;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by Monads. I won&#8217;t go into what a Monad is, it doesn&#8217;t matter, and I&#8217;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &#8220;only&#8221; perform calculation.</p>
+
+<p>These referentially transparent &#8220;pure&#8221; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&#8217;t have changed anything outside of itself.</p>
+
+<p>So, while the languages most of us use daily don&#8217;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. And wouldn&#8217;t that be nice.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Post-fetch Manipulation (sorting) of ngResources in AngularJS]]></title>
@@ -1586,15 +1607,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 <p>It&#8217;s still in the history of course, but no need to keep old branches around.</p>
 
 <p>Hope that makes things clear to anyone else who was confused as I was by some of the overly complicated explanation of branching in git.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[New VPS Hosting]]></title>
-    <link href="http://blog.tekerson.com/2008/08/12/new-vps-hosting/"/>
-    <updated>2008-08-12T07:38:16+10:00</updated>
-    <id>http://blog.tekerson.com/2008/08/12/new-vps-hosting</id>
-    <content type="html"><![CDATA[<p>If you&#8217;re reading this then I have successfully migrated to my new VPS hosting on <a href="https://manage.slicehost.com/customers/new?referrer=1470153180">Slicehost</a>.</p>
 ]]></content>
   </entry>
   

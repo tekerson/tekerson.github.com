@@ -9,8 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="
-">
+  <meta name="description" content="Along with the old server machines I collected from the office (that this server is currently running on) came a plethora of hard disks of varying &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +72,71 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/04/24/configuring-software-raid-with-mdadm/">Configuring Software RAID With Mdadm</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-04-24T01:14:31+10:00" pubdate data-updated="true">Apr 24<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Along with the old server machines I collected from the office (that this server is currently running on) came a plethora of hard disks of varying sized. I decided to put a couple of them to use in a RAID array to protect my important (not really) data.
+The motherboard in my (much newer) desktop machine comes equipped with a RAID compatible disk controller, that I have never made use of. Unfortunately, the machine I have constructed as my server does not.</p>
+
+<p>Never fear, software raid to the rescue. While I was (and still am) led to believe that software RAID is considerably slower than its hardware equivalent, my current array performs comparably, even slightly better (at least for reads), than the individual disks. So it is definitely a viable solution.</p>
+
+<p>So I now have a simple 2 disk mirrored array, and in it&#8217;s creation dispelled a few more of my own misconceptions.</p>
+
+<p>RAID array can be configured using partitions on an already partitioned drive (probably even using the 2 partitions on the same disk, but I didn&#8217;t try as it sort of defeats the purpose).</p>
+
+<p>Using mdadm, a newer much friendlier (than the older raidtools) solution to software RAID on linux, to set up a software RAID is actually a fairly simple task.</p>
+
+<p>As I was creating an new array from blank disks, the majority of the configuration is one command:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/hdb1 /dev/hdc1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Where /dev/md0 is the new software raid device and /dev/hdb1 and /dev/hdc1 are the 2 partitions that are to be used to create the array. If there is already data that needs to be preservered the &#8220;Create Degraded array, Add new disk&#8221; approach (described in much more detail in an <a href="http://nst.sourceforge.net/nst/docs/user/ch14.html">article on SourceForge</a>).</p>
+
+<p>and then</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mdadm --examine --scan &gt;&gt; /dev/mdadm/mdadm.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to save the configuration (it works without the configuration file, it just makes life a little easier)</p>
+
+<p>I am yet to set up monitoring, but according to <a href="http://www.linuxdevcenter.com/pub/a/linux/2002/12/05/RAID.html">Linux dev center</a> that is fairly simple too.</p>
+
+<p>The configuration of a RAID array was much simpler and less interesting than I anticipated, but I suppose that&#8217;s a good thing for the server administration world in general.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -164,98 +228,6 @@ I didn&#8217;t even realise it was so low spec until I checked during the upgrad
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/02/19/single-or-double-quotes-for-html-attributes/">Single or Double Quotes for HTML Attributes?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-02-19T09:02:42+10:00" pubdate data-updated="true">Feb 19<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The issue of whether to use single quotes or double quotation marks in HTML attributes is a topic that has been somewhat debated for some time now. The reason there is debate is due to the differences in, and the leniency of the relevant standards or recommendations. So here&#8217;s my take.</p>
-
-<p>The W3C&#8217;s <a href="http://www.w3.org/TR/html401/">HTML 4.01 Recommendation</a> allows the use of either single or double quotation marks and in certain cases no quotation marks are required at all.
-To quote the recommendation:</p>
-
-<blockquote><p>By default, SGML requires that all attribute values be delimited using either double quotation marks (ASCII decimal 34) or single quotation marks (ASCII decimal 39). Single quote marks can be included within the attribute value when the value is delimited by double quote marks, and vice versa. Authors may also use numeric character references to represent double quotes (&#34;) and single quotes (&#39;). For double quotes authors can also use the character entity reference &#8220;.
-In certain cases, authors may specify the value of an attribute without any quotation marks. The attribute value may only contain letters (a-z and A-Z), digits (0-9), hyphens (ASCII decimal 45), periods (ASCII decimal 46), underscores (ASCII decimal 95), and colons (ASCII decimal 58). We recommend using quotation marks even when it is possible to eliminate them.</p></blockquote>
-
-<p><a href="http://www.w3.org/TR/xhtml1/">XHTML1</a> is a little stricter, saying that all attribute values must be quoted, even those which appear to be numeric, but (as far as I can tell) still allows the use of either quote.</p>
-
-<p>While I am all for flexibility in standards, it can and does lead to inconsistencies between developers, projects and even within the same document.</p>
-
-<p>This inconsistency is not a problem for the majority of (especially static) X/HTML documents. Even though double quotes are recommended, the choice is essentially inconsequential, and may be influenced by factors such as personal preference or the contents of the value being quoted (because single quote marks can be included within the attribute value when the value is delimited by double quote marks, and vice versa).</p>
-
-<p>It does become more relevant once dynamic pages are introduced, mainly due to the uncertainty of the value within the quotes (which can be a deciding factor in the choice, as mentioned above). In this situation I strongly advocate the use of double quotes. Let me explain why with a simple example.</p>
-
-<p>Imagine a template, used in a dynamic web page, that displays a form to allow some data to be entered or edited. With single quotes, an example in <a href="http://php.net">PHP</a> may look like this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;form …&gt;
-</span><span class='line'>&lt;input type='text' name='name' value='&lt;?php echo $name ?&gt;' /&gt;
-</span><span class='line'>&lt;input type='submit' value='Submit' /&gt;
-</span><span class='line'>&lt;/form&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This would work fine in most cases, but consider the case where the $name variable contains an apostrophe such as in &#8220;O&#8217;Brien&#8221;. The resulting HTML would look like this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;form …&gt;
-</span><span class='line'>&lt;input type='text' name='name' value='O'Brien' /&gt;
-</span><span class='line'>&lt;input type='submit' value='Submit' /&gt;
-</span><span class='line'>&lt;/form&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This would obviously cause problems with the display, causing only an &#8220;O&#8221; to be displayed inside the text field (not to mention invalid markup). Of course, you could run the value through the PHP&#8217;s <a href="http://php.net/addslashes">addslashes()</a> function, and the problem would be solved. But addslashes is one of those functions I try to use very sparingly, it has a tendency to bite you by adding slashes where they are not intended, such as before slashes intended to be escaping other characters. Instead, I prefer to use double quotes around all attributes, like so:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;form …&gt;
-</span><span class='line'>&lt;input type="text" name="name" value="&lt;?php echo $name ?&gt;" /&gt;
-</span><span class='line'>&lt;input type="submit" value="Submit" /&gt;
-</span><span class='line'>&lt;/form&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The advantage is that, by passing the variables through a <a href="http://php.net/htmlentities">htmlentities</a> function (or equivalent). This will convert any double quotes in the variable to the HTML entity &#8220;&quot;&#8221;, preventing the reverse of the problem described with &#8220;O&#8217;Brien&#8221; and ensuring the markup is going to be valid and the value is as intended. This only works for double quotes because there is no standard HTML entity for single quotes (The ASCII code can be used, and &amp;apos; is supported in some browsers, but these aren&#8217;t as widely supported as &amp;quot;).</p>
-
-<p>On the surface, the approach of converting the HTML entities may appear to be no better or worse than the method of escaping the single quotes with addslashes. The advantage is, converting the HTML entities will also account for other characters that should be converted as well, for example the ampersand (&amp;) that, while they may not cause the page to fail to function (most browsers will compensate), will render the HTML invalid if not converted. As such, this conversion would need to be done even with the escaping using slashes, so why use both? Taking this into consideration, I have yet to find a good reason for using single quotes (at least if the value contains dynamic content).</p>
-
-<p>So that&#8217;s my vote, and my reasoning behind it. Vote 1: Double quotes for attribute value delimiters.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/15/">&larr; Older</a>
@@ -273,6 +245,10 @@ In certain cases, authors may specify the value of an attribute without any quot
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
@@ -286,10 +262,6 @@ In certain cases, authors may specify the value of an attribute without any quot
     
       <li class="post">
         <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/24/reboot/">Reboot</a>
       </li>
     
   </ul>
