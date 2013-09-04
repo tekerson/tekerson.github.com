@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="The issue of whether to use single quotes or double quotation marks in HTML attributes is a topic that has been somewhat debated for some time now. &hellip;">
+  <meta name="description" content="Well, It&#8217;s been a while since I&#8217;ve added anything new. There are a few reasons (read: &#8220;Excuses&#8221;). I&#8217;ve been uninspired &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -41,6 +41,11 @@
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+      window.onscroll = function() {
+        window.onscroll = null;
+        _gaq.push(['_trackEvent', 'scroll', 'read']);
+      };
     })();
   </script>
 
@@ -72,6 +77,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/03/28/its-been-a-while/">It&#8217;s Been a While</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-28T02:57:06+10:00" pubdate data-updated="true">Mar 28<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Well, It&#8217;s been a while since I&#8217;ve added anything new. There are a few reasons (read: &#8220;Excuses&#8221;).</p>
+
+<ol>
+<li><p>I&#8217;ve been uninspired</p></li>
+<li><p>I&#8217;ve been busy</p></li>
+<li><p>I&#8217;ve been migrating to/playing with my new server</p></li>
+</ol>
+
+
+<p>That&#8217;s right I&#8217;ve finally upgraded from my fantastic 200Mhz machine.
+I didn&#8217;t even realise it was so low spec until I checked during the upgrade. To check you can:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cat /proc/cpuinfo</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(I feel the need to include something useful here.)</p>
+
+<p>So, there should (hopefully) be a few posts in the near future about the (re-)installation/configuration process of the new server.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -231,94 +290,6 @@ In certain cases, authors may specify the value of an attribute without any quot
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/01/20/generate-ssl-cerificate-for-courier-imap-server/">Generate SSL Cerificate for Courier IMAP Server</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-01-20T12:03:22+10:00" pubdate data-updated="true">Jan 20<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>My SSL certificate for my mail server had been expired for a few weeks now. When I finally got a round to installing a new one, I discovered the script I used to use to generate them missing. Instead I had to call <a href="http://openssl.org">OpenSSL</a> directly. Luckily, the line wasn&#8217;t too hard to find.</p>
-
-<p>After filling in the requisite fields in the configuration file &#8211; The most important being the &#8220;CN&#8221; field, which should contain the FQDN of the mail server.</p>
-
-<p>/etc/courier/imapd.cnf:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>RANDFILE = /usr/lib/courier/imapd.rand
-</span><span class='line'>[ req ]
-</span><span class='line'>default_bits = 1024
-</span><span class='line'>encrypt_key = yes
-</span><span class='line'>distinguished_name = req_dn
-</span><span class='line'>x509_extensions = cert_type
-</span><span class='line'>prompt = no
-</span><span class='line'>[ req_dn ]
-</span><span class='line'>C=AU
-</span><span class='line'>ST=QLD
-</span><span class='line'>L=Brisbane
-</span><span class='line'>O=Courier Mail Server
-</span><span class='line'>OU=Automatically-generated IMAP SSL key
-</span><span class='line'>CN=mail.example.com
-</span><span class='line'>emailAddress=postmaster@example.com
-</span><span class='line'>[ cert_type ]
-</span><span class='line'>nsCertType = server</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then generate the certificate itself with this incantation:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/usr/bin/openssl req -new -x509 -days 365 -nodes \
-</span><span class='line'>-config /etc/courier/imapd.cnf -out /usr/lib/courier/imapd.pem \
-</span><span class='line'>-keyout /usr/lib/courier/imapd.pem</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Got rid of the annoying &#8220;This servers certificate is exipired&#8221; messages in my MUA anyway.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/16/">&larr; Older</a>
@@ -336,6 +307,10 @@ In certain cases, authors may specify the value of an attribute without any quot
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
@@ -349,10 +324,6 @@ In certain cases, authors may specify the value of an attribute without any quot
     
       <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
   </ul>

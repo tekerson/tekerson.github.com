@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Introduction I recently grabbed the pre-print release of Lorna Jane Mitchell&#8217;s new book &#8220;PHP Web Services: APIs for the Modern Web&#8221 &hellip;">
+  <meta name="description" content="When working in a terminal (the vast majority of the time) I run the terminal multiplexer tmux, with one session for each project I am currently &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -41,6 +41,11 @@
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+      window.onscroll = function() {
+        window.onscroll = null;
+        _gaq.push(['_trackEvent', 'scroll', 'read']);
+      };
     })();
   </script>
 
@@ -72,6 +77,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/05/28/share-tmux-windows-across-sessions/">Share Tmux Windows Across Sessions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-28T16:01:00+10:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When working in a terminal (the vast majority of the time) I run the terminal multiplexer <a href="http://tmux.sourceforge.net/">tmux</a>, with one session for each project I am currently working on. I like to have a window for my IRC client in every session, so I can keep an eye on it. The best way to do this is to share the tmux window across multiple tmux sessions.</p>
+
+<p>To perform this setup, we can create a new session for &#8220;shared&#8221; applications, opening irssi in a window named &#8220;irc&#8221;. Either manually create the windows and open the applications in them, or, if you&#8217;re lazy and use the same setup regularly. Script it, something like so:</p>
+
+<pre><code>tmux new-session -s shared "tmux new-window -n irc irssi"
+</code></pre>
+
+<p>You can use the automatically-assigned window names, but since I&#8217;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
+
+<p>Once the applications are running, we can link the windows to the working session using tmux&#8217;s <code>link-window</code> command, which has the basic form:</p>
+
+<pre><code>tmux link-window -s &lt;src-window&gt; -t &lt;dst-window&gt;
+</code></pre>
+
+<p>Any time a tmux command requires a reference to a window, we can provide an absolute reference to any window in any session using the <code>session:window</code> format where <code>session</code> is the name of the session and <code>window</code> is the name (or number) of the window in that session.</p>
+
+<p>Using this, we can use the <code>link-window</code> our &#8220;shared:irc&#8221; window to index &#8220;9&#8221; in the current session. Which looks like:</p>
+
+<pre><code>tmux link-window -s shared:irc -t 9
+</code></pre>
+
+<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&#8217;t get in the way of my &#8220;real work&#8221;.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -185,44 +247,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/03/24/reboot/">Reboot</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-24T18:25:00+10:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Wow, it&#8217;s been over 3 years since my last post! And, like so many entertainment franchises, I think it&#8217;s time for a reboot. I stopped blogging when I moved away from PHP because I no longer felt confident enough in my work to open up anything I was doing to any kind of public scrutiny. Having since (mostly) returned to PHP, doing some consulting and contracting and embarking on a venture of my own, I feel it is time once again to put some of my experiences and thoughts into writing.</p>
-
-<p>To facilitate this, and because my Wordpress install was so hideously out of date, I&#8217;ve decided to changed to a static blogging solution: <a href="http://octopress.org/">Octopress</a>. As such, the blog is currently without much of a design. This may (or may not) be remedied at a later time. I will write in more detail about the platform and the migration in a future post.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/3/">&larr; Older</a>
@@ -240,6 +264,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
@@ -253,10 +281,6 @@
     
       <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
   </ul>

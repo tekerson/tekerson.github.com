@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="As part of the current application I am developing, I have the need for a reliable queue that is not going to allow duplicate reads when popped from &hellip;">
+  <meta name="description" content="Since I was first introduced to CouchDB late last year when Jan Lehnardt discussed it on the PHP Abstract Podcast my interest was piqued. I have &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -41,6 +41,11 @@
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+      window.onscroll = function() {
+        window.onscroll = null;
+        _gaq.push(['_trackEvent', 'scroll', 'read']);
+      };
     })();
   </script>
 
@@ -72,6 +77,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/04/15/initial-thoughts-on-couchdb/">Initial Thoughts on CouchDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-15T01:18:33+10:00" pubdate data-updated="true">Apr 15<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Since I was first introduced to <a href="http://incubator.apache.org/couchdb/">CouchDB</a> late last year when Jan Lehnardt discussed it on the <a href="http://devzone.zend.com/article/2857-PHP-Abstract-Podcast-Episode-30-CouchDB">PHP Abstract Podcast</a> my interest was piqued. I have since read as much as I can about it, which doesn&#8217;t actually amount to a great deal unfortunately. However, I think the idea has merit as an alternative to relational databases in various scenarios.</p>
+
+<p>I have been using <a href="http://www.danga.com/memcached/">memcached</a> to store aggregated objects and it often seems pointless to break them into disparate parts to fit into a relational schema. While I realise CouchDB is not an object cache, being able to store data &#8220;as is&#8221;, in a form (JSON) that is directly malleable by many languages makes a lot of sense.</p>
+
+<p>The &#8220;views&#8221;, used to retrieve data, select the documents to return by passing them through user defined JavaScript filter functions, instead of querying using SQL as in most relational databases; providing near infinite flexibility for data retrieval.</p>
+
+<p>The major concern that I haven&#8217;t seen adequately addressed is performance, especially given larger datasets. With the unstructured nature of the data and the flexibility of the view functions, it seems performance could be a challenge. Though given <a href="http://www.erlang.org/">Erlang</a>&#8217;s ground up concurrency and some of the algorithmic genius they have apparently borrowed from <a href="http://labs.google.com/papers/mapreduce.html">Google&#8217;s MapReduce</a> &#8211; datasets don&#8217;t get much larger than that &#8211; I might yet be proved wrong. I hope I am.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -181,59 +228,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/03/14/manually-deliver-email-to-maildir/">Manually Deliver Email to Maildir</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-03-14T21:12:31+10:00" pubdate data-updated="true">Mar 14<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have, on occasion, had need to manually drop an email into a users inbox. For example, when an over-zealous virus scanner dumps mail into &#8220;quarantine&#8221;.</p>
-
-<p>After confirming that the email are, in fact, virus free, the emails are able to be injected into the users maildir with the help of <a href="http://jeenyus.net/~budney/linux/software/safecat.html">safecat</a>, which guarantees atomic copying (even from a slow standard input stream) and unique file naming.</p>
-
-<p>The basic format of the command is:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>
-</span><span class='line'>safecat &lt;tmp_dir&gt; .Maildir/new/ &lt; msg.eml
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>with the only restriction being that tmp_dir must be on the same file system, as the algorithm uses hard links to guarantee instant availability of the complete file.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/11/">&larr; Older</a>
@@ -251,6 +245,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
@@ -264,10 +262,6 @@
     
       <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
   </ul>

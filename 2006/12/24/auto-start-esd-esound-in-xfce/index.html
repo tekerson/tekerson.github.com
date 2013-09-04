@@ -41,6 +41,11 @@
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+      window.onscroll = function() {
+        window.onscroll = null;
+        _gaq.push(['_trackEvent', 'scroll', 'read']);
+      };
     })();
   </script>
 
@@ -208,6 +213,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
@@ -221,10 +230,6 @@
     
       <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">"PHP Web Services" by Lorna Mitchell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where's the love?</a>
       </li>
     
   </ul>

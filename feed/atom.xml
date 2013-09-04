@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-08-18T22:48:20+10:00</updated>
+  <updated>2013-09-04T11:33:39+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Remapping Caps Lock to Ctrl in OS X]]></title>
+    <link href="http://blog.tekerson.com/2013/09/04/remapping-capslock-to-ctrl-in-osx/"/>
+    <updated>2013-09-04T11:14:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/09/04/remapping-capslock-to-ctrl-in-osx</id>
+    <content type="html"><![CDATA[<p>As a keyboard line junky and a Vim user, this is something I&#8217;ve been meaning to do for a long time. I mean, who actually uses Caps lock anyway? Every time I&#8217;ve had a look, the process has appeared to involve installation of third party software and in general seemed like too much effort. It turns out, if you only want to remap meta-keys (caps lock, alt, ctrl and command) you can do that easily through the OSX System Preferences.</p>
+
+<p>In &#8220;Apple Menu&#8221; (Top Left), &#8220;System Preferences&#8221;, &#8220;Keyboard&#8221;. On the &#8220;Keyboard&#8221; Tab (not &#8220;Keyboard Shortcuts&#8221;), there is a &#8220;Modifier Keys&#8221; button, which opens a dialog and provides a simple interface to remap (or disable) your modifier keys.</p>
+
+<p>I wish I&#8217;d realised sooner that it was so simple, now to re-train my hands and free that poor little finger from its curled up hell.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation]]></title>
@@ -1557,56 +1570,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 <p>So the approximate plans were filled with some more details, and off we went.</p>
 
 <p>To Be Continued&#8230;</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Basic branching with git]]></title>
-    <link href="http://blog.tekerson.com/2008/09/05/basic-branching-with-git/"/>
-    <updated>2008-09-05T22:48:22+10:00</updated>
-    <id>http://blog.tekerson.com/2008/09/05/basic-branching-with-git</id>
-    <content type="html"><![CDATA[<p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it&#8217;s <strong>easy!</strong></p>
-
-<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using &#8221;<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>&#8221; to work on multiple things at once, but this is very limiting.</p>
-
-<p>So, Here we go. My basic workflow now look like this.</p>
-
-<p>Create a new branch (based on the HEAD of your current branch), and automatically switch to it:</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; -b my_branch&lt;/code&gt;
-</code></pre>
-
-<p>Then you can work within this branch as you always would.</p>
-
-<p>Work, work, work&#8230;</p>
-
-<pre><code>&lt;code&gt;&lt;a&gt;&lt;/a&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add manual page"&gt;git add&lt;/a&gt; files_i_have_edited.txt
-&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-commit.html" title="git-commit manual page"&gt;git commit&lt;/a&gt; -m 'My changes'&lt;/code&gt;
-</code></pre>
-
-<p>Repeating this step until the task is complete. Then, to get the changes back into the master branch. Switch to it</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; master&lt;/code&gt;
-</code></pre>
-
-<p>And pull the changes from the branch</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-pull.html" title="git-pull manual page"&gt;git pull&lt;/a&gt; . my_branch&lt;/code&gt;
-</code></pre>
-
-<p>Easy. No need to remember revision numbers where you branched, or which changed have already been merged. You can of course switch back to the branch and continue work with</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; my_branch&lt;/code&gt;
-</code></pre>
-
-<p>this &#8220;edit, commit, pull&#8221; cycle can continue until the task is complete. Then, once you&#8217;re satisfied you can delete the branch with</p>
-
-<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html" title="git-branch manual page"&gt;git branch&lt;/a&gt; -d my_branch&lt;/code&gt;
-</code></pre>
-
-<p>It&#8217;s still in the history of course, but no need to keep old branches around.</p>
-
-<p>Hope that makes things clear to anyone else who was confused as I was by some of the overly complicated explanation of branching in git.</p>
 ]]></content>
   </entry>
   

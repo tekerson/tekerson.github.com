@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="The hashtags service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also &hellip;">
+  <meta name="description" content="When you have an &#8220;position&#8221; column in a table, to allow the user to select the order of elements in the table or as an optimization for &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -41,6 +41,11 @@
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+      window.onscroll = function() {
+        window.onscroll = null;
+        _gaq.push(['_trackEvent', 'scroll', 'read']);
+      };
     })();
   </script>
 
@@ -72,6 +77,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/05/26/re-sequence-a-column-in-mysql/">Re-sequence a Column in MySQL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-26T23:13:24+10:00" pubdate data-updated="true">May 26<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When you have an &#8220;position&#8221; column in a table, to allow the user to select the order of elements in the table or as an optimization for pagination. They always seem to get out of sequence at some point&#8211;ending up with gaps in the sequence.
+This is something I run into not quiet often enough to remember how to do it, yet often enough to to be frustrating. So here is an easy solution to re-sequence the position column in a table, maintaining the current order, just closing any gaps.</p>
+
+<p>SET @pos := 0;
+UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
+
+<p>It simply initializes a variable (@pos) to 0, then for each row (updates are done in sequence) increments the variable and assigns it to the position column. The ORDER BY clause ensures the current ordering is maintained. WHERE clauses can also be added as required.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -183,209 +230,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/03/03/converting-a-flat-array-with-parent-ids-to-a-nested-tree/">Converting a Flat Array With Parent ID&#8217;s to a Nested Tree</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-03-03T21:37:32+10:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry, or a navigation menu structure). The &#8220;Adjacency List&#8221; method; probably the most common, involves storing a reference to the parent in each of the children.</p>
-
-<p>Here is a snippet for converting the rows stored using the adjacency list method into a hierarchical array in PHP. My goal was to do this in 1 pass, without recursion. I ended up using 2 passes, I think 1 pass is achievable if you can guarantee the parent will always be returned before all of its children. But since I couldn&#8217;t, the first pass is to change the id of the row to be the key of the array.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">function</span> <span class="nf">convertToTree</span><span class="p">(</span><span class="k">array</span> <span class="nv">$flat</span><span class="p">,</span> <span class="nv">$idField</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
-</span><span class='line'>                        <span class="nv">$parentIdField</span> <span class="o">=</span> <span class="s1">&#39;parentId&#39;</span><span class="p">,</span>
-</span><span class='line'>                        <span class="nv">$childNodesField</span> <span class="o">=</span> <span class="s1">&#39;childNodes&#39;</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nv">$indexed</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
-</span><span class='line'>    <span class="c1">// first pass - get the array indexed by the primary id  </span>
-</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$flat</span> <span class="k">as</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$idField</span><span class="p">]]</span> <span class="o">=</span> <span class="nv">$row</span><span class="p">;</span>
-</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$idField</span><span class="p">]][</span><span class="nv">$childNodesField</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//second pass  </span>
-</span><span class='line'>    <span class="nv">$root</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$indexed</span> <span class="k">as</span> <span class="nv">$id</span> <span class="o">=&gt;</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$parentIdField</span><span class="p">]][</span><span class="nv">$childNodesField</span><span class="p">][</span><span class="nv">$id</span><span class="p">]</span> <span class="o">=&amp;</span> <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$id</span><span class="p">];</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$parentIdField</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nv">$root</span> <span class="o">=</span> <span class="nv">$id</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="k">array</span><span class="p">(</span><span class="nv">$root</span> <span class="o">=&gt;</span> <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$root</span><span class="p">]);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Usage:</span>
-</span><span class='line'><span class="nv">$rows</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Menu&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-1&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 2-1&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-2&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">convertToTree</span><span class="p">(</span><span class="nv">$rows</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Produces:</span>
-</span><span class='line'><span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="k">NULL</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Menu&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>            <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-1&#39;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
-</span><span class='line'>                        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
-</span><span class='line'>                        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-2&#39;</span><span class="p">,</span>
-</span><span class='line'>                        <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                        <span class="p">),</span>
-</span><span class='line'>                    <span class="p">),</span>
-</span><span class='line'>                <span class="p">),</span>
-</span><span class='line'>            <span class="p">),</span>
-</span><span class='line'>            <span class="mi">3</span> <span class="o">=&gt;</span>  <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 2-1&#39;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                <span class="p">),</span>
-</span><span class='line'>            <span class="p">),</span>
-</span><span class='line'>        <span class="p">),</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/6/">&larr; Older</a>
@@ -403,6 +247,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
@@ -416,10 +264,6 @@
     
       <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
   </ul>

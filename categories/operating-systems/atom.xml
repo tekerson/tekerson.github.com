@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Operating Systems | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/operating-systems/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-08-18T22:48:20+10:00</updated>
+  <updated>2013-09-04T11:33:39+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Remapping Caps Lock to Ctrl in OS X]]></title>
+    <link href="http://blog.tekerson.com/2013/09/04/remapping-capslock-to-ctrl-in-osx/"/>
+    <updated>2013-09-04T11:14:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/09/04/remapping-capslock-to-ctrl-in-osx</id>
+    <content type="html"><![CDATA[<p>As a keyboard line junky and a Vim user, this is something I've been meaning to do for a long time. I mean, who actually uses Caps lock anyway? Every time I've had a look, the process has appeared to involve installation of third party software and in general seemed like too much effort. It turns out, if you only want to remap meta-keys (caps lock, alt, ctrl and command) you can do that easily through the OSX System Preferences.</p>
+
+<p>In "Apple Menu" (Top Left), "System Preferences", "Keyboard". On the "Keyboard" Tab (not "Keyboard Shortcuts"), there is a "Modifier Keys" button, which opens a dialog and provides a simple interface to remap (or disable) your modifier keys.</p>
+
+<p>I wish I'd realised sooner that it was so simple, now to re-train my hands and free that poor little finger from its curled up hell.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Set Manipulation of files with uniq & sort]]></title>
@@ -93,57 +106,6 @@ rename 's/\.jpeg$/.jpg/' images/*
 </code></p>
 
 <p>Mmm… Regex…</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Wiping MBR and Reinstalling Grub]]></title>
-    <link href="http://blog.tekerson.com/2007/05/14/wiping-mbr-and-reinstalling-grub/"/>
-    <updated>2007-05-14T03:15:00+10:00</updated>
-    <id>http://blog.tekerson.com/2007/05/14/wiping-mbr-and-reinstalling-grub</id>
-    <content type="html"><![CDATA[<p>If you have ever mistakenly installed grub (or any other boot manager) onto the MBR of the wrong drive (usually during setting up additional multi-boot OSs), you'll know it can be a pain to get rid of. Most sources out there are for when you accidentally override the windows boot manager with an common *nix one (grub or lilo). This involves using the windows "repair" console on the CD.
-When you are running a pure linux system, this isn't a useful option. This is the solution I found to wipe and re-install grub:</p>
-
-<p>This will probably need to be done from a live CD, as if your MBR is broken, you probably can't boot your installed system.</p>
-
-<h2>1. Wipe the MBR</h2>
-
-<p>The first <strong>446 bytes</strong> of the drive make up the Master Boot Record, the next 66 (totalling 512) is partition information, you probably <strong>don't</strong> want to wipe that unless you intend of re-partitioning (and/or formatting) your disk anyway.</p>
-
-<p>Use <code>dd</code> to "zero" those 446 bytes:
-<code>
-dd if=/dev/zero of=/dev/hd? ds=446 count=1
-</code></p>
-
-<h2>2. Chroot into your installed system</h2>
-
-<p>Set up and <code>chroot</code> into your main OS
-<code>
-mkdir -p /mnt/root
-mount /dev/hd? /mnt/root
-mount -t proc none /mnt/root/proc
-mount -o bind /dev /mnt/root/dev
-chroot /mnt/root /bin/bash
-</code></p>
-
-<h2>3. Reinstall grub in the correct MBR</h2>
-
-<p>Start the <code>grub</code> console
-<code>
-grub
-</code>
-then, at the grub prompt:
-<code>
-find /grub/stage1
-root (hd?,?)
-setup (hd?)
-</code>
-If you "boot" is not on a seperate partition, you the first line might need to be
-<code>
-find /boot/grub/stage1
-</code></p>
-
-<p>Assuming your configuration is correct (i.e doesn't need to be changed since before it broke) you should now be able to boot into your installed system again.</p>
 ]]></content>
   </entry>
   

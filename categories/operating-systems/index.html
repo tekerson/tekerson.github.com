@@ -41,6 +41,11 @@
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+      window.onscroll = function() {
+        window.onscroll = null;
+        _gaq.push(['_trackEvent', 'scroll', 'read']);
+      };
     })();
   </script>
 
@@ -79,6 +84,23 @@
   </header>
   
   <div id="blog-archives" class="category">
+
+
+
+  
+  <h2>2013</h2>
+
+<article>
+  
+<h1><a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a></h1>
+<time datetime="2013-09-04T11:14:00+10:00" pubdate><span class='month'>Sep</span> <span class='day'>04</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/categories/os-x/'>OS X</a>, <a class='category' href='/categories/operating-systems/'>Operating Systems</a></span>
+</footer>
+
+
+</article>
 
 
 
@@ -341,6 +363,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
@@ -354,10 +380,6 @@
     
       <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">"PHP Web Services" by Lorna Mitchell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where's the love?</a>
       </li>
     
   </ul>

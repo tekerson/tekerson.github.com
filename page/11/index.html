@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Well, a return anyway. I&#8217;m not exactly sure how triumphant it is. Yes, that&#8217;s right, I&#8217;m back. I&#8217;ve been away from my blog, &hellip;">
+  <meta name="description" content="I have, on occasion, had need to manually drop an email into a users inbox. For example, when an over-zealous virus scanner dumps mail into &#8220; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -41,6 +41,11 @@
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+      window.onscroll = function() {
+        window.onscroll = null;
+        _gaq.push(['_trackEvent', 'scroll', 'read']);
+      };
     })();
   </script>
 
@@ -72,6 +77,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/03/14/manually-deliver-email-to-maildir/">Manually Deliver Email to Maildir</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-14T21:12:31+10:00" pubdate data-updated="true">Mar 14<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have, on occasion, had need to manually drop an email into a users inbox. For example, when an over-zealous virus scanner dumps mail into &#8220;quarantine&#8221;.</p>
+
+<p>After confirming that the email are, in fact, virus free, the emails are able to be injected into the users maildir with the help of <a href="http://jeenyus.net/~budney/linux/software/safecat.html">safecat</a>, which guarantees atomic copying (even from a slow standard input stream) and unique file naming.</p>
+
+<p>The basic format of the command is:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>safecat &lt;tmp_dir&gt; .Maildir/new/ &lt; msg.eml
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>with the only restriction being that tmp_dir must be on the same file system, as the algorithm uses hard links to guarantee instant availability of the complete file.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -182,62 +240,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/12/05/much-ado-about-nothing/">Much Ado About Nothing</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-12-05T05:44:57+10:00" pubdate data-updated="true">Dec 5<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This blog entry doesn&#8217;t actually contain any technical notes, which is a first for me. I think I might do posts of the style more often, as my posts will hopefully be more frequent if I allow myself the freedom to discuss ideas in general, and not have to delve into a particular topic.</p>
-
-<p>On that note, it&#8217;s been a hectic few months and doesn&#8217;t look like slowing down before the end of the year. Unfortunately, my blog is one of the many aspects of life that has been neglected. However, I have been busy doing, and learning, different things and should have some interesting topics to write about when I do eventually get around to putting something together.</p>
-
-<p>A short list of tools, technologies and techniques crossing my path recently that I intend to blog (more) about include:</p>
-
-<ul>
-<li><p>Caching (memcached/apc)</p></li>
-<li><p>MySQL 5 Features (clusters, replication, stored procedures, triggers)</p></li>
-<li><p>Zend Framework</p></li>
-<li><p>Xen virtualisation</p></li>
-<li><p>HA &#8211; heartbeat et. al</p></li>
-<li><p>Load balancing</p></li>
-<li><p>Advanced Apache mod_rewrite (Rewrite mappers)</p></li>
-<li><p>PHP multi-processing (forking)</p></li>
-<li><p>Web services (SOA)</p></li>
-</ul>
-
-
-<p>And possibly others. That should give you an idea of what to look forward to, as well as a list to help me remember. I hope to post on at least one or two of those topics before the end of the year, and maybe some other lighter material as well.
-Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the general tourist thing. Should be great fun and much needed break, but until then… I&#8217;ve got a project to hack on!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/12/">&larr; Older</a>
@@ -255,6 +257,10 @@ Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
@@ -268,10 +274,6 @@ Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the
     
       <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
   </ul>

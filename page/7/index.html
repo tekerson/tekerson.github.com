@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I&#8217;ve just started telecommuting, and not wanting to take it slowly, I&#8217;ve jumped straight into an international arrangement; living in &hellip;">
+  <meta name="description" content="I have been telecommuting for a bit over a month now, and things have settled quite well. We have set up an office, away from the entertainment area &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -41,6 +41,11 @@
       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+      window.onscroll = function() {
+        window.onscroll = null;
+        _gaq.push(['_trackEvent', 'scroll', 'read']);
+      };
     })();
   </script>
 
@@ -72,6 +77,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/12/16/telecommute-experience-part-2/">Telecommute Experience (Part 2)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-16T18:34:01+10:00" pubdate data-updated="true">Dec 16<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have been telecommuting for a bit over a month now, and things have settled quite well.</p>
+
+<p>We have set up an office, away from the entertainment area (except the foosball table, that&#8217;s in the office :)). This has been good to keep some separation between those trying to get work done and the rest of the household population.</p>
+
+<p>With the time difference, office hours work well. An 8 hour stint from 1pm to 9pm (Canada) is the same as 7am to 3pm (Australia). Giving plenty of time in the morning to enjoy the snow, while still allowing ample real-time communication with the office during business hours, and even leaving some time after the work day to relax.</p>
+
+<p>The work itself hasn&#8217;t changed much. A good issue tracker makes things much easier (We use <a href="http://eventum.mysql.org/">MySQL&#8217;s Eventum</a>) because everyone can easily see a current list of priorities and who is doing what, which is always important but even more so without real-time contact.</p>
+
+<p>A good local development environment has also been invaluable, being able to develop and test completely without a connection to the world ensures I can still be productive even when the Internet is on the fritz. Using virtual machines I have set up individual environments for each project. <a href="http://git.or.cz/">Git</a> (via git-svn) for version control allows me to work; branching, committing, merging and reverting all locally.</p>
+
+<p>Communication has primarily been via instant messenger, which was already the case in the office anyway, so no real transition there. Skype is also great if you need voice communication (I generally don&#8217;t).</p>
+
+<p>Using these tools, the transition has been smooth and painless. We have even successfully deployed a major project since I have been here. So far, so good.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -194,42 +247,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/08/12/new-vps-hosting/">New VPS Hosting</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-08-12T07:38:16+10:00" pubdate data-updated="true">Aug 12<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>If you&#8217;re reading this then I have successfully migrated to my new VPS hosting on <a href="https://manage.slicehost.com/customers/new?referrer=1470153180">Slicehost</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/8/">&larr; Older</a>
@@ -247,6 +264,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
@@ -260,10 +281,6 @@
     
       <li class="post">
         <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the love?</a>
       </li>
     
   </ul>
