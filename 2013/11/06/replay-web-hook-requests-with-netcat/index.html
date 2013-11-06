@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Telecommute - Deprecated Behaviour</title>
+  <title>Replay web hook requests with netcat - Deprecated Behaviour</title>
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Category: Telecommute">
+  <meta name="description" content="Netcat (nc) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.tekerson.comcategories/telecommute">
+  <link rel="canonical" href="http://blog.tekerson.com/2013/11/06/replay-web-hook-requests-with-netcat">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/feed/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
@@ -76,49 +76,94 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Telecommute</h1>
+    
+      <h1 class="entry-title">Replay Web Hook Requests With Netcat</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-06T17:45:00+10:00" pubdate data-updated="true">Nov 6<span>th</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &#8220;Web Hooks&#8221;.</p>
 
-  
-  <h2>2008</h2>
+<p>In my specific case, it was the Facebook &#8220;Real-Time&#8221; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
 
-<article>
-  
-<h1><a href="/2008/12/16/telecommute-experience-part-2/">Telecommute Experience (Part 2)</a></h1>
-<time datetime="2008-12-16T18:34:01+10:00" pubdate><span class='month'>Dec</span> <span class='day'>16</span> <span class='year'>2008</span></time>
+<p>To overcome this, we need to be able to consistently repeat a request from Facebook while fine-tuning the handler to perform the required task.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/categories/telecommute/'>Telecommute</a>, <a class='category' href='/categories/work/'>Work</a></span>
-</footer>
+<p>Firstly, we can set up <code>nc</code> to capture the request. We could manually write a HTTP request, but this will ensure it is authentic and actually represents the request that will be sent by the third party.</p>
 
+<pre><code>nc -l 8000 &gt; request.txt
+</code></pre>
 
-</article>
+<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &#8220;request.txt&#8221;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&#8217;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &#8220;request.txt&#8221;, where we can view it, edit it and &#8211; most importantly &#8211; replay it.</p>
 
+<p>We can also use <code>nc</code> to handle sending the request for us by piping the saved file through to the target server.</p>
 
+<pre><code>cat request.txt | nc myserver.example.com 80
+</code></pre>
 
-<article>
-  
-<h1><a href="/2008/11/24/telecommute-experience-part-1/">Telecommute Experience (Part 1)</a></h1>
-<time datetime="2008-11-24T23:27:59+10:00" pubdate><span class='month'>Nov</span> <span class='day'>24</span> <span class='year'>2008</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/categories/telecommute/'>Telecommute</a>, <a class='category' href='/categories/work/'>Work</a></span>
-</footer>
-
-
-</article>
-
+<p>This will connect to our server and make the exact HTTP request that was captured. The advantage, of course, is that we can replay the request over and over quickly and accurately.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Brenton Alker</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-06T17:45:00+10:00" pubdate data-updated="true">Nov 6<span>th</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/" title="Previous Post: Remapping Caps Lock to Ctrl in OS X">&laquo; Remapping Caps Lock to Ctrl in OS X</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

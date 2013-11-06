@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-09-04T11:50:25+10:00</updated>
+  <updated>2013-11-06T22:34:37+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Replay web hook requests with netcat]]></title>
+    <link href="http://blog.tekerson.com/2013/11/06/replay-web-hook-requests-with-netcat/"/>
+    <updated>2013-11-06T17:45:00+10:00</updated>
+    <id>http://blog.tekerson.com/2013/11/06/replay-web-hook-requests-with-netcat</id>
+    <content type="html"><![CDATA[<p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &#8220;Web Hooks&#8221;.</p>
+
+<p>In my specific case, it was the Facebook &#8220;Real-Time&#8221; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
+
+<p>To overcome this, we need to be able to consistently repeat a request from Facebook while fine-tuning the handler to perform the required task.</p>
+
+<p>Firstly, we can set up <code>nc</code> to capture the request. We could manually write a HTTP request, but this will ensure it is authentic and actually represents the request that will be sent by the third party.</p>
+
+<pre><code>nc -l 8000 &gt; request.txt
+</code></pre>
+
+<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &#8220;request.txt&#8221;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&#8217;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &#8220;request.txt&#8221;, where we can view it, edit it and &#8211; most importantly &#8211; replay it.</p>
+
+<p>We can also use <code>nc</code> to handle sending the request for us by piping the saved file through to the target server.</p>
+
+<pre><code>cat request.txt | nc myserver.example.com 80
+</code></pre>
+
+<p>This will connect to our server and make the exact HTTP request that was captured. The advantage, of course, is that we can replay the request over and over quickly and accurately.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Remapping Caps Lock to Ctrl in OS X]]></title>
@@ -1553,23 +1580,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 <p>Communication has primarily been via instant messenger, which was already the case in the office anyway, so no real transition there. Skype is also great if you need voice communication (I generally don&#8217;t).</p>
 
 <p>Using these tools, the transition has been smooth and painless. We have even successfully deployed a major project since I have been here. So far, so good.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Telecommute Experience (Part 1)]]></title>
-    <link href="http://blog.tekerson.com/2008/11/24/telecommute-experience-part-1/"/>
-    <updated>2008-11-24T23:27:59+10:00</updated>
-    <id>http://blog.tekerson.com/2008/11/24/telecommute-experience-part-1</id>
-    <content type="html"><![CDATA[<p>I&#8217;ve just started telecommuting, and not wanting to take it slowly, I&#8217;ve jumped straight into an international arrangement; living in Canada and working in Brisbane, Australia. This is my story&#8230;</p>
-
-<p>After almost 3 years with my current employer, I decided I needed to get out of the office. Not that there is anything particularly wrong with the office, it&#8217;s just not the most exciting environment and I was getting pretty over it.</p>
-
-<p>It just so happened that a number of my friends were in a similar situation, and a plan was hatched to move ourselves to Canada for 6 months. Once an approximate timetable was established, we approached our respective employers. After explaining the plan to make the move and maintain our current employment, for the most part we met little resistance; this was a little surprising to me.</p>
-
-<p>So the approximate plans were filled with some more details, and off we went.</p>
-
-<p>To Be Continued&#8230;</p>
 ]]></content>
   </entry>
   

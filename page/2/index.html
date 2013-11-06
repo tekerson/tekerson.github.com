@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="When working in a terminal (the vast majority of the time) I run the terminal multiplexer tmux, with one session for each project I am currently &hellip;">
+  <meta name="description" content="Just a quick tip that I found useful in a recent Angular.js application. I was trying to randomize the order of elements within a list retrieved from &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,86 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (Sorting) of ngResources in AngularJS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-10T17:06:00+10:00" pubdate data-updated="true">Jul 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just a quick tip that I found useful in a recent Angular.js application.</p>
+
+<p>I was trying to randomize the order of elements within a list retrieved from a <a href="http://docs.angularjs.org/api/ngResource.$resource">ngResource</a> (answers in a quiz or poll application). The naive approach would be to write the code as if the resource fetch is synchronous.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">).</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MyCtrl&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$resource</span><span class="p">,</span> <span class="nx">$routeParams</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">shuffle</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">list</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">};</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">repo</span> <span class="o">=</span> <span class="nx">$resource</span><span class="p">(</span><span class="s1">&#39;/api/question/:id&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;@id&#39;</span><span class="p">});</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">question</span> <span class="o">=</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="nx">$routeParams</span><span class="p">.</span><span class="nx">id</span><span class="p">});</span>
+</span><span class='line'>  <span class="nx">shuffle</span><span class="p">(</span><span class="nx">question</span><span class="p">.</span><span class="nx">anwers</span><span class="p">);</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The problem that will soon become apparent, is that the <code>get</code> is <em>not</em> synchronous. So, when the <code>shuffle(question.answer)</code> is called, the <code>question</code> object is not yet populated.</p>
+
+<p>One approach that I encountered to circumvent the issue is to use the built in <a href="http://docs.angularjs.org/api/ng.filter:orderBy">orderBy filter</a> with a callback that randomly chooses the order. This works, because the filter is run when the returning data triggers a new digest. This may be good enough in some circumstances. The problem I encountered with this approach however, is the list is re-sorted every digest cycle. So, if there is anything much going on in the scope, the list will re-sort itself causing the bound elements in the page to jump around.</p>
+
+<p>The solution for me, was to sort the list once, after it is retrieved. This can be accomplished by passing a callback, as the second argument to <code>$resource.get</code>, that will be called with the returned data once it becomes available. This allows you to perform any required manipulation on the data before it is assigned to the <code>$scope</code>.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">).</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MyCtrl&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$resource</span><span class="p">,</span> <span class="nx">$routeParams</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">shuffle</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">list</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">};</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">repo</span> <span class="o">=</span> <span class="nx">$resource</span><span class="p">(</span><span class="s1">&#39;/api/question/:id&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;@id&#39;</span><span class="p">});</span>
+</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">question</span> <span class="o">=</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="nx">$routeParams</span><span class="p">.</span><span class="nx">id</span><span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">question</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">shuffle</span><span class="p">(</span><span class="nx">question</span><span class="p">.</span><span class="nx">anwers</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In this instance, the answers to the question are shuffled, but the pattern is useful any time you want to perform an action only <em>after</em> the data if fetched. This may include calculating aggregates or even fetching extra, dependant data.</p>
+
+<p>As an aside, I don&#8217;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &#8220;fat&#8221; services and &#8220;lean&#8221; controllers in a future post.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -201,52 +281,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the Love?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-28T21:43:00+10:00" pubdate data-updated="true">Mar 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As I previously blogged, I&#8217;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
-
-<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; &#8220;You never know when it&#8217;s going to disappear.&#8221; citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell&#8217;s suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">&#8220;don&#8217;t read the comments&#8221;</a>, I have to wonder if having comments is worth the effort involved?</p>
-
-<p>For now, it looks like I&#8217;m going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where&#8217;s the love?</p>
-
-<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes &#8220;turn off comments and encourage others to respond by writing [&#8230;] on their own blog.&#8221; I think this is a fantastic idea (I&#8217;m doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, &#8220;trackbacks&#8221; were an attempt at solving this issue, but I&#8217;m not sure that worked too well.</p>
-
-<p>This is one advantage the &#8220;walled gardens&#8221; currently hold - they have the ability to aggregate the posts into a single congruous conversation.</p>
-
-<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I&#8217;ll&#8230; Probably never see it&#8230; Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/3/">&larr; Older</a>
@@ -264,6 +298,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
       </li>
     
@@ -277,10 +315,6 @@
     
       <li class="post">
         <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
       </li>
     
   </ul>

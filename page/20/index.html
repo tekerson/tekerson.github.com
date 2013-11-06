@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="After recently discovering the ways in which a version control server, combined with a sensible set of deployment scripts, can development easier (up &hellip;">
+  <meta name="description" content="I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &#8216;hosts&#8217; files, and just to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,202 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2006/11/03/dns-bind9-configuration/">DNS (Bind9) Configuration</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-03T04:56:19+10:00" pubdate data-updated="true">Nov 3<span>rd</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &#8216;hosts&#8217; files, and just to see if I could&#8230; I have worked with DNS servers mainly through web-based front-ends, so I wanted to find out what the configuration really looked like. The most helpful and complete resource I came across was the <a href="http://www.net.cmu.edu/groups/netdev/docs/bind9/Bv9ARM.html">BIND 9 Administrator Reference Manual</a> (Good title). Here is the configuration I finally came up with (and some associated notes).</p>
+
+<h2>The Configuration Files</h2>
+
+<p>The &#8216;named.conf&#8217; file that usually contains the main configuration information is split into 3 seperate files on the debian install.</p>
+
+<h3>named.conf</h3>
+
+<p>The &#8216;named.conf&#8217; file is located in the &#8216;/etc/bind/&#8217; directory, this is the main bind configuration directory on a debian install. The &#8216;named.conf&#8217; file itself is written so there is probably no need to edit it. All personalisation of the service can be done using the &#8216;named.conf.options&#8217; and &#8216;named.conf.local&#8217; files that are referenced in the &#8216;named.conf&#8217;.</p>
+
+<h3>named.conf.options</h3>
+
+<p>&#8216;named.conf.options&#8217; pretty much contains the <em>options</em> block that is usually found in the top of the &#8216;named.conf&#8217; file.</p>
+
+<p>The <em>directory</em> parameter specifies the root directory where all relatively referenced files can be found (this is the default on debian)</p>
+
+<p>The <em>forwarders</em> is a list of DNS servers that this server can &#8216;forward&#8217; the query to if it doesn&#8217;t know the answer. This is pointed at my ISP&#8217;s normal DNS server (in this case, via the network router)</p>
+
+<p>The <em>auth-nxdomain</em> directive instructs the server to answer as an authoritative source for non-existant (nx) records. It is generally a bad idea.</p>
+
+<p>The <em>allow-query</em> directive is fairly self-explanatory, it provides a list of IP ranges that are permitted to query this server. In this case, I have limited access to the localhost and the private network.</p>
+
+<p>The <em>listen-on</em> directive is similar, it provides a list of IPs that the server should listen on. In my case this is only the loopback and the private interface.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>options {
+</span><span class='line'>        directory "/etc/bind";
+</span><span class='line'>        forwarders {
+</span><span class='line'>                192.168.1.1;
+</span><span class='line'>        };
+</span><span class='line'>        auth-nxdomain no;    # conform to RFC1035
+</span><span class='line'>        allow-query {
+</span><span class='line'>            192.168.1.0/24;    # Only allow queries from the network and local machine
+</span><span class='line'>            127.0.0.0/24;
+</span><span class='line'>        };
+</span><span class='line'>         listen-on {
+</span><span class='line'>            192.168.1.100;
+</span><span class='line'>            127.0.0.1;
+</span><span class='line'>        };
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>On the debian package the file &#8216;named.conf.local&#8217; is referenced by the &#8216;named.conf&#8217; to provide information about the setup specific to this server. As such, there is little or no need to edit the &#8216;named.conf&#8217; itself. My &#8216;named.conf.local&#8217; defines 2 zones; &#8216;everyone-here.is-a-geek.com&#8217;, whichs maps the computers on the LAN, and the &#8216;1.168.192.in-addr.arpa&#8217; zone, which provides the reverse dns information. While this is (especially on a LAN) pretty much un-used as far as I know, it&#8217;s still good practice to put it in, and it can be useful at times for resolving the &#8220;Which computer connected to my server?&#8221; question.</p>
+
+<p>The <em>type</em> &#8216;master&#8217; tells the server that it is the authority for this zone, and it should be able to answer definitively about requests for systems in it.</p>
+
+<p>The <em>file</em> points to the &#8216;database&#8217; file containing specific information about the contents of the zone. This file is relative to the <em>path</em> given earlier, but an absolute path can also be used.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//Add the zone for normal DNS lookup
+</span><span class='line'>zone "everyone-here.is-a-geek.com" {
+</span><span class='line'>        type master;
+</span><span class='line'>        file "db.everyone-here.is-a-geek.com";
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The reverse zone is exactly the same as the forward zone. All reverse DNS zones end in &#8216;.in-addr.arpa&#8217;, the rest of the address is the IP in reverse (i.e 192.168.1. is my internal IP range, so to allow lookups I add entries for &#8216;1.168.192.in-addr.arpa&#8217;)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//Add the zone for reverse lookups
+</span><span class='line'>zone "1.168.192.in-addr.arpa" {
+</span><span class='line'>        type master;
+</span><span class='line'>        file "db.192";
+</span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>The Database file(s)</h2>
+
+<h3>db.everyone-here.is-a-geek.com</h3>
+
+<p>This one probably needs a bit more explanation, I think it&#8217;s easier if I comment it inline. Two important things to remember everything that doesn&#8217;t end in a &#8220;.&#8221; will be prepended to the base domain, and the @ is substituted for the base domain.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$TTL    604800
+</span><span class='line'>$ORIGIN everyone-here.is-a-geek.com.                            ;The base domain name (From now on = @)
+</span><span class='line'>@       IN      SOA     gir webmaster (                
+</span><span class='line'>                             1                ; Serial
+</span><span class='line'>                             604800        ; Refresh
+</span><span class='line'>                             86400          ; Retry
+</span><span class='line'>                             2419200       ; Expire
+</span><span class='line'>                             604800 )      ; Negative Cache TTL
+</span><span class='line'>;
+</span><span class='line'>@               NS         gir                  ;This is the nameserver
+</span><span class='line'>@               MX        10      gir         ;mail sent to @everyone-here.is-a-geek.com goes to this server
+</span><span class='line'>@               A          192.168.1.100   ;the "A" record specifies a direct pointer to the IP address
+</span><span class='line'>gir              CNAME   @                   ;each "CNAME" points to another entry (or domain) in this case gir points to the base domain
+</span><span class='line'>*               CNAME   gir                   ;and everything (*) points to gir
+</span><span class='line'>ben            A       192.168.1.69     ;My housemates desktop - an "A" record pointing to Ben's static IP
+</span><span class='line'>zyrtec         A       192.168.1.150   ;My desktop machine - ditto for mine</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And the reverse table works the same way as the forward ones, except with the special <em>.in-addr.arpa</em> postfix.</p>
+
+<h3>/etc/bind/db.192</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$TTL    1D
+</span><span class='line'>$ORIGIN 1.168.192.in-addr.arpa.
+</span><span class='line'>@       IN      SOA     gir.everyone-here.is-a-geek.com. hostmaster.everyone-here.is-a-geek.com. (
+</span><span class='line'>                             1                 ; Serial
+</span><span class='line'>                             604800         ; Refresh
+</span><span class='line'>                             86400           ; Retry
+</span><span class='line'>                             2419200        ; Expire
+</span><span class='line'>                             604800 )       ; Negative Cache TTL
+</span><span class='line'>;
+</span><span class='line'>@               NS      gir.everyone-here.is-a-geek.com.           ;Add entries for all known IP-&gt;hostname maps in the domain
+</span><span class='line'>100             PTR     gir.everyone-here.is-a-geek.com.
+</span><span class='line'>150             PTR     zyrtec.everyone-here.is-a-geek.com.
+</span><span class='line'>69               PTR     ben.everyone-here.is-a-geek.com.</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So there you have it, thats pretty much the guts of my DNS configuration. It took some tweaking to get it right (syslog is you best friend on this one) but it now works for my needs.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -191,6 +387,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
       </li>
     
@@ -204,10 +404,6 @@
     
       <li class="post">
         <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
       </li>
     
   </ul>

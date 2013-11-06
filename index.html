@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="As a keyboard line junky and a Vim user, this is something I&#8217;ve been meaning to do for a long time. I mean, who actually uses Caps lock anyway &hellip;">
+  <meta name="description" content="Netcat (nc) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay Web Hook Requests With Netcat</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-06T17:45:00+10:00" pubdate data-updated="true">Nov 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &#8220;Web Hooks&#8221;.</p>
+
+<p>In my specific case, it was the Facebook &#8220;Real-Time&#8221; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
+
+<p>To overcome this, we need to be able to consistently repeat a request from Facebook while fine-tuning the handler to perform the required task.</p>
+
+<p>Firstly, we can set up <code>nc</code> to capture the request. We could manually write a HTTP request, but this will ensure it is authentic and actually represents the request that will be sent by the third party.</p>
+
+<pre><code>nc -l 8000 &gt; request.txt
+</code></pre>
+
+<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &#8220;request.txt&#8221;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&#8217;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &#8220;request.txt&#8221;, where we can view it, edit it and &#8211; most importantly &#8211; replay it.</p>
+
+<p>We can also use <code>nc</code> to handle sending the request for us by piping the saved file through to the target server.</p>
+
+<pre><code>cat request.txt | nc myserver.example.com 80
+</code></pre>
+
+<p>This will connect to our server and make the exact HTTP request that was captured. The advantage, of course, is that we can replay the request over and over quickly and accurately.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -166,86 +220,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (Sorting) of ngResources in AngularJS</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-10T17:06:00+10:00" pubdate data-updated="true">Jul 10<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Just a quick tip that I found useful in a recent Angular.js application.</p>
-
-<p>I was trying to randomize the order of elements within a list retrieved from a <a href="http://docs.angularjs.org/api/ngResource.$resource">ngResource</a> (answers in a quiz or poll application). The naive approach would be to write the code as if the resource fetch is synchronous.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">).</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MyCtrl&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$resource</span><span class="p">,</span> <span class="nx">$routeParams</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">shuffle</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">list</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">};</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">repo</span> <span class="o">=</span> <span class="nx">$resource</span><span class="p">(</span><span class="s1">&#39;/api/question/:id&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;@id&#39;</span><span class="p">});</span>
-</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">question</span> <span class="o">=</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="nx">$routeParams</span><span class="p">.</span><span class="nx">id</span><span class="p">});</span>
-</span><span class='line'>  <span class="nx">shuffle</span><span class="p">(</span><span class="nx">question</span><span class="p">.</span><span class="nx">anwers</span><span class="p">);</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The problem that will soon become apparent, is that the <code>get</code> is <em>not</em> synchronous. So, when the <code>shuffle(question.answer)</code> is called, the <code>question</code> object is not yet populated.</p>
-
-<p>One approach that I encountered to circumvent the issue is to use the built in <a href="http://docs.angularjs.org/api/ng.filter:orderBy">orderBy filter</a> with a callback that randomly chooses the order. This works, because the filter is run when the returning data triggers a new digest. This may be good enough in some circumstances. The problem I encountered with this approach however, is the list is re-sorted every digest cycle. So, if there is anything much going on in the scope, the list will re-sort itself causing the bound elements in the page to jump around.</p>
-
-<p>The solution for me, was to sort the list once, after it is retrieved. This can be accomplished by passing a callback, as the second argument to <code>$resource.get</code>, that will be called with the returned data once it becomes available. This allows you to perform any required manipulation on the data before it is assigned to the <code>$scope</code>.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='js'><span class='line'><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;myApp&#39;</span><span class="p">).</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MyCtrl&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">$resource</span><span class="p">,</span> <span class="nx">$routeParams</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">shuffle</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">list</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">};</span>
-</span><span class='line'>  <span class="kd">var</span> <span class="nx">repo</span> <span class="o">=</span> <span class="nx">$resource</span><span class="p">(</span><span class="s1">&#39;/api/question/:id&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">id</span><span class="o">:</span> <span class="s1">&#39;@id&#39;</span><span class="p">});</span>
-</span><span class='line'>  <span class="nx">$scope</span><span class="p">.</span><span class="nx">question</span> <span class="o">=</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span><span class="nx">id</span><span class="o">:</span> <span class="nx">$routeParams</span><span class="p">.</span><span class="nx">id</span><span class="p">},</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">question</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="nx">shuffle</span><span class="p">(</span><span class="nx">question</span><span class="p">.</span><span class="nx">anwers</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In this instance, the answers to the question are shuffled, but the pattern is useful any time you want to perform an action only <em>after</em> the data if fetched. This may include calculating aggregates or even fetching extra, dependant data.</p>
-
-<p>As an aside, I don&#8217;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &#8220;fat&#8221; services and &#8220;lean&#8221; controllers in a future post.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/2/">&larr; Older</a>
@@ -261,6 +235,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
       </li>
     
@@ -274,10 +252,6 @@
     
       <li class="post">
         <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a>
       </li>
     
   </ul>
