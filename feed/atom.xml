@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2013-11-06T22:34:37+10:00</updated>
+  <updated>2014-05-06T14:19:19+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,30 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Open and close SSH tunnel in script]]></title>
+    <link href="http://blog.tekerson.com/2014/05/06/open-and-close-ssh-tunnel-in-script/"/>
+    <updated>2014-05-06T13:38:00+10:00</updated>
+    <id>http://blog.tekerson.com/2014/05/06/open-and-close-ssh-tunnel-in-script</id>
+    <content type="html"><![CDATA[<p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&#8217;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
+
+<p>In that spirit, I wanted a script to create an ssh tunnel and connect my irc client (irssi) to my bouncer (znc), behind my home firewall.</p>
+
+<p>So, this is what I&#8217;m using:</p>
+
+<pre><code>#!/bin/bash
+ssh -f -o ExitOnForwardFailure=yes -L 6667:localhost:6667 user@home.example.com sleep 30
+irssi
+</code></pre>
+
+<p>The <code>-f -o ExitOnForwardFailure=yes</code> combination makes ssh wait until the forwarded ports have been established before backgrounding. Effectively, this blocks the script until the ports are ready to use.</p>
+
+<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&#8217;re using it. So, once I quit irssi, the tunnel closes.</p>
+
+<p>Then, irssi configured to connect to localhost:6667 which is tunneled to localhost:6667 on the target machine, where it finds znc!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Replay web hook requests with netcat]]></title>
@@ -1559,27 +1583,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 <p>The Mapper could access many data stores; RDBMSs, Session/Cookie data or web services to name a few. Remember, the Mapper decouples the DomainObject completely from the persistent storage</p>
 
 <p>Anyway, I hope this provides a fairly simple concrete example that you can build upon to create a more complete solution that you can then share with the rest of us.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Telecommute Experience (Part 2)]]></title>
-    <link href="http://blog.tekerson.com/2008/12/16/telecommute-experience-part-2/"/>
-    <updated>2008-12-16T18:34:01+10:00</updated>
-    <id>http://blog.tekerson.com/2008/12/16/telecommute-experience-part-2</id>
-    <content type="html"><![CDATA[<p>I have been telecommuting for a bit over a month now, and things have settled quite well.</p>
-
-<p>We have set up an office, away from the entertainment area (except the foosball table, that&#8217;s in the office :)). This has been good to keep some separation between those trying to get work done and the rest of the household population.</p>
-
-<p>With the time difference, office hours work well. An 8 hour stint from 1pm to 9pm (Canada) is the same as 7am to 3pm (Australia). Giving plenty of time in the morning to enjoy the snow, while still allowing ample real-time communication with the office during business hours, and even leaving some time after the work day to relax.</p>
-
-<p>The work itself hasn&#8217;t changed much. A good issue tracker makes things much easier (We use <a href="http://eventum.mysql.org/">MySQL&#8217;s Eventum</a>) because everyone can easily see a current list of priorities and who is doing what, which is always important but even more so without real-time contact.</p>
-
-<p>A good local development environment has also been invaluable, being able to develop and test completely without a connection to the world ensures I can still be productive even when the Internet is on the fritz. Using virtual machines I have set up individual environments for each project. <a href="http://git.or.cz/">Git</a> (via git-svn) for version control allows me to work; branching, committing, merging and reverting all locally.</p>
-
-<p>Communication has primarily been via instant messenger, which was already the case in the office anyway, so no real transition there. Skype is also great if you need voice communication (I generally don&#8217;t).</p>
-
-<p>Using these tools, the transition has been smooth and painless. We have even successfully deployed a major project since I have been here. So far, so good.</p>
 ]]></content>
   </entry>
   

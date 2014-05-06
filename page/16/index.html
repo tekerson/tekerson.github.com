@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Every so often I find a new font that I want to use for something on my system. This time it was a new programming font in gvim. The font I was &hellip;">
+  <meta name="description" content="The issue of whether to use single quotes or double quotation marks in HTML attributes is a topic that has been somewhat debated for some time now. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,98 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/02/19/single-or-double-quotes-for-html-attributes/">Single or Double Quotes for HTML Attributes?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-19T09:02:42+10:00" pubdate data-updated="true">Feb 19<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The issue of whether to use single quotes or double quotation marks in HTML attributes is a topic that has been somewhat debated for some time now. The reason there is debate is due to the differences in, and the leniency of the relevant standards or recommendations. So here&#8217;s my take.</p>
+
+<p>The W3C&#8217;s <a href="http://www.w3.org/TR/html401/">HTML 4.01 Recommendation</a> allows the use of either single or double quotation marks and in certain cases no quotation marks are required at all.
+To quote the recommendation:</p>
+
+<blockquote><p>By default, SGML requires that all attribute values be delimited using either double quotation marks (ASCII decimal 34) or single quotation marks (ASCII decimal 39). Single quote marks can be included within the attribute value when the value is delimited by double quote marks, and vice versa. Authors may also use numeric character references to represent double quotes (&#34;) and single quotes (&#39;). For double quotes authors can also use the character entity reference &#8220;.
+In certain cases, authors may specify the value of an attribute without any quotation marks. The attribute value may only contain letters (a-z and A-Z), digits (0-9), hyphens (ASCII decimal 45), periods (ASCII decimal 46), underscores (ASCII decimal 95), and colons (ASCII decimal 58). We recommend using quotation marks even when it is possible to eliminate them.</p></blockquote>
+
+<p><a href="http://www.w3.org/TR/xhtml1/">XHTML1</a> is a little stricter, saying that all attribute values must be quoted, even those which appear to be numeric, but (as far as I can tell) still allows the use of either quote.</p>
+
+<p>While I am all for flexibility in standards, it can and does lead to inconsistencies between developers, projects and even within the same document.</p>
+
+<p>This inconsistency is not a problem for the majority of (especially static) X/HTML documents. Even though double quotes are recommended, the choice is essentially inconsequential, and may be influenced by factors such as personal preference or the contents of the value being quoted (because single quote marks can be included within the attribute value when the value is delimited by double quote marks, and vice versa).</p>
+
+<p>It does become more relevant once dynamic pages are introduced, mainly due to the uncertainty of the value within the quotes (which can be a deciding factor in the choice, as mentioned above). In this situation I strongly advocate the use of double quotes. Let me explain why with a simple example.</p>
+
+<p>Imagine a template, used in a dynamic web page, that displays a form to allow some data to be entered or edited. With single quotes, an example in <a href="http://php.net">PHP</a> may look like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;form …&gt;
+</span><span class='line'>&lt;input type='text' name='name' value='&lt;?php echo $name ?&gt;' /&gt;
+</span><span class='line'>&lt;input type='submit' value='Submit' /&gt;
+</span><span class='line'>&lt;/form&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This would work fine in most cases, but consider the case where the $name variable contains an apostrophe such as in &#8220;O&#8217;Brien&#8221;. The resulting HTML would look like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;form …&gt;
+</span><span class='line'>&lt;input type='text' name='name' value='O'Brien' /&gt;
+</span><span class='line'>&lt;input type='submit' value='Submit' /&gt;
+</span><span class='line'>&lt;/form&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This would obviously cause problems with the display, causing only an &#8220;O&#8221; to be displayed inside the text field (not to mention invalid markup). Of course, you could run the value through the PHP&#8217;s <a href="http://php.net/addslashes">addslashes()</a> function, and the problem would be solved. But addslashes is one of those functions I try to use very sparingly, it has a tendency to bite you by adding slashes where they are not intended, such as before slashes intended to be escaping other characters. Instead, I prefer to use double quotes around all attributes, like so:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;form …&gt;
+</span><span class='line'>&lt;input type="text" name="name" value="&lt;?php echo $name ?&gt;" /&gt;
+</span><span class='line'>&lt;input type="submit" value="Submit" /&gt;
+</span><span class='line'>&lt;/form&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The advantage is that, by passing the variables through a <a href="http://php.net/htmlentities">htmlentities</a> function (or equivalent). This will convert any double quotes in the variable to the HTML entity &#8220;&quot;&#8221;, preventing the reverse of the problem described with &#8220;O&#8217;Brien&#8221; and ensuring the markup is going to be valid and the value is as intended. This only works for double quotes because there is no standard HTML entity for single quotes (The ASCII code can be used, and &amp;apos; is supported in some browsers, but these aren&#8217;t as widely supported as &amp;quot;).</p>
+
+<p>On the surface, the approach of converting the HTML entities may appear to be no better or worse than the method of escaping the single quotes with addslashes. The advantage is, converting the HTML entities will also account for other characters that should be converted as well, for example the ampersand (&amp;) that, while they may not cause the page to fail to function (most browsers will compensate), will render the HTML invalid if not converted. As such, this conversion would need to be done even with the escaping using slashes, so why use both? Taking this into consideration, I have yet to find a good reason for using single quotes (at least if the value contains dynamic content).</p>
+
+<p>So that&#8217;s my vote, and my reasoning behind it. Vote 1: Double quotes for attribute value delimiters.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -232,65 +324,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/01/13/search-for-the-holy-grail-not-really/">Search for the Holy Grail (Not Really)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-01-13T02:17:38+10:00" pubdate data-updated="true">Jan 13<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Back from the Christmas/New Year festivities, I have been playing around (at a very basic level) with a few programming languages, with the goal of learning something new. All of the languages I have been playing with I have looked at in the past very briefly, but never ventured any deeper. This time I intend to pick one and hopefully learn it to a level where is might be useful.</p>
-
-<p>Of the languages I am looking at, none are particularly unusual or oscure, they are all fairly common scripting languages used for web development.</p>
-
-<p>My list so far consists of (in no particular order):</p>
-
-<ul>
-<li><p><a href="http://perl.org/">Perl</a></p></li>
-<li><p><a href="http://python.org/">Python</a></p></li>
-<li><p><a href="http://ruby-lang.org/">Ruby</a></p></li>
-</ul>
-
-
-<p>I have chosen these languages because as I said, they are common scripting languages, often used in web development. And I am looking to expand my repetoire. Learning a new language not only teaches the symantics of the language, but programming methods, structures and paradigms that can be implemented in any language.</p>
-
-<p>With that in mind, I have decided to look at Ruby (at least for now).</p>
-
-<p>Deciding to do web development with Ruby invariably leads to <a href="http://rubyonrails.org/">Ruby on Rails</a>. Not wanting to get (too) caught up in the hype, I decided to have a look at the raw language first. So, I had a read through the quite unusual (have a look and see) <a href="http://poignantguide.net/ruby/">Why&#8217;s (Poignant) Guide to Ruby</a>. After sifting through this odd compilation to find the actual useful content (The humour &#8211; cartoons, stories and the like &#8211; throughout the book make it an interesting read, but maybe not the best reference manual) I had an overview of Ruby and liked what I saw.</p>
-
-<p>After some initial playing around, reading up on the &#8220;raw&#8221; way of developing web sites in Ruby (raw text and with cgi extensions) I did end up installing rails.</p>
-
-<p>I have experimented briefly with rails in the past, previously though, I had not bothered to learn anything at all about Ruby as a language. So, while the basic functionality of rails, the model/view/controller scaffolding was really impressive (it still is), if I wanted to do anything more adventurous, or if something broke, I was lost.</p>
-
-<p>I am hoping that with a slightly better understanding of Ruby (and a willingness to learn the language this time) I will have more success with rails. If it doesn&#8217;t work for me… I&#8217;ll try somethign else.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/17/">&larr; Older</a>
@@ -308,6 +341,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
       </li>
     
@@ -321,10 +358,6 @@
     
       <li class="post">
         <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
       </li>
     
   </ul>
@@ -343,7 +376,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Brenton Alker -
+  Copyright &copy; 2014 - Brenton Alker -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

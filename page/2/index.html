@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Just a quick tip that I found useful in a recent Angular.js application. I was trying to randomize the order of elements within a list retrieved from &hellip;">
+  <meta name="description" content="I&#8217;ve been studying functional programming lately (it&#8217;s trendy) and while it&#8217;s great to just learn new languages and paradigm, it&# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-12T23:34:00+10:00" pubdate data-updated="true">Aug 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve been studying functional programming lately (it&#8217;s trendy) and while it&#8217;s great to just learn new languages and paradigm, it&#8217;s always nice when the principles can be applied to everyday work.</p>
+
+<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &#8220;Object Oriented Software Construction&#8221;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&#8217;s discussion of the principle</a> he mentions that &#8220;it would be nice if the language itself would support this notion&#8221;.</p>
+
+<p>If occurs to me that functional languages do indeed grant Mr. Fowler his wish.</p>
+
+<p>Functional programmers aim to compose programs using &#8220;pure&#8221; functions. In this case, &#8220;pure&#8221; is used to mean a functions that are &#8220;referentially transparent&#8221;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
+
+<p>Of course, a program that takes no input, can&#8217;t access a data store and produces no output isn&#8217;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&#8217;t go into what a Monads are, it doesn&#8217;t matter, and I&#8217;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &#8220;only&#8221; perform calculation.</p>
+
+<p>These referentially transparent &#8220;pure&#8221; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&#8217;t have changed anything outside of itself.</p>
+
+<p>So, while the languages most of us use daily don&#8217;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&#8217;t that be nice.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -215,72 +263,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-08T16:40:00+10:00" pubdate data-updated="true">May 8<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>Introduction</h2>
-
-<p>I recently grabbed the pre-print release of Lorna Jane Mitchell&#8217;s new book &#8220;PHP Web Services: APIs for the Modern Web&#8221;, now available in Print and Ebook formats <a href="http://shop.oreilly.com/product/0636920028291.do">through O&#8217;Reilly</a>. APIs are such an integral part of modern web application development. Lorna herself specialises in API development and integration, rarely working on anything that could be called front-end.</p>
-
-<p>Every system I have worked on recently has been heavily API based. With the current trend in single-page JavaScript web applications and client-side MV*, the server is being relegated more and more to the role of data provider through custom APIs.</p>
-
-<h2>Content</h2>
-
-<p>In the preface, Lorna enumerates many scenarios in which building APIs is a prudent strategy and why PHP is a pragmatic way to &#8220;solve the web problem&#8221;; being built with the web in mind from the beginning it comes with many useful tools for delivering and consuming web services built in.</p>
-
-<p>With this introduction (as well as the usual typographical conventions) out of the way, we are thrown straight into the nuts-and-bolts of the basics of HTTP request/response and how the browser/web server is analogous to the API consumer/provider we will be building. A very practical and useful part of the chapter is the introduction to a number of tools and techniques for making and inspecting requests against HTTP servers, I have personally used the section on Curl as a reference a number of times already.</p>
-
-<p>No introduction to HTTP, especially as a platform for APIs, would be complete without an explanation of the HTTP verbs and this book doesn&#8217;t disappoint, with a thorough explanation of the common verbs and PHP code examples of their usage. Delving deeper into the HTTP protocol, we find a much more comprehensive look at request and response headers, a look at a number of common headers and a detailed look at the very important, but in my experience - underutilised, <code>Accept</code> header for content negotiation, including example code to parse it correctly taking into accounts the weighting of the preferences. This is great low level information for building a flexible API service.</p>
-
-<p>A chapter each is given to XML and JSON data formats, the advantages and disadvantages of each. Asking the question, &#8220;which format is superior?&#8221; (Hint: it depends); Some useful guidelines regarding the scenarios in which each format may be an appropriate choice are provided. There are, of course, code snippets showing how to work with each format.</p>
-
-<p>The chapter on RPC and SOAP provides a substantial look into these styles of services with examples of real-world APIs, snippets to create and consume them and tools to make working with them more friendly. In spite of the book appearing somewhat biased towards REST style services (or maybe that&#8217;s just me), this chapter is full of great information and tips for REST and SOAP style services, but if this is your primary interest there are probably better books.</p>
-
-<p>The REST chapter brings together many of the concepts explored in the previous chapters about HTTP, verbs, headers, URLs and data formats to describe REST services in a useful, accurate and fairly succinct way. Thorough explanations of how to implement the standard CRUD operations so fundamental to REST are provided. Special mention is also given to hypermedia and content negotiation/media types, which are important aspects of &#8220;pure&#8221; REST services. Ever pragmatic, the chapter concludes with a section reminding readers to remember not to be caught up in the &#8220;trendy&#8221;, and that it is more important for an API to be &#8220;useful&#8221; than it is to be &#8220;RESTful&#8221;.</p>
-
-<p>The debugging chapter looks into what to do when it all goes wrong. As APIs are generally hidden behind the actual application interface the techniques for debugging them can be a bit different. Lorna introduces a couple of tools for inspecting the requests and responses on the wire to allow the tracking of anomalies without interrupting the data flow and breaking request/response formats.</p>
-
-<p>Towards the end of the book, we step away from the code for a couple of chapters and discuss the design decisions based on the options provided earlier in the book. Including chapters discussing robust, predictable, user/developer friendly APIs, handling errors and writing documentation.</p>
-
-<h2>Conclusion &amp; Recommendations</h2>
-
-<p>That was longer than I intended, but I see that as testament to the breadth of information contained within the seemingly modest tome, every chapter has something. Weighing in at a little over 100 pages &#8220;PHP Web Services&#8221; provides a great foundation to the practicalities of using PHP to build modern web services.</p>
-
-<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn&#8217;t dive deep enough for the seasoned professionals. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
-
-<p>All in all, I think the book provides a solid overview of many of the considerations of web service development and would be a great guide to anyone venturing into building such services in PHP.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/3/">&larr; Older</a>
@@ -298,6 +280,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
       </li>
     
@@ -311,10 +297,6 @@
     
       <li class="post">
         <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
       </li>
     
   </ul>
@@ -333,7 +315,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Brenton Alker -
+  Copyright &copy; 2014 - Brenton Alker -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

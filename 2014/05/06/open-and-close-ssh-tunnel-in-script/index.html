@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>About Me - Deprecated Behaviour</title>
+  <title>Open and close SSH tunnel in script - Deprecated Behaviour</title>
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="About Me I am Brenton Alker, hailing from Brisbane, Australia. As a software developer and chronic lurker, I can often be seen hanging around the &hellip;">
+  <meta name="description" content="I have been using SSH tunnels for a long time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.tekerson.com/about">
+  <link rel="canonical" href="http://blog.tekerson.com/2014/05/06/open-and-close-ssh-tunnel-in-script">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/feed/atom.xml" rel="alternate" title="Deprecated Behaviour" type="application/atom+xml">
@@ -76,39 +76,97 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">About Me</h1>
+    
+      <h1 class="entry-title">Open and Close SSH Tunnel in Script</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-06T13:38:00+10:00" pubdate data-updated="true">May 6<span>th</span>, 2014</time>
+        
+      </p>
     
   </header>
-  
-  <p>I am Brenton Alker, hailing from Brisbane, Australia.</p>
-
-<p>As a software developer and chronic lurker, I can often be seen hanging around the fringes of various communities (under the alias Tekerson). Regularly depriving myself of sleep to learn something shiny and hopefully give something back to the community.</p>
-
-<p>If you want to get in touch, I shouldn&#8217;t be too hard to find.</p>
-
-<ul>
-<li>Twitter: (<a href="http://twitter.com/tekerson">@tekerson</a>)</li>
-<li>Email: <a href="mailto:brenton@tekerson.com">brenton@tekerson.com</a></li>
-<li>IRC: <a href="irc://irc.freenode.net/phpc">#phpc on Freenode</a></li>
-</ul>
 
 
-  
-    <footer>
+<div class="entry-content"><p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&#8217;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
+
+<p>In that spirit, I wanted a script to create an ssh tunnel and connect my irc client (irssi) to my bouncer (znc), behind my home firewall.</p>
+
+<p>So, this is what I&#8217;m using:</p>
+
+<pre><code>#!/bin/bash
+ssh -f -o ExitOnForwardFailure=yes -L 6667:localhost:6667 user@home.example.com sleep 30
+irssi
+</code></pre>
+
+<p>The <code>-f -o ExitOnForwardFailure=yes</code> combination makes ssh wait until the forwarded ports have been established before backgrounding. Effectively, this blocks the script until the ports are ready to use.</p>
+
+<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&#8217;re using it. So, once I quit irssi, the tunnel closes.</p>
+
+<p>Then, irssi configured to connect to localhost:6667 which is tunneled to localhost:6667 on the target machine, where it finds znc!</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
       
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Brenton Alker</span></span>
+
       
-        <div class="sharing">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-06T13:38:00+10:00" pubdate data-updated="true">May 6<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/linux/'>Linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
   
   
   
 </div>
 
+    
+    <p class="meta">
       
-    </footer>
-  
+        <a class="basic-alignment left" href="/2013/11/06/replay-web-hook-requests-with-netcat/" title="Previous Post: Replay web hook requests with netcat">&laquo; Replay web hook requests with netcat</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

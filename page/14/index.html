@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="If you have ever mistakenly installed grub (or any other boot manager) onto the MBR of the wrong drive (usually during setting up additional multi- &hellip;">
+  <meta name="description" content="I noticed today that my example subdomain, where my online code examples are (currently only my YUI example) served from was down. Probably since my &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,42 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2007/05/15/example-subdomain-back-online/">Example Subdomain Back Online</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-05-15T01:06:01+10:00" pubdate data-updated="true">May 15<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I noticed today that my example subdomain, where my online code examples are (currently only my <a href="http://example.blog.everyone-here.is-a-geek.com/yui-dragdrop-subscribe/">YUI example</a>) served from was down. Probably since my server upgrade. Oh well, for anyone who cares, it&#8217;s back online now.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -263,71 +299,6 @@ I can, without intervention, maintain 2 weeks worth of backups.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/04/24/configuring-software-raid-with-mdadm/">Configuring Software RAID With Mdadm</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-04-24T01:14:31+10:00" pubdate data-updated="true">Apr 24<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Along with the old server machines I collected from the office (that this server is currently running on) came a plethora of hard disks of varying sized. I decided to put a couple of them to use in a RAID array to protect my important (not really) data.
-The motherboard in my (much newer) desktop machine comes equipped with a RAID compatible disk controller, that I have never made use of. Unfortunately, the machine I have constructed as my server does not.</p>
-
-<p>Never fear, software raid to the rescue. While I was (and still am) led to believe that software RAID is considerably slower than its hardware equivalent, my current array performs comparably, even slightly better (at least for reads), than the individual disks. So it is definitely a viable solution.</p>
-
-<p>So I now have a simple 2 disk mirrored array, and in it&#8217;s creation dispelled a few more of my own misconceptions.</p>
-
-<p>RAID array can be configured using partitions on an already partitioned drive (probably even using the 2 partitions on the same disk, but I didn&#8217;t try as it sort of defeats the purpose).</p>
-
-<p>Using mdadm, a newer much friendlier (than the older raidtools) solution to software RAID on linux, to set up a software RAID is actually a fairly simple task.</p>
-
-<p>As I was creating an new array from blank disks, the majority of the configuration is one command:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/hdb1 /dev/hdc1</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Where /dev/md0 is the new software raid device and /dev/hdb1 and /dev/hdc1 are the 2 partitions that are to be used to create the array. If there is already data that needs to be preservered the &#8220;Create Degraded array, Add new disk&#8221; approach (described in much more detail in an <a href="http://nst.sourceforge.net/nst/docs/user/ch14.html">article on SourceForge</a>).</p>
-
-<p>and then</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>mdadm --examine --scan &gt;&gt; /dev/mdadm/mdadm.conf</span></code></pre></td></tr></table></div></figure>
-
-
-<p>to save the configuration (it works without the configuration file, it just makes life a little easier)</p>
-
-<p>I am yet to set up monitoring, but according to <a href="http://www.linuxdevcenter.com/pub/a/linux/2002/12/05/RAID.html">Linux dev center</a> that is fairly simple too.</p>
-
-<p>The configuration of a RAID array was much simpler and less interesting than I anticipated, but I suppose that&#8217;s a good thing for the server administration world in general.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/15/">&larr; Older</a>
@@ -345,6 +316,10 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
       </li>
     
@@ -358,10 +333,6 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
     
       <li class="post">
         <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
       </li>
     
   </ul>
@@ -380,7 +351,7 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Brenton Alker -
+  Copyright &copy; 2014 - Brenton Alker -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

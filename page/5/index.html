@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="This is part one of a series exploring modular application development in Zend Framework. In this entry we&#8217;ll look at downloading and &hellip;">
+  <meta name="description" content="Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in part one, we &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,167 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/06/28/building-a-modular-application-in-zend-framework-part-2/">Building a Modular Application in Zend Framework - Part 2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-28T00:43:35+10:00" pubdate data-updated="true">Jun 28<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We&#8217;re going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
+
+<p>Note, there are still some bugs in Zend_Tool that prevent this working as it should, I will note the bugs and their fixes as we encounter them.</p>
+
+<h2>Create the module</h2>
+
+<p>From the base path of our application (/WORKING/PATH/aza from the last article), we can issue the command to the Zend_Tool CLI to create our guestbook module.</p>
+
+<pre><code>zf create module guestbook
+</code></pre>
+
+<p>Then, create the index controller within the guestbook module.</p>
+
+<pre><code>zf create controller index 1 guestbook
+</code></pre>
+
+<p>The &#8220;1&#8221; argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
+
+<pre><code>zf create controller ?
+</code></pre>
+
+<p>Once the new module and controller is created we need to tell the application that we are using modules. We do this by adding two lines to the configs/application.ini. The first activates the modules resource. The second configures the front controller, telling it where the modules are located. These lines should be added to the end of the production section of the .ini file.</p>
+
+<pre><code>resources.modules = ""
+resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
+</code></pre>
+
+<p>To check our module is working, we can navigate to our guestbook at http://aza/guestbook and we should see the default view for the index action.</p>
+
+<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn&#8217;t prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
+<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn&#8217;t be but we don&#8217;t really care, we&#8217;re going to replace it anyway.</p>
+
+<h2>Create module bootstrap</h2>
+
+<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn&#8217;t create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">class</span> <span class="nc">Guestbook_Bootstrap</span> <span class="k">extends</span> <span class="nx">Zend_Application_Module_Bootstrap</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don&#8217;t need any further bootstrapping.</p>
+
+<p><strong>Important note</strong>: <strong><em>All</em> bootstrap functions</strong> for <strong>every module</strong> are run for <strong>every request</strong>.</p>
+
+<p>The bootstrap process occurs <em>before</em> routing and dispatch, so during bootstrap there is no way to know which module/controller/action is being requested. Therefore, any setup that should be done only if a particular module is requested should be done in plugins, <em>not</em> bootstrap.</p>
+
+<h2>Getting Quickstart</h2>
+
+<p>Now we have the module skeleton in place, lets start porting the guestbook code to our module. This turns out to be fairly easy; the majority of the changes involve prefixing class names with the module name.</p>
+
+<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it&#8217;s on the right hand side in zip or tar.gz form).</p>
+
+<h2>Importing Quickstart</h2>
+
+<p>Once you have downloaded and extracted the files into a temporary folder, we can start copying in the files we need.</p>
+
+<p>We need to copy the GuestbookController from the Quickstart (making it the IndexController) and all of the Quickstart models, views and forms to the appropriate places within our module.</p>
+
+<p>From (Quickstart)To (Aza)</p>
+
+<p>application/controllers/GuestbookController.php</p>
+
+<p>application/modules/guestbook/controllers/IndexController.php</p>
+
+<p>application/models/*
+application/modules/guestbook/models/</p>
+
+<p>application/views/scripts/guestbook/*
+application/modules/guestbook/views/scripts/index/</p>
+
+<p>application/forms/*
+application/modules/guestbook/forms/</p>
+
+<p>The controller and the views will require overwriting the existing files.</p>
+
+<h2>Porting Quickstart</h2>
+
+<p>Now we have the files in the right place, we need to update the files to be modular.</p>
+
+<p>We&#8217;ll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
+
+<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with &#8220;Default<em>&#8221;, but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of &#8220;Default</em>&#8221; with &#8220;Guestbook_&#8221; in the application/modules/guestbook/models/ directory is all we need.</p>
+
+<p>The controller is a little trickier because it isn&#8217;t already prefixed (controllers in the default module aren&#8217;t), but it&#8217;s still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
+
+<p>Finally, we get to the view. In our index view (application/modules/guestbook/views/scripts/index/index.phtml) we need to update the parameters passed to the url helper to reference our controller. Adding the module, and changing the controller leaves the first link looking like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;&lt;?php echo $this-&gt;url(</span>
+</span><span class='line'><span class="s">    array(</span>
+</span><span class='line'><span class="s">        &#39;module&#39;    =&gt; &#39;guestbook&#39;,</span>
+</span><span class='line'><span class="s">        &#39;controller&#39; =&gt; &#39;index&#39;,</span>
+</span><span class='line'><span class="s">        &#39;action&#39;     =&gt; &#39;sign&#39;</span>
+</span><span class='line'><span class="s">    ), </span>
+</span><span class='line'><span class="s">    &#39;default&#39;, </span>
+</span><span class='line'><span class="s">    true) ?&gt;&quot;</span><span class="nt">&gt;</span>Sign Our Guestbook<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Done!</p>
+
+<h2>Connect the database</h2>
+
+<p>I&#8217;ll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.</p>
+
+<h2>Conclusion</h2>
+
+<p>We have just ported the Quickstart guestbook application to a Zend Framework Module. Modularizing applications allows for easier code reuse across applications. Hopefully modules will become standardized to the point that there will be a repository of modules that can be added to your application and providing drop in functionality.</p>
+
+<h2>Download</h2>
+
+<p>For those who had trouble following along, I&#8217;ve made the entire application (including database) available via my <a href="http://github.com/tekerson/A-Zend-Application/tree/master">github repository</a>.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -226,46 +387,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/03/17/following-hashtags-on-twitter/">Following Hashtags on Twitter</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-03-17T00:24:59+10:00" pubdate data-updated="true">Mar 17<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don&#8217;t believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the &#8220;correct&#8221; tag).</p>
-
-<p>I found that this can be done using twitter&#8217;s own search function, simply put all the tags into the &#8220;Any of these words&#8221; box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the &#8220;Feed for this query&#8221; (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
-
-<p>This allowed me to keep up with chatter at the conference, even from people I don&#8217;t usually follow.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/6/">&larr; Older</a>
@@ -283,6 +404,10 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
       </li>
     
@@ -296,10 +421,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     
       <li class="post">
         <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/05/28/share-tmux-windows-across-sessions/">Share tmux Windows Across Sessions</a>
       </li>
     
   </ul>
@@ -318,7 +439,7 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Brenton Alker -
+  Copyright &copy; 2014 - Brenton Alker -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
