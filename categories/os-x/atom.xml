@@ -4,7 +4,7 @@
   <title><![CDATA[Category: OS X | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/os-x/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,11 +18,11 @@
     <link href="http://blog.tekerson.com/2013/09/04/remapping-capslock-to-ctrl-in-osx/"/>
     <updated>2013-09-04T11:14:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/09/04/remapping-capslock-to-ctrl-in-osx</id>
-    <content type="html"><![CDATA[<p>As a keyboard line junky and a Vim user, this is something I've been meaning to do for a long time. I mean, who actually uses Caps lock anyway? Every time I've had a look, the process has appeared to involve installation of third party software and in general seemed like too much effort. It turns out, if you only want to remap meta-keys (caps lock, alt, ctrl and command) you can do that easily through the OSX System Preferences.</p>
+    <content type="html"><![CDATA[<p>As a command line junky and a Vim user, this is something I&rsquo;ve been meaning to do for a long time. I mean, who actually uses Caps lock anyway? Every time I&rsquo;ve had a look, the process has appeared to involve installation of third party software and in general seemed like too much effort. It turns out, if you only want to remap meta-keys (caps lock, alt, ctrl and command) you can do that easily through the OSX System Preferences.</p>
 
-<p>In "Apple Menu" (Top Left), "System Preferences", "Keyboard". On the "Keyboard" Tab (not "Keyboard Shortcuts"), there is a "Modifier Keys" button, which opens a dialog and provides a simple interface to remap (or disable) your modifier keys.</p>
+<p>In &ldquo;Apple Menu&rdquo; (Top Left), &ldquo;System Preferences&rdquo;, &ldquo;Keyboard&rdquo;. On the &ldquo;Keyboard&rdquo; Tab (not &ldquo;Keyboard Shortcuts&rdquo;), there is a &ldquo;Modifier Keys&rdquo; button, which opens a dialog and provides a simple interface to remap (or disable) your modifier keys.</p>
 
-<p>I wish I'd realised sooner that it was so simple, now to re-train my hands and free that poor little finger from its curled up hell.</p>
+<p>I wish I&rsquo;d realised sooner that it was so simple, now to re-train my hands and free that poor little finger from its curled up hell.</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Subversion | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/subversion/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -20,7 +20,7 @@
     <id>http://blog.tekerson.com/2006/11/02/easy-deployment-from-subversion</id>
     <content type="html"><![CDATA[<p>After recently discovering the ways in which a version control server, combined with a sensible set of deployment scripts, can development easier (up until now the ones I have used have all been poorly configured and more of a hindrance then a help). I moved some of my personal projects onto my subversion server.</p>
 
-<p>I have been using <a href="http://subversion.tigris.org/">subversion</a> for some years to manage the configuration files on my Linux boxen, on the suggestion of an article I read at one time but can't now find a link for (there are some similar ones available), all those fiddly kernel configs and xorg.conf files that you tweak until they break, then can't remember what you changed.</p>
+<p>I have been using <a href="http://subversion.tigris.org/">subversion</a> for some years to manage the configuration files on my Linux boxen, on the suggestion of an article I read at one time but can&rsquo;t now find a link for (there are some similar ones available), all those fiddly kernel configs and xorg.conf files that you tweak until they break, then can&rsquo;t remember what you changed.</p>
 
 <p>Being in charge of the version control systems at work, I am always looking for better and easier ways to keep the latest versions checked in and easily deploy to the live servers (and be able to roll it back if it all goes up in flames). So with the help of a few simple shell scripts, I finally have a system that allows my to edit and test locally before committing and deploying to the live sites.</p>
 
@@ -33,9 +33,9 @@ rsync -vrz --rhs=ssh --progress /tmp/project/public_html user@remote.live.site.c
 rm -rf /tmp/project/
 </code></p>
 
-<p>Of course this is only the basic form, with all values hard coded, there are more advanced scripts that take arguments, for example I use <em>--live</em> to deploy to the live server as opposed to the (default) staging/test server, or allow the the name of the branch/tag and revision to be specified.</p>
+<p>Of course this is only the basic form, with all values hard coded, there are more advanced scripts that take arguments, for example I use <em>&mdash;live</em> to deploy to the live server as opposed to the (default) staging/test server, or allow the the name of the branch/tag and revision to be specified.</p>
 
-<p>This allows easy deployment of code bases in a fairly efficient manner. I am still struggling with control of database structures, I currently start with an SQL dump of the schema, and then incrementally store SQL scripts to update the database to newer versions to allow deployment on various sites. I am considering writing a tool to compare the schema of 2 databases and provide SQL code to transform one into the other... when I get time.</p>
+<p>This allows easy deployment of code bases in a fairly efficient manner. I am still struggling with control of database structures, I currently start with an SQL dump of the schema, and then incrementally store SQL scripts to update the database to newer versions to allow deployment on various sites. I am considering writing a tool to compare the schema of 2 databases and provide SQL code to transform one into the other&hellip; when I get time.</p>
 
 <p>Now I just need to convince the developers to use it.</p>
 ]]></content>

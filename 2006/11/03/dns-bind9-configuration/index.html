@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &#8216;hosts&#8217; files, and just to &hellip;">
+  <meta name="description" content="I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &lsquo;hosts&rsquo; files, and just to &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,23 +103,23 @@
   </header>
 
 
-<div class="entry-content"><p>I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &#8216;hosts&#8217; files, and just to see if I could&#8230; I have worked with DNS servers mainly through web-based front-ends, so I wanted to find out what the configuration really looked like. The most helpful and complete resource I came across was the <a href="http://www.net.cmu.edu/groups/netdev/docs/bind9/Bv9ARM.html">BIND 9 Administrator Reference Manual</a> (Good title). Here is the configuration I finally came up with (and some associated notes).</p>
+<div class="entry-content"><p>I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &lsquo;hosts&rsquo; files, and just to see if I could&hellip; I have worked with DNS servers mainly through web-based front-ends, so I wanted to find out what the configuration really looked like. The most helpful and complete resource I came across was the <a href="http://www.net.cmu.edu/groups/netdev/docs/bind9/Bv9ARM.html">BIND 9 Administrator Reference Manual</a> (Good title). Here is the configuration I finally came up with (and some associated notes).</p>
 
 <h2>The Configuration Files</h2>
 
-<p>The &#8216;named.conf&#8217; file that usually contains the main configuration information is split into 3 seperate files on the debian install.</p>
+<p>The &lsquo;named.conf&rsquo; file that usually contains the main configuration information is split into 3 seperate files on the debian install.</p>
 
 <h3>named.conf</h3>
 
-<p>The &#8216;named.conf&#8217; file is located in the &#8216;/etc/bind/&#8217; directory, this is the main bind configuration directory on a debian install. The &#8216;named.conf&#8217; file itself is written so there is probably no need to edit it. All personalisation of the service can be done using the &#8216;named.conf.options&#8217; and &#8216;named.conf.local&#8217; files that are referenced in the &#8216;named.conf&#8217;.</p>
+<p>The &lsquo;named.conf&rsquo; file is located in the &lsquo;/etc/bind/&rsquo; directory, this is the main bind configuration directory on a debian install. The &lsquo;named.conf&rsquo; file itself is written so there is probably no need to edit it. All personalisation of the service can be done using the &lsquo;named.conf.options&rsquo; and &lsquo;named.conf.local&rsquo; files that are referenced in the &lsquo;named.conf&rsquo;.</p>
 
 <h3>named.conf.options</h3>
 
-<p>&#8216;named.conf.options&#8217; pretty much contains the <em>options</em> block that is usually found in the top of the &#8216;named.conf&#8217; file.</p>
+<p>&lsquo;named.conf.options&rsquo; pretty much contains the <em>options</em> block that is usually found in the top of the &lsquo;named.conf&rsquo; file.</p>
 
 <p>The <em>directory</em> parameter specifies the root directory where all relatively referenced files can be found (this is the default on debian)</p>
 
-<p>The <em>forwarders</em> is a list of DNS servers that this server can &#8216;forward&#8217; the query to if it doesn&#8217;t know the answer. This is pointed at my ISP&#8217;s normal DNS server (in this case, via the network router)</p>
+<p>The <em>forwarders</em> is a list of DNS servers that this server can &lsquo;forward&rsquo; the query to if it doesn&rsquo;t know the answer. This is pointed at my ISP&rsquo;s normal DNS server (in this case, via the network router)</p>
 
 <p>The <em>auth-nxdomain</em> directive instructs the server to answer as an authoritative source for non-existant (nx) records. It is generally a bad idea.</p>
 
@@ -159,11 +159,11 @@
 </span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
 
 
-<p>On the debian package the file &#8216;named.conf.local&#8217; is referenced by the &#8216;named.conf&#8217; to provide information about the setup specific to this server. As such, there is little or no need to edit the &#8216;named.conf&#8217; itself. My &#8216;named.conf.local&#8217; defines 2 zones; &#8216;everyone-here.is-a-geek.com&#8217;, whichs maps the computers on the LAN, and the &#8216;1.168.192.in-addr.arpa&#8217; zone, which provides the reverse dns information. While this is (especially on a LAN) pretty much un-used as far as I know, it&#8217;s still good practice to put it in, and it can be useful at times for resolving the &#8220;Which computer connected to my server?&#8221; question.</p>
+<p>On the debian package the file &lsquo;named.conf.local&rsquo; is referenced by the &lsquo;named.conf&rsquo; to provide information about the setup specific to this server. As such, there is little or no need to edit the &lsquo;named.conf&rsquo; itself. My &lsquo;named.conf.local&rsquo; defines 2 zones; &lsquo;everyone-here.is-a-geek.com&rsquo;, whichs maps the computers on the LAN, and the &lsquo;1.168.192.in-addr.arpa&rsquo; zone, which provides the reverse dns information. While this is (especially on a LAN) pretty much un-used as far as I know, it&rsquo;s still good practice to put it in, and it can be useful at times for resolving the &ldquo;Which computer connected to my server?&rdquo; question.</p>
 
-<p>The <em>type</em> &#8216;master&#8217; tells the server that it is the authority for this zone, and it should be able to answer definitively about requests for systems in it.</p>
+<p>The <em>type</em> &lsquo;master&rsquo; tells the server that it is the authority for this zone, and it should be able to answer definitively about requests for systems in it.</p>
 
-<p>The <em>file</em> points to the &#8216;database&#8217; file containing specific information about the contents of the zone. This file is relative to the <em>path</em> given earlier, but an absolute path can also be used.</p>
+<p>The <em>file</em> points to the &lsquo;database&rsquo; file containing specific information about the contents of the zone. This file is relative to the <em>path</em> given earlier, but an absolute path can also be used.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -177,7 +177,7 @@
 </span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The reverse zone is exactly the same as the forward zone. All reverse DNS zones end in &#8216;.in-addr.arpa&#8217;, the rest of the address is the IP in reverse (i.e 192.168.1. is my internal IP range, so to allow lookups I add entries for &#8216;1.168.192.in-addr.arpa&#8217;)</p>
+<p>The reverse zone is exactly the same as the forward zone. All reverse DNS zones end in &lsquo;.in-addr.arpa&rsquo;, the rest of the address is the IP in reverse (i.e 192.168.1. is my internal IP range, so to allow lookups I add entries for &lsquo;1.168.192.in-addr.arpa&rsquo;)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -195,7 +195,7 @@
 
 <h3>db.everyone-here.is-a-geek.com</h3>
 
-<p>This one probably needs a bit more explanation, I think it&#8217;s easier if I comment it inline. Two important things to remember everything that doesn&#8217;t end in a &#8220;.&#8221; will be prepended to the base domain, and the @ is substituted for the base domain.</p>
+<p>This one probably needs a bit more explanation, I think it&rsquo;s easier if I comment it inline. Two important things to remember everything that doesn&rsquo;t end in a &ldquo;.&rdquo; will be prepended to the base domain, and the @ is substituted for the base domain.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -325,6 +325,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -338,10 +342,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

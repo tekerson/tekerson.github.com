@@ -105,17 +105,17 @@
 
 <div class="entry-content"><p>I intend to do a write-up of my experiences choosing a PHP framework, but for now, I just thought I would share this.</p>
 
-<p>One of the out-of-the-box features that the <a href="http://framework.zend.com/">Zend Framework</a> is missing is &#8220;layouts&#8221;. These are the templates that contain the elements that are present on every (or at least almost every) page of the application. Things like headers, main menu&#8217;s, footers etc.</p>
+<p>One of the out-of-the-box features that the <a href="http://framework.zend.com/">Zend Framework</a> is missing is &ldquo;layouts&rdquo;. These are the templates that contain the elements that are present on every (or at least almost every) page of the application. Things like headers, main menu&rsquo;s, footers etc.</p>
 
 <p>I looked at a number of different ways to implement this in Zend, the most obvious idea involves adding header and footer calls (possible a helper) in every view. While this will work, it is a lot of duplicated code.</p>
 
-<p><a href="http://blog.astrumfutura.com/archives/291-Complex-Views-with-the-Zend-Framework-Part-6-Setting-The-Terminology.html">Maugrim the Reaper&#8217;s blog</a> contains a fairly comprehensive investigation (in 6 parts so far, the 7th hopefully coming soon) into &#8220;Complex Views&#8221;. Unfortunately, there is not (as yet) any solid implementation of most of the concepts available there, but it does provide much to think about.</p>
+<p><a href="http://blog.astrumfutura.com/archives/291-Complex-Views-with-the-Zend-Framework-Part-6-Setting-The-Terminology.html">Maugrim the Reaper&rsquo;s blog</a> contains a fairly comprehensive investigation (in 6 parts so far, the 7th hopefully coming soon) into &ldquo;Complex Views&rdquo;. Unfortunately, there is not (as yet) any solid implementation of most of the concepts available there, but it does provide much to think about.</p>
 
-<p>The most elegant implementation (IMHO) of a layout system to meet my needs that I have found (and believe me I&#8217;ve looked) comes from <a href="http://akrabat.com/2007/06/02/extending-viewrenderer-to-support-layout-templates/">Akra&#8217;s Devnotes</a> and involves extending the ViewRenderer <a href="http://framework.zend.com/manual/en/zend.controller.actionhelpers.html">Action Helper</a> to render the layout template.</p>
+<p>The most elegant implementation (IMHO) of a layout system to meet my needs that I have found (and believe me I&rsquo;ve looked) comes from <a href="http://akrabat.com/2007/06/02/extending-viewrenderer-to-support-layout-templates/">Akra&rsquo;s Devnotes</a> and involves extending the ViewRenderer <a href="http://framework.zend.com/manual/en/zend.controller.actionhelpers.html">Action Helper</a> to render the layout template.</p>
 
 <p>This works very similarly to my initial stab at an implementation, but does so in a much cleaner way (I initially had separate top and bottom templates, instead of the call to render the content in the layout). However, it does lack one feature that my implementation had, it only allows <em>application level</em> layouts. I also implemented <em>controller level</em> layouts; A 3-level view structure.</p>
 
-<p>This allows the controllers to contain their own structure within the applications main structure. I extended Rob&#8217;s class (as in added to, not in the OO sense) to incorporate this 3-level view structure.</p>
+<p>This allows the controllers to contain their own structure within the applications main structure. I extended Rob&rsquo;s class (as in added to, not in the OO sense) to incorporate this 3-level view structure.</p>
 
 <p>My current code looks like this:</p>
 
@@ -325,7 +325,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The Controller (for the default &#8220;index&#8221; controller) layout (views/scripts/index/layout.tpl.php) looks like this:</p>
+<p>The Controller (for the default &ldquo;index&rdquo; controller) layout (views/scripts/index/layout.tpl.php) looks like this:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -342,7 +342,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>And that of course leaves the action&#8217;s view to only display the items specific to that action.</p>
+<p>And that of course leaves the action&rsquo;s view to only display the items specific to that action.</p>
 
 <p>UPDATE:
 This code is broken. During some debugging, I discovered that this method of calling the render function from the view causes the action function to be run twice. It also prevents the action function (or view) from manipulating variables that can be used by the layout script, so preventing things like the action requesting javascript or stylesheet includes in the html head section.</p>
@@ -409,6 +409,10 @@ This code is broken. During some debugging, I discovered that this method of cal
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -422,10 +426,6 @@ This code is broken. During some debugging, I discovered that this method of cal
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

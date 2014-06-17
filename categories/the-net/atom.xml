@@ -4,7 +4,7 @@
   <title><![CDATA[Category: The Net | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/the-net/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,17 +18,17 @@
     <link href="http://blog.tekerson.com/2013/03/28/ideas-of-march-wheres-the-love/"/>
     <updated>2013-03-28T21:43:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/03/28/ideas-of-march-wheres-the-love</id>
-    <content type="html"><![CDATA[<p>As I previously blogged, I've recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
+    <content type="html"><![CDATA[<p>As I previously blogged, I&rsquo;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
 
-<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; "You never know when it's going to disappear." citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell's suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">"don't read the comments"</a>, I have to wonder if having comments is worth the effort involved?</p>
+<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; &ldquo;You never know when it&rsquo;s going to disappear.&rdquo; citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell&rsquo;s suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">&ldquo;don&rsquo;t read the comments&rdquo;</a>, I have to wonder if having comments is worth the effort involved?</p>
 
-<p>For now, it looks like I'm going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where's the love?</p>
+<p>For now, it looks like I&rsquo;m going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where&rsquo;s the love?</p>
 
-<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes "turn off comments and encourage others to respond by writing [...] on their own blog." I think this is a fantastic idea (I'm doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, "trackbacks" were an attempt at solving this issue, but I'm not sure that worked too well.</p>
+<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes &ldquo;turn off comments and encourage others to respond by writing [&hellip;] on their own blog.&rdquo; I think this is a fantastic idea (I&rsquo;m doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, &ldquo;trackbacks&rdquo; were an attempt at solving this issue, but I&rsquo;m not sure that worked too well.</p>
 
-<p>This is one advantage the "walled gardens" currently hold - they have the ability to aggregate the posts into a single congruous conversation.</p>
+<p>This is one advantage the &ldquo;walled gardens&rdquo; currently hold &ndash; they have the ability to aggregate the posts into a single congruous conversation.</p>
 
-<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I'll... Probably never see it... Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
+<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I&rsquo;ll&hellip; Probably never see it&hellip; Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
 ]]></content>
   </entry>
   
@@ -37,9 +37,9 @@
     <link href="http://blog.tekerson.com/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/"/>
     <updated>2010-02-18T00:11:13+10:00</updated>
     <id>http://blog.tekerson.com/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle</id>
-    <content type="html"><![CDATA[<p>The furor surrounding the amusing chaos that ensued following <a href="http://www.readwriteweb.com/archives/facebook_wants_to_be_your_one_true_loginpage5.php">ReadWriteWeb's article on Facebook Connect</a> has been interesting, in that it brings attention to developers assumptions about the way users interact with their products.</p>
+    <content type="html"><![CDATA[<p>The furor surrounding the amusing chaos that ensued following <a href="http://www.readwriteweb.com/archives/facebook_wants_to_be_your_one_true_loginpage5.php">ReadWriteWeb&rsquo;s article on Facebook Connect</a> has been interesting, in that it brings attention to developers assumptions about the way users interact with their products.</p>
 
-<p>There have been articles debating who is the cause of the confusion; whether it's the <a href="http://funkatron.com/site/comments/were-the-stupid-ones-facebook-google-and-our-failure-as-developers/">Developers</a> or the <a href="http://www.lastpodcast.net/2010/02/10/facebook-login-is-hard-welcome-to-idiocracy">Users</a> that need to try harder.</p>
+<p>There have been articles debating who is the cause of the confusion; whether it&rsquo;s the <a href="http://funkatron.com/site/comments/were-the-stupid-ones-facebook-google-and-our-failure-as-developers/">Developers</a> or the <a href="http://www.lastpodcast.net/2010/02/10/facebook-login-is-hard-welcome-to-idiocracy">Users</a> that need to try harder.</p>
 
 <p>But in all this, what I think has been missed is the <em>success</em> of <a href="http://developers.facebook.com/connect.php">Facebook Connect</a>. There are hundreds of comments on the ReadWriteWeb article from users who failed (for whatever reason) to find their way to Facebook, yet still managed to use Facebook Connect to leave a comment.</p>
 
@@ -52,11 +52,11 @@
     <link href="http://blog.tekerson.com/2009/03/17/following-hashtags-on-twitter/"/>
     <updated>2009-03-17T00:24:59+10:00</updated>
     <id>http://blog.tekerson.com/2009/03/17/following-hashtags-on-twitter</id>
-    <content type="html"><![CDATA[<p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don't believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the "correct" tag).</p>
+    <content type="html"><![CDATA[<p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don&rsquo;t believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the &ldquo;correct&rdquo; tag).</p>
 
-<p>I found that this can be done using twitter's own search function, simply put all the tags into the "Any of these words" box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the "Feed for this query" (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
+<p>I found that this can be done using twitter&rsquo;s own search function, simply put all the tags into the &ldquo;Any of these words&rdquo; box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the &ldquo;Feed for this query&rdquo; (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
 
-<p>This allowed me to keep up with chatter at the conference, even from people I don't usually follow.</p>
+<p>This allowed me to keep up with chatter at the conference, even from people I don&rsquo;t usually follow.</p>
 ]]></content>
   </entry>
   
@@ -65,7 +65,7 @@
     <link href="http://blog.tekerson.com/2008/05/31/my-web-2-world/"/>
     <updated>2008-05-31T02:41:40+10:00</updated>
     <id>http://blog.tekerson.com/2008/05/31/my-web-2-world</id>
-    <content type="html"><![CDATA[<p>The last month or so I've been trying to actually get into the whole "Web 2.0" (I don't like the term by the way) world. I know it's old news, and it's not like it's new to me either. I just recently thought about all the web applications that seem to be so popular that I have dormant accounts on, the main ones are;</p>
+    <content type="html"><![CDATA[<p>The last month or so I&rsquo;ve been trying to actually get into the whole &ldquo;Web 2.0&rdquo; (I don&rsquo;t like the term by the way) world. I know it&rsquo;s old news, and it&rsquo;s not like it&rsquo;s new to me either. I just recently thought about all the web applications that seem to be so popular that I have dormant accounts on, the main ones are;</p>
 
 <ul>
 <li><p><a href="http://www.facebook.com/profile.php?id=611142997">Facebook</a></p></li>
@@ -75,15 +75,15 @@
 </ul>
 
 
-<p>Facebook, well, that's taken MySpace's place as the social network I only passively interact with. The other three are of more interest to me, so I've decided to try and use them for something useful.</p>
+<p>Facebook, well, that&rsquo;s taken MySpace&rsquo;s place as the social network I only passively interact with. The other three are of more interest to me, so I&rsquo;ve decided to try and use them for something useful.</p>
 
-<p>Flickr is a fairly easy one, I have a large collection of digitized photographs spanning a few years which are for the most part sorted/tagged thanks to <a href="http://f-spot.org/Main_Page">F-Spot</a> which has the ability to sync with many popular image hosting sites including Flickr and <a href="http://picasaweb.google.com/Brenton.Alker/">Google's Picasaweb</a>. So I am gradually building the on-line collection, I initially intended to just dump the lot on there (if only as a backup) but then realised that there are a few too many GB for that.</p>
+<p>Flickr is a fairly easy one, I have a large collection of digitized photographs spanning a few years which are for the most part sorted/tagged thanks to <a href="http://f-spot.org/Main_Page">F-Spot</a> which has the ability to sync with many popular image hosting sites including Flickr and <a href="http://picasaweb.google.com/Brenton.Alker/">Google&rsquo;s Picasaweb</a>. So I am gradually building the on-line collection, I initially intended to just dump the lot on there (if only as a backup) but then realised that there are a few too many GB for that.</p>
 
-<p>Del.icio.us I get, but as someone who has never been a big collector of bookmarks, I don't find too useful. My bookmarks in my browser have always been a mess, mainly because they are all just temporary. Any site I visit on a regular basis for any extended period of time, I know the address for (or at least know a good google query to find it). But, in the spirit of my trying to "giving it a go" I installed the <a href="http://del.icio.us/help/firefox/extension">firefox extension</a> and added my "recent bookmarks" to this page using the <a href="http://rick.jinlabs.com/code/delicious">wordpress plugin</a> (over there on the right somewhere). I must say I'm using it more, but still not a great deal.</p>
+<p>Del.icio.us I get, but as someone who has never been a big collector of bookmarks, I don&rsquo;t find too useful. My bookmarks in my browser have always been a mess, mainly because they are all just temporary. Any site I visit on a regular basis for any extended period of time, I know the address for (or at least know a good google query to find it). But, in the spirit of my trying to &ldquo;giving it a go&rdquo; I installed the <a href="http://del.icio.us/help/firefox/extension">firefox extension</a> and added my &ldquo;recent bookmarks&rdquo; to this page using the <a href="http://rick.jinlabs.com/code/delicious">wordpress plugin</a> (over there on the right somewhere). I must say I&rsquo;m using it more, but still not a great deal.</p>
 
-<p>Twitter is an oddity to me, it seems incredibly popular; in spite of it's apparent unreliability. To me it seems to sit somewhere between a very slow IRC and a short message mailing list. I think the only advantage I can see is that it can work mobile, though I've not had much luck keeping that working for more than a day or two. Most other people who have complained about "Not Getting It" when it comes to Twitter seem to be told to install a desktop client, as it is much more conducive to regular use than the website. So, I diligently installed <a href="http://funkatron.com/spaz">Spaz</a>, an <a href="http://www.adobe.com/products/air/">Adobe Air</a> based client, which means I now get little popups telling me when someone "tweets". That makes it more convenient, so far it hasn't made it more interesting.</p>
+<p>Twitter is an oddity to me, it seems incredibly popular; in spite of it&rsquo;s apparent unreliability. To me it seems to sit somewhere between a very slow IRC and a short message mailing list. I think the only advantage I can see is that it can work mobile, though I&rsquo;ve not had much luck keeping that working for more than a day or two. Most other people who have complained about &ldquo;Not Getting It&rdquo; when it comes to Twitter seem to be told to install a desktop client, as it is much more conducive to regular use than the website. So, I diligently installed <a href="http://funkatron.com/spaz">Spaz</a>, an <a href="http://www.adobe.com/products/air/">Adobe Air</a> based client, which means I now get little popups telling me when someone &ldquo;tweets&rdquo;. That makes it more convenient, so far it hasn&rsquo;t made it more interesting.</p>
 
-<p>Although all the tools are very cool, maybe this "Social Web" thing just isn't for me. Then again, maybe it's this whole "Social" thing that just doesn't work for me ;)</p>
+<p>Although all the tools are very cool, maybe this &ldquo;Social Web&rdquo; thing just isn&rsquo;t for me. Then again, maybe it&rsquo;s this whole &ldquo;Social&rdquo; thing that just doesn&rsquo;t work for me ;)</p>
 ]]></content>
   </entry>
   
@@ -92,12 +92,12 @@
     <link href="http://blog.tekerson.com/2008/05/04/sixty-second-tech/"/>
     <updated>2008-05-04T21:48:27+10:00</updated>
     <id>http://blog.tekerson.com/2008/05/04/sixty-second-tech</id>
-    <content type="html"><![CDATA[<p><a href="http://www.sixtysecondtech.com">Sixty Second Tech</a> is a (relatively) new podcast by prominent Zender <a href="http://blog.calevans.com/">Cal Evans</a> that promises to be the "Cure to BSS"</p>
+    <content type="html"><![CDATA[<p><a href="http://www.sixtysecondtech.com">Sixty Second Tech</a> is a (relatively) new podcast by prominent Zender <a href="http://blog.calevans.com/">Cal Evans</a> that promises to be the &ldquo;Cure to BSS&rdquo;</p>
 
-<blockquote><p>Sixty Second Tech is the only known cure for â€œBlank Stare Syndromeâ€ (BSS). BSS happens when one of your technical friends starts talking to you and unconsciously slips into geek speak. They don't realize they've triggered BSS until long after your eyes glaze over. BSS is an embarrassing condition but a curable one, just spend one minute a week listening to Sixty Second Tech.</p></blockquote>
+<blockquote><p>Sixty Second Tech is the only known cure for â€œBlank Stare Syndromeâ€ (BSS). BSS happens when one of your technical friends starts talking to you and unconsciously slips into geek speak. They don&rsquo;t realize they&rsquo;ve triggered BSS until long after your eyes glaze over. BSS is an embarrassing condition but a curable one, just spend one minute a week listening to Sixty Second Tech.</p></blockquote>
 
-<p>While I am definitely on the side of the "technical friends", the short podcasts -- almost exactly 1 minute each, quite impressive -- are a great way to provoke thought about aspects of technology that may not otherwise have been brought to the fore, but probably should be; such as <a href="http://www.sixtysecondtech.com/2008/03/02/the-secret-to-cheap-and-easy-websites/">Wordpress as a CMS</a>, <a href="http://www.sixtysecondtech.com/2008/03/31/openid-and-you/">OpenID</a> and <a href="http://www.sixtysecondtech.com/2008/03/24/do-you-know-what-they-are-saying-about-you/">Google Alerts</a>
-But, my favourite is pointing anyone who speaks to me about "SEO" to the episode "<a href="http://www.sixtysecondtech.com/2008/03/10/go-relevant-or-go-home/">Go Relevant or Go Home!</a>"; which sums up very succinctly the folly of the whole practice.</p>
+<p>While I am definitely on the side of the &ldquo;technical friends&rdquo;, the short podcasts &mdash; almost exactly 1 minute each, quite impressive &mdash; are a great way to provoke thought about aspects of technology that may not otherwise have been brought to the fore, but probably should be; such as <a href="http://www.sixtysecondtech.com/2008/03/02/the-secret-to-cheap-and-easy-websites/">Wordpress as a CMS</a>, <a href="http://www.sixtysecondtech.com/2008/03/31/openid-and-you/">OpenID</a> and <a href="http://www.sixtysecondtech.com/2008/03/24/do-you-know-what-they-are-saying-about-you/">Google Alerts</a>
+But, my favourite is pointing anyone who speaks to me about &ldquo;SEO&rdquo; to the episode &ldquo;<a href="http://www.sixtysecondtech.com/2008/03/10/go-relevant-or-go-home/">Go Relevant or Go Home!</a>&rdquo;; which sums up very succinctly the folly of the whole practice.</p>
 
 <p>His name is Cal Evans, and he is my sixty second tech.</p>
 ]]></content>

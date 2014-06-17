@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Functional Programming | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/functional-programming/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,19 +18,19 @@
     <link href="http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/"/>
     <updated>2013-08-12T23:34:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation</id>
-    <content type="html"><![CDATA[<p>I've been studying functional programming lately (it's trendy) and while it's great to just learn new languages and paradigm, it's always nice when the principles can be applied to everyday work.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been studying functional programming lately (it&rsquo;s trendy) and while it&rsquo;s great to just learn new languages and paradigm, it&rsquo;s always nice when the principles can be applied to everyday work.</p>
 
-<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in "Object Oriented Software Construction", it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler's discussion of the principle</a> he mentions that "it would be nice if the language itself would support this notion".</p>
+<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &ldquo;Object Oriented Software Construction&rdquo;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&rsquo;s discussion of the principle</a> he mentions that &ldquo;it would be nice if the language itself would support this notion&rdquo;.</p>
 
 <p>If occurs to me that functional languages do indeed grant Mr. Fowler his wish.</p>
 
-<p>Functional programmers aim to compose programs using "pure" functions. In this case, "pure" is used to mean a functions that are "referentially transparent", that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
+<p>Functional programmers aim to compose programs using &ldquo;pure&rdquo; functions. In this case, &ldquo;pure&rdquo; is used to mean a functions that are &ldquo;referentially transparent&rdquo;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
 
-<p>Of course, a program that takes no input, can't access a data store and produces no output isn't very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won't go into what a Monads are, it doesn't matter, and I'm not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that "only" perform calculation.</p>
+<p>Of course, a program that takes no input, can&rsquo;t access a data store and produces no output isn&rsquo;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&rsquo;t go into what a Monads are, it doesn&rsquo;t matter, and I&rsquo;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &ldquo;only&rdquo; perform calculation.</p>
 
-<p>These referentially transparent "pure" functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can't have changed anything outside of itself.</p>
+<p>These referentially transparent &ldquo;pure&rdquo; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&rsquo;t have changed anything outside of itself.</p>
 
-<p>So, while the languages most of us use daily don't offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn't that be nice.</p>
+<p>So, while the languages most of us use daily don&rsquo;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&rsquo;t that be nice.</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/git/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,9 +18,9 @@
     <link href="http://blog.tekerson.com/2008/09/05/basic-branching-with-git/"/>
     <updated>2008-09-05T22:48:22+10:00</updated>
     <id>http://blog.tekerson.com/2008/09/05/basic-branching-with-git</id>
-    <content type="html"><![CDATA[<p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it's <strong>easy!</strong></p>
+    <content type="html"><![CDATA[<p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it&rsquo;s <strong>easy!</strong></p>
 
-<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using "<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>" to work on multiple things at once, but this is very limiting.</p>
+<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using &ldquo;<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>&rdquo; to work on multiple things at once, but this is very limiting.</p>
 
 <p>So, Here we go. My basic workflow now look like this.</p>
 
@@ -31,7 +31,7 @@
 
 <p>Then you can work within this branch as you always would.</p>
 
-<p>Work, work, work...</p>
+<p>Work, work, work&hellip;</p>
 
 <pre><code>&lt;code&gt;&lt;a&gt;&lt;/a&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add manual page"&gt;git add&lt;/a&gt; files_i_have_edited.txt
 &lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-commit.html" title="git-commit manual page"&gt;git commit&lt;/a&gt; -m 'My changes'&lt;/code&gt;
@@ -52,12 +52,12 @@
 <pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; my_branch&lt;/code&gt;
 </code></pre>
 
-<p>this "edit, commit, pull" cycle can continue until the task is complete. Then, once you're satisfied you can delete the branch with</p>
+<p>this &ldquo;edit, commit, pull&rdquo; cycle can continue until the task is complete. Then, once you&rsquo;re satisfied you can delete the branch with</p>
 
 <pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html" title="git-branch manual page"&gt;git branch&lt;/a&gt; -d my_branch&lt;/code&gt;
 </code></pre>
 
-<p>It's still in the history of course, but no need to keep old branches around.</p>
+<p>It&rsquo;s still in the history of course, but no need to keep old branches around.</p>
 
 <p>Hope that makes things clear to anyone else who was confused as I was by some of the overly complicated explanation of branching in git.</p>
 ]]></content>

@@ -105,7 +105,7 @@
 
 <div class="entry-content"><p>A good dependency injection container is a godsend when it comes to managing the dependency tree of even a moderately complex domain model. As such, it comes as no surprise there has been much discussion about them of late in the PHP and Zend Framework communities.</p>
 
-<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei&#8217;s recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
+<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei&rsquo;s recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
 
 <p>The container resource copies any already instantiated objects from the old container into the new one, then replaces the default container.</p>
 
@@ -198,7 +198,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I&#8217;ve also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
+<p>I&rsquo;ve also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
 
 <p>To use the container resource you will need to add the prefix and path to the bootstrappers plugin loader:</p>
 
@@ -242,11 +242,11 @@ resources.container.objects.Log_Writer.arguments.0 = "%Log_Writer.stream%"
 resources.container.options.Log_Writer.stream = APPLICATION_PATH "/../log/application.log"
 </code></pre>
 
-<p>There are 2 resources defined here, the &#8220;Log&#8221; and the &#8220;Log_Writer&#8221;.</p>
+<p>There are 2 resources defined here, the &ldquo;Log&rdquo; and the &ldquo;Log_Writer&rdquo;.</p>
 
 <ol>
-<li><p>Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
-<li><p>The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
+<li><p> Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
+<li><p> The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
 </ol>
 
 
@@ -330,6 +330,10 @@ Instantiating a dependency tree like this for every object you need can lead to 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -343,10 +347,6 @@ Instantiating a dependency tree like this for every object you need can lead to 
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

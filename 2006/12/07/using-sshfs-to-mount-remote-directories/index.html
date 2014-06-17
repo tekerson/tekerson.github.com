@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Well, this is one of the niftiest utilities I&#8217;ve found in a while. It&#8217;s dawned on me in the past that this should be possible, but I&# &hellip;">
+  <meta name="description" content="Well, this is one of the niftiest utilities I&rsquo;ve found in a while. It&rsquo;s dawned on me in the past that this should be possible, but I& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,21 +103,21 @@
   </header>
 
 
-<div class="entry-content"><p>Well, this is one of the niftiest utilities I&#8217;ve found in a while. It&#8217;s dawned on me in the past that this should be possible, but I&#8217;ve never really investigated it until now, probably because at work my desktop is a Windows box.</p>
+<div class="entry-content"><p>Well, this is one of the niftiest utilities I&rsquo;ve found in a while. It&rsquo;s dawned on me in the past that this should be possible, but I&rsquo;ve never really investigated it until now, probably because at work my desktop is a Windows box.</p>
 
-<p>The sshfs &#8220;driver&#8221; allows transparent mounting of a remote directory via the standard SSH protocol.</p>
+<p>The sshfs &ldquo;driver&rdquo; allows transparent mounting of a remote directory via the standard SSH protocol.</p>
 
-<p>I&#8217;m using <a href="http://fuse.sourceforge.net/sshfs.html">sshfs</a> to remotely mount the a directory on my development web server, instead of having to install a full server on my desktop. The box is sitting just across the room, why not. This allows me to use all my normal development tools, without the hassle of manually transferring the files every time a change is made.</p>
+<p>I&rsquo;m using <a href="http://fuse.sourceforge.net/sshfs.html">sshfs</a> to remotely mount the a directory on my development web server, instead of having to install a full server on my desktop. The box is sitting just across the room, why not. This allows me to use all my normal development tools, without the hassle of manually transferring the files every time a change is made.</p>
 
-<p>While this may not be suitable for a staging box where multiple people are working on it, for my little network it makes things easier (the web folder is also a subversion working copy &#8211; but this <em>is</em> only a development server remember)</p>
+<p>While this may not be suitable for a staging box where multiple people are working on it, for my little network it makes things easier (the web folder is also a subversion working copy &mdash; but this <em>is</em> only a development server remember)</p>
 
-<p>It&#8217;s also simple to set up, requiring no configuration on the server. Following the general gist (I already had much of it set up) of the instructions found on a fellow <a href="http://ubuntu.wordpress.com/2005/10/28/how-to-mount-a-remote-ssh-filesystem-using-sshfs/">Ubuntu users blog</a> I can now mount remote directories by using:</p>
+<p>It&rsquo;s also simple to set up, requiring no configuration on the server. Following the general gist (I already had much of it set up) of the instructions found on a fellow <a href="http://ubuntu.wordpress.com/2005/10/28/how-to-mount-a-remote-ssh-filesystem-using-sshfs/">Ubuntu users blog</a> I can now mount remote directories by using:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>sshfs server:/my/remote/directory/ /my/local/mountpoint</span></code></pre></td></tr></table></div></figure>
 
 
-<p>If only this was available for Windows, I&#8217;d never have to work on my local machine again (<a href="http://winscp.net/">WinSCP</a> does a pretty good job, but it&#8217;s not quiet as seamless)</p>
+<p>If only this was available for Windows, I&rsquo;d never have to work on my local machine again (<a href="http://winscp.net/">WinSCP</a> does a pretty good job, but it&rsquo;s not quiet as seamless)</p>
 </div>
 
 
@@ -179,6 +179,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -192,10 +196,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

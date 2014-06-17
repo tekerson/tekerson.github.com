@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ruby | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/ruby/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -35,13 +35,13 @@
 
 <p>With that in mind, I have decided to look at Ruby (at least for now).</p>
 
-<p>Deciding to do web development with Ruby invariably leads to <a href="http://rubyonrails.org/">Ruby on Rails</a>. Not wanting to get (too) caught up in the hype, I decided to have a look at the raw language first. So, I had a read through the quite unusual (have a look and see) <a href="http://poignantguide.net/ruby/">Why's (Poignant) Guide to Ruby</a>. After sifting through this odd compilation to find the actual useful content (The humour -- cartoons, stories and the like -- throughout the book make it an interesting read, but maybe not the best reference manual) I had an overview of Ruby and liked what I saw.</p>
+<p>Deciding to do web development with Ruby invariably leads to <a href="http://rubyonrails.org/">Ruby on Rails</a>. Not wanting to get (too) caught up in the hype, I decided to have a look at the raw language first. So, I had a read through the quite unusual (have a look and see) <a href="http://poignantguide.net/ruby/">Why&rsquo;s (Poignant) Guide to Ruby</a>. After sifting through this odd compilation to find the actual useful content (The humour &mdash; cartoons, stories and the like &mdash; throughout the book make it an interesting read, but maybe not the best reference manual) I had an overview of Ruby and liked what I saw.</p>
 
-<p>After some initial playing around, reading up on the "raw" way of developing web sites in Ruby (raw text and with cgi extensions) I did end up installing rails.</p>
+<p>After some initial playing around, reading up on the &ldquo;raw&rdquo; way of developing web sites in Ruby (raw text and with cgi extensions) I did end up installing rails.</p>
 
 <p>I have experimented briefly with rails in the past, previously though, I had not bothered to learn anything at all about Ruby as a language. So, while the basic functionality of rails, the model/view/controller scaffolding was really impressive (it still is), if I wanted to do anything more adventurous, or if something broke, I was lost.</p>
 
-<p>I am hoping that with a slightly better understanding of Ruby (and a willingness to learn the language this time) I will have more success with rails. If it doesn't work for me… I'll try somethign else.</p>
+<p>I am hoping that with a slightly better understanding of Ruby (and a willingness to learn the language this time) I will have more success with rails. If it doesn&rsquo;t work for me… I&rsquo;ll try somethign else.</p>
 ]]></content>
   </entry>
   

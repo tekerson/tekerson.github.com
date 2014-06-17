@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="When I installed my software RAID array, I was a little unsure of stability, mainly because I&#8217;ve never configured RAID before, not because the &hellip;">
+  <meta name="description" content="When I installed my software RAID array, I was a little unsure of stability, mainly because I&rsquo;ve never configured RAID before, not because the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,9 +103,9 @@
   </header>
 
 
-<div class="entry-content"><p>When I <a href="/2007/04/23/configuring-software-raid-with-mdadm/">installed my software RAID array</a>, I was a little unsure of stability, mainly because I&#8217;ve never configured RAID before, not because the software is unstable. So as a precaution, I decided to create a backup scheme (which I should have had anyway).</p>
+<div class="entry-content"><p>When I <a href="/2007/04/23/configuring-software-raid-with-mdadm/">installed my software RAID array</a>, I was a little unsure of stability, mainly because I&rsquo;ve never configured RAID before, not because the software is unstable. So as a precaution, I decided to create a backup scheme (which I should have had anyway).</p>
 
-<p>Using some tools found on almost every Linux system, &#8220;rsync&#8221; and &#8220;cp&#8221;, I wrote a script, to create incremental backups of my /home directory.</p>
+<p>Using some tools found on almost every Linux system, &ldquo;rsync&rdquo; and &ldquo;cp&rdquo;, I wrote a script, to create incremental backups of my /home directory.</p>
 
 <p>My code looks like this:</p>
 
@@ -146,7 +146,7 @@ then</p>
 </code></pre>
 
 <p>fi
-rsync -a &#8211;update &#8211;delete ${SRC_DIR}/ ${BACKUP_DIR}${SRC_DIR}.0
+rsync -a &mdash;update &mdash;delete ${SRC_DIR}/ ${BACKUP_DIR}${SRC_DIR}.0
 touch ${BACKUP_DIR}${SRC_DIR}.0</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -159,9 +159,9 @@ touch ${BACKUP_DIR}${SRC_DIR}.0</p>
 &#8220;`
 I can, without intervention, maintain 2 weeks worth of backups.</p>
 
-<p>Since this is basically a single user system, and the backups are only meant to protect against my stupidity, I haven&#8217;t gone to the trouble of making the backups read-only. But this would certainly be an improvement to the system. A couple of solutions are discussed in <a href="http://gja.space4me.com/things/Backups_With_Rsync.html">the article</a> that my script is based on. Mine only backs up to a different directory (which is mounted on a different drive), not to a separate system/location (although, this is a good idea if possible).</p>
+<p>Since this is basically a single user system, and the backups are only meant to protect against my stupidity, I haven&rsquo;t gone to the trouble of making the backups read-only. But this would certainly be an improvement to the system. A couple of solutions are discussed in <a href="http://gja.space4me.com/things/Backups_With_Rsync.html">the article</a> that my script is based on. Mine only backs up to a different directory (which is mounted on a different drive), not to a separate system/location (although, this is a good idea if possible).</p>
 
-<p>As a side note, I haven&#8217;t had any trouble with the RAID, but backups are still reassuring.</p>
+<p>As a side note, I haven&rsquo;t had any trouble with the RAID, but backups are still reassuring.</p>
 </div>
 
 
@@ -223,6 +223,10 @@ I can, without intervention, maintain 2 weeks worth of backups.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -236,10 +240,6 @@ I can, without intervention, maintain 2 weeks worth of backups.</p>
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

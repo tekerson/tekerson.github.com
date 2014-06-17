@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I have been using SSH tunnels for a long time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a &hellip;">
+  <meta name="description" content="I prefer to reserve the system-level package manager for system-level packages, which my development tools generally are not. As such, my tools are &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,74 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the Tools: Haskell Edition</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-18T00:30:36+10:00" pubdate data-updated="true">Jun 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I prefer to reserve the system-level package manager for system-level packages, which my development tools generally are not. As such, my tools are installed in my <code>~/opt/</code> directory where possible (then symlinked to <code>~/bin/</code>).</p>
+
+<p>In this post, I&rsquo;m looking at how I did this for my Haskell tool-set.</p>
+
+<p>Haskell&rsquo;s <code>cabal</code> is a great dependency management/build tool with built-in sandbox capabilities. It is also often used to install many Haskell tools, such as <code>hlint</code>, <code>pointfree</code> and <code>doctest</code>.</p>
+
+<p>I was originally installing these tools by creating a subdirectory per tool (e.g. <code>~/opt/haskell/hlint/</code>) and using <code>cabal sandbox init; cabal install hlint</code> to install the tool (<code>hlint</code> in this case) within the sandbox.</p>
+
+<p>But, I didn&rsquo;t like having a set of &ldquo;empty&rdquo; directories (containing only the hidden <code>.cabal-sandbox</code> and <code>cabal.sandbox.config</code>). With a few extra arguments (thanks to some tips from <a href="https://twitter.com/benkolera">Ben Kolera</a> at the last <a href="http://bfpg.org">BFPG</a> hack night) we can forgo the superfluous subdirectories and reveal the sandboxes.</p>
+
+<p>Here is an example of installing <code>hlint</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># in ~/opt/haskell
+</span><span class='line'>PKG=hlint
+</span><span class='line'>cabal --sandbox-config-file=$PKG.sandbox.config sandbox init --sandbox=$PKG
+</span><span class='line'>cabal --sandbox-config-file=$PKG.sandbox.config install $PKG</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This creates a sandbox config file called <code>hlint.sandbox.config</code> and a visible sandbox in the <code>hlint</code> directory.</p>
+
+<p>You can then symlink the executable onto your path:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ln -s ~/opt/haskell/hlint/bin/hlint ~/bin/hlint</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is how I have installed all of these tools and is my currently preferred method. There are other variations on this that can also be used, for instance, adding the package&rsquo;s <code>bin</code> directory to your path, or copying the actual executable out of the sandbox (then you could even delete the sandbox if you choose).</p>
+
+<p>This works for all of the packages I mentioned above, and probably any others that you want to install just for the executable binary.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and Close SSH Tunnel in Script</a></h1>
     
     
@@ -106,11 +174,11 @@
   </header>
 
 
-  <div class="entry-content"><p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&#8217;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
+  <div class="entry-content"><p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&rsquo;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
 
 <p>In that spirit, I wanted a script to create an ssh tunnel and connect my irc client (irssi) to my bouncer (znc), behind my home firewall.</p>
 
-<p>So, this is what I&#8217;m using:</p>
+<p>So, this is what I&rsquo;m using:</p>
 
 <pre><code>#!/bin/bash
 ssh -f -o ExitOnForwardFailure=yes -L 6667:localhost:6667 user@home.example.com sleep 30
@@ -119,7 +187,7 @@ irssi
 
 <p>The <code>-f -o ExitOnForwardFailure=yes</code> combination makes ssh wait until the forwarded ports have been established before backgrounding. Effectively, this blocks the script until the ports are ready to use.</p>
 
-<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&#8217;re using it. So, once I quit irssi, the tunnel closes.</p>
+<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&rsquo;re using it. So, once I quit irssi, the tunnel closes.</p>
 
 <p>Then, irssi configured to connect to localhost:6667 which is tunneled to localhost:6667 on the target machine, where it finds znc!</p>
 </div>
@@ -157,9 +225,9 @@ irssi
   </header>
 
 
-  <div class="entry-content"><p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &#8220;Web Hooks&#8221;.</p>
+  <div class="entry-content"><p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&rsquo;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &ldquo;Web Hooks&rdquo;.</p>
 
-<p>In my specific case, it was the Facebook &#8220;Real-Time&#8221; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
+<p>In my specific case, it was the Facebook &ldquo;Real-Time&rdquo; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
 
 <p>To overcome this, we need to be able to consistently repeat a request from Facebook while fine-tuning the handler to perform the required task.</p>
 
@@ -168,7 +236,7 @@ irssi
 <pre><code>nc -l 8000 &gt; request.txt
 </code></pre>
 
-<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &#8220;request.txt&#8221;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&#8217;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &#8220;request.txt&#8221;, where we can view it, edit it and &#8211; most importantly &#8211; replay it.</p>
+<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &ldquo;request.txt&rdquo;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&rsquo;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &ldquo;request.txt&rdquo;, where we can view it, edit it and &mdash; most importantly &mdash; replay it.</p>
 
 <p>We can also use <code>nc</code> to handle sending the request for us by piping the saved file through to the target server.</p>
 
@@ -176,46 +244,6 @@ irssi
 </code></pre>
 
 <p>This will connect to our server and make the exact HTTP request that was captured. The advantage, of course, is that we can replay the request over and over quickly and accurately.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-04T11:14:00+10:00" pubdate data-updated="true">Sep 4<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As a keyboard line junky and a Vim user, this is something I&#8217;ve been meaning to do for a long time. I mean, who actually uses Caps lock anyway? Every time I&#8217;ve had a look, the process has appeared to involve installation of third party software and in general seemed like too much effort. It turns out, if you only want to remap meta-keys (caps lock, alt, ctrl and command) you can do that easily through the OSX System Preferences.</p>
-
-<p>In &#8220;Apple Menu&#8221; (Top Left), &#8220;System Preferences&#8221;, &#8220;Keyboard&#8221;. On the &#8220;Keyboard&#8221; Tab (not &#8220;Keyboard Shortcuts&#8221;), there is a &#8220;Modifier Keys&#8221; button, which opens a dialog and provides a simple interface to remap (or disable) your modifier keys.</p>
-
-<p>I wish I&#8217;d realised sooner that it was so simple, now to re-train my hands and free that poor little finger from its curled up hell.</p>
 </div>
   
   
@@ -238,6 +266,10 @@ irssi
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -251,10 +283,6 @@ irssi
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

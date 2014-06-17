@@ -103,19 +103,19 @@
   </header>
 
 
-<div class="entry-content"><p>When you build an application, it is often deployed to a number of servers each with a different set of configurations. The development and production servers, with different debug, logging, and database details is an obvious example. Many approaches I have seen to dealing with this, including Anis uddin Ahmad&#8217;s <a href="http://www.ajaxray.com/blog/2009/02/03/advanced-bootstrapping-configure-your-zend-framework-application-for-multiple-host/">post that inspired this one</a>, involve determining the domain the application is running on, and loading a pre-determined configuration for that host.</p>
+<div class="entry-content"><p>When you build an application, it is often deployed to a number of servers each with a different set of configurations. The development and production servers, with different debug, logging, and database details is an obvious example. Many approaches I have seen to dealing with this, including Anis uddin Ahmad&rsquo;s <a href="http://www.ajaxray.com/blog/2009/02/03/advanced-bootstrapping-configure-your-zend-framework-application-for-multiple-host/">post that inspired this one</a>, involve determining the domain the application is running on, and loading a pre-determined configuration for that host.</p>
 
 <p>There are 2 downfalls to that solution from my point of view;</p>
 
 <ol>
-<li><p>Each new environment involves editing the source of the application</p></li>
-<li><p>If the application involves command line components, there is no way to determine the domain, requiring a special case</p></li>
+<li><p> Each new environment involves editing the source of the application</p></li>
+<li><p> If the application involves command line components, there is no way to determine the domain, requiring a special case</p></li>
 </ol>
 
 
-<p>My solution may look familiar if you have ever looked at <a href="http://www.djangoproject.com/">python&#8217;s django</a>. It involves using environment variables, which can be set through the web server, or on the command line - even in crontab. Basically, I set an environment variable specifying the location of the configuration file to load into the application. I actually allow a list of configuration files,so you can have a &#8220;base&#8221; and only override specific configuration as required per location.</p>
+<p>My solution may look familiar if you have ever looked at <a href="http://www.djangoproject.com/">python&rsquo;s django</a>. It involves using environment variables, which can be set through the web server, or on the command line &ndash; even in crontab. Basically, I set an environment variable specifying the location of the configuration file to load into the application. I actually allow a list of configuration files,so you can have a &ldquo;base&rdquo; and only override specific configuration as required per location.</p>
 
-<p>To add and environment variable in apache, you use the mod_env module&#8217;s <a href="http://httpd.apache.org/docs/1.3/mod/mod_env.html#setenv">SetEnv directive</a>.</p>
+<p>To add and environment variable in apache, you use the mod_env module&rsquo;s <a href="http://httpd.apache.org/docs/1.3/mod/mod_env.html#setenv">SetEnv directive</a>.</p>
 
 <p><code>SetEnv APPLICATION_CONFIG /path/to/config/basic.php:/path/to/config/development.php</code></p>
 
@@ -214,6 +214,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -227,10 +231,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

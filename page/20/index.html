@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I&#8217;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the &hellip;">
+  <meta name="description" content="I was trying to install something or other tonight, using the (usually very simple) apt-get system on my web box, but it kept showing up with this &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,62 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2006/11/24/there-are-no-public-key-available-for-the-following-key-ids/">&#8220;There Are No Public Key Available for the Following Key IDs&#8221;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-11-24T09:43:13+10:00" pubdate data-updated="true">Nov 24<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was trying to install something or other tonight, using the (usually very simple) apt-get system on my web box, but it kept showing up with this error</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>There are no public key available for the following key IDs:
+</span><span class='line'>XXXXXXXXXX</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Where the X&rsquo;s are a hash/key of some description.
+After some searching, The solution appears to be to import a key from a key-server (makes sense), here&rsquo;s how:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># gpg --keyserver hkp://wwwkeys.eu.pgp.net --recv-keys XXXXXXXXXX
+</span><span class='line'># apt-key add /root/.gnupg/pubring.gpg
+</span><span class='line'># apt-get update</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Substituting in the same hash/key.
+Then, it just works&hellip;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2006/11/04/priority-when-multiple-css-classes-are-applied/">Priority When Multiple CSS Classes Are Applied</a></h1>
     
     
@@ -106,9 +162,9 @@
   </header>
 
 
-  <div class="entry-content"><p>I&#8217;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I&#8217;ve checked it out and it works like this.</p>
+  <div class="entry-content"><p>I&rsquo;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I&rsquo;ve checked it out and it works like this.</p>
 
-<p>I had a page, who&#8217;s table cells all had a CSS class that applied a background colour, some font attributes and what have you.
+<p>I had a page, who&rsquo;s table cells all had a CSS class that applied a background colour, some font attributes and what have you.
 The class (from an external stylesheet file):</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -153,13 +209,13 @@ The class (from an external stylesheet file):</p>
 </span><span class='line'>&lt;/head&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>On my way I went, coded the javascript to search the table and add the &#8216;searchHighlight&#8217; class to the cells that needed hightlighting. Easy. Except it didn&#8217;t work.</p>
+<p>On my way I went, coded the javascript to search the table and add the &lsquo;searchHighlight&rsquo; class to the cells that needed hightlighting. Easy. Except it didn&rsquo;t work.</p>
 
-<p>When the Javascript found it&#8217;s target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
+<p>When the Javascript found it&rsquo;s target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
 
-<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it&#8217;s normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
+<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it&rsquo;s normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
 
-<p>So I created a simple test page, to make sure I was wasn&#8217;t going (more) insane, and that multiple CSS styles ever worked.
+<p>So I created a simple test page, to make sure I was wasn&rsquo;t going (more) insane, and that multiple CSS styles ever worked.
 The test page looked like this:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -198,11 +254,11 @@ The test page looked like this:</p>
 </span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The results are sort of what I expected&#8230; the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn&#8217;t matter. So they are getting the bold from the normal style, and the background from the special style.</p>
+<p>The results are sort of what I expected&hellip; the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn&rsquo;t matter. So they are getting the bold from the normal style, and the background from the special style.</p>
 
-<p>Great. So why didn&#8217;t it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that &#8216;special&#8217; is declared first) and the results are very different, the &#8216;special&#8217; class is ignored completely.</p>
+<p>Great. So why didn&rsquo;t it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that &lsquo;special&rsquo; is declared first) and the results are very different, the &lsquo;special&rsquo; class is ignored completely.</p>
 
-<p>That&#8217;s right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn&#8217;t know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
+<p>That&rsquo;s right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn&rsquo;t know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
 
 <p>For example, if (from my test page) I remove the special style, and put it in an external style sheet, and include it like so:</p>
 
@@ -220,7 +276,7 @@ The test page looked like this:</p>
 </span><span class='line'>…</span></code></pre></td></tr></table></div></figure>
 
 
-<p>It works, but doing this doesn&#8217;t:</p>
+<p>It works, but doing this doesn&rsquo;t:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -272,23 +328,23 @@ The test page looked like this:</p>
   </header>
 
 
-  <div class="entry-content"><p>I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &#8216;hosts&#8217; files, and just to see if I could&#8230; I have worked with DNS servers mainly through web-based front-ends, so I wanted to find out what the configuration really looked like. The most helpful and complete resource I came across was the <a href="http://www.net.cmu.edu/groups/netdev/docs/bind9/Bv9ARM.html">BIND 9 Administrator Reference Manual</a> (Good title). Here is the configuration I finally came up with (and some associated notes).</p>
+  <div class="entry-content"><p>I have just set up a local DNS (bind9) server on my network, mainly because I got tired of forever editing my &lsquo;hosts&rsquo; files, and just to see if I could&hellip; I have worked with DNS servers mainly through web-based front-ends, so I wanted to find out what the configuration really looked like. The most helpful and complete resource I came across was the <a href="http://www.net.cmu.edu/groups/netdev/docs/bind9/Bv9ARM.html">BIND 9 Administrator Reference Manual</a> (Good title). Here is the configuration I finally came up with (and some associated notes).</p>
 
 <h2>The Configuration Files</h2>
 
-<p>The &#8216;named.conf&#8217; file that usually contains the main configuration information is split into 3 seperate files on the debian install.</p>
+<p>The &lsquo;named.conf&rsquo; file that usually contains the main configuration information is split into 3 seperate files on the debian install.</p>
 
 <h3>named.conf</h3>
 
-<p>The &#8216;named.conf&#8217; file is located in the &#8216;/etc/bind/&#8217; directory, this is the main bind configuration directory on a debian install. The &#8216;named.conf&#8217; file itself is written so there is probably no need to edit it. All personalisation of the service can be done using the &#8216;named.conf.options&#8217; and &#8216;named.conf.local&#8217; files that are referenced in the &#8216;named.conf&#8217;.</p>
+<p>The &lsquo;named.conf&rsquo; file is located in the &lsquo;/etc/bind/&rsquo; directory, this is the main bind configuration directory on a debian install. The &lsquo;named.conf&rsquo; file itself is written so there is probably no need to edit it. All personalisation of the service can be done using the &lsquo;named.conf.options&rsquo; and &lsquo;named.conf.local&rsquo; files that are referenced in the &lsquo;named.conf&rsquo;.</p>
 
 <h3>named.conf.options</h3>
 
-<p>&#8216;named.conf.options&#8217; pretty much contains the <em>options</em> block that is usually found in the top of the &#8216;named.conf&#8217; file.</p>
+<p>&lsquo;named.conf.options&rsquo; pretty much contains the <em>options</em> block that is usually found in the top of the &lsquo;named.conf&rsquo; file.</p>
 
 <p>The <em>directory</em> parameter specifies the root directory where all relatively referenced files can be found (this is the default on debian)</p>
 
-<p>The <em>forwarders</em> is a list of DNS servers that this server can &#8216;forward&#8217; the query to if it doesn&#8217;t know the answer. This is pointed at my ISP&#8217;s normal DNS server (in this case, via the network router)</p>
+<p>The <em>forwarders</em> is a list of DNS servers that this server can &lsquo;forward&rsquo; the query to if it doesn&rsquo;t know the answer. This is pointed at my ISP&rsquo;s normal DNS server (in this case, via the network router)</p>
 
 <p>The <em>auth-nxdomain</em> directive instructs the server to answer as an authoritative source for non-existant (nx) records. It is generally a bad idea.</p>
 
@@ -328,11 +384,11 @@ The test page looked like this:</p>
 </span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
 
 
-<p>On the debian package the file &#8216;named.conf.local&#8217; is referenced by the &#8216;named.conf&#8217; to provide information about the setup specific to this server. As such, there is little or no need to edit the &#8216;named.conf&#8217; itself. My &#8216;named.conf.local&#8217; defines 2 zones; &#8216;everyone-here.is-a-geek.com&#8217;, whichs maps the computers on the LAN, and the &#8216;1.168.192.in-addr.arpa&#8217; zone, which provides the reverse dns information. While this is (especially on a LAN) pretty much un-used as far as I know, it&#8217;s still good practice to put it in, and it can be useful at times for resolving the &#8220;Which computer connected to my server?&#8221; question.</p>
+<p>On the debian package the file &lsquo;named.conf.local&rsquo; is referenced by the &lsquo;named.conf&rsquo; to provide information about the setup specific to this server. As such, there is little or no need to edit the &lsquo;named.conf&rsquo; itself. My &lsquo;named.conf.local&rsquo; defines 2 zones; &lsquo;everyone-here.is-a-geek.com&rsquo;, whichs maps the computers on the LAN, and the &lsquo;1.168.192.in-addr.arpa&rsquo; zone, which provides the reverse dns information. While this is (especially on a LAN) pretty much un-used as far as I know, it&rsquo;s still good practice to put it in, and it can be useful at times for resolving the &ldquo;Which computer connected to my server?&rdquo; question.</p>
 
-<p>The <em>type</em> &#8216;master&#8217; tells the server that it is the authority for this zone, and it should be able to answer definitively about requests for systems in it.</p>
+<p>The <em>type</em> &lsquo;master&rsquo; tells the server that it is the authority for this zone, and it should be able to answer definitively about requests for systems in it.</p>
 
-<p>The <em>file</em> points to the &#8216;database&#8217; file containing specific information about the contents of the zone. This file is relative to the <em>path</em> given earlier, but an absolute path can also be used.</p>
+<p>The <em>file</em> points to the &lsquo;database&rsquo; file containing specific information about the contents of the zone. This file is relative to the <em>path</em> given earlier, but an absolute path can also be used.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -346,7 +402,7 @@ The test page looked like this:</p>
 </span><span class='line'>};</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The reverse zone is exactly the same as the forward zone. All reverse DNS zones end in &#8216;.in-addr.arpa&#8217;, the rest of the address is the IP in reverse (i.e 192.168.1. is my internal IP range, so to allow lookups I add entries for &#8216;1.168.192.in-addr.arpa&#8217;)</p>
+<p>The reverse zone is exactly the same as the forward zone. All reverse DNS zones end in &lsquo;.in-addr.arpa&rsquo;, the rest of the address is the IP in reverse (i.e 192.168.1. is my internal IP range, so to allow lookups I add entries for &lsquo;1.168.192.in-addr.arpa&rsquo;)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -364,7 +420,7 @@ The test page looked like this:</p>
 
 <h3>db.everyone-here.is-a-geek.com</h3>
 
-<p>This one probably needs a bit more explanation, I think it&#8217;s easier if I comment it inline. Two important things to remember everything that doesn&#8217;t end in a &#8220;.&#8221; will be prepended to the base domain, and the @ is substituted for the base domain.</p>
+<p>This one probably needs a bit more explanation, I think it&rsquo;s easier if I comment it inline. Two important things to remember everything that doesn&rsquo;t end in a &ldquo;.&rdquo; will be prepended to the base domain, and the @ is substituted for the base domain.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -440,64 +496,6 @@ The test page looked like this:</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2006/11/02/easy-deployment-from-subversion/">Easy Deployment From Subversion</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2006-11-02T10:11:19+10:00" pubdate data-updated="true">Nov 2<span>nd</span>, 2006</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>After recently discovering the ways in which a version control server, combined with a sensible set of deployment scripts, can development easier (up until now the ones I have used have all been poorly configured and more of a hindrance then a help). I moved some of my personal projects onto my subversion server.</p>
-
-<p>I have been using <a href="http://subversion.tigris.org/">subversion</a> for some years to manage the configuration files on my Linux boxen, on the suggestion of an article I read at one time but can&#8217;t now find a link for (there are some similar ones available), all those fiddly kernel configs and xorg.conf files that you tweak until they break, then can&#8217;t remember what you changed.</p>
-
-<p>Being in charge of the version control systems at work, I am always looking for better and easier ways to keep the latest versions checked in and easily deploy to the live servers (and be able to roll it back if it all goes up in flames). So with the help of a few simple shell scripts, I finally have a system that allows my to edit and test locally before committing and deploying to the live sites.</p>
-
-<p>The most basic of which sits in ~/bin/ and looks something like this:</p>
-
-<p><em>deploy-project</em></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>svn export svn://svn.repository.server/project/trunk/ /tmp/project/
-</span><span class='line'>rsync -vrz --rhs=ssh --progress /tmp/project/public_html user@remote.live.site.com:~/public_html
-</span><span class='line'>rm -rf /tmp/project/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Of course this is only the basic form, with all values hard coded, there are more advanced scripts that take arguments, for example I use <em>&#8211;live</em> to deploy to the live server as opposed to the (default) staging/test server, or allow the the name of the branch/tag and revision to be specified.</p>
-
-<p>This allows easy deployment of code bases in a fairly efficient manner. I am still struggling with control of database structures, I currently start with an SQL dump of the schema, and then incrementally store SQL scripts to update the database to newer versions to allow deployment on various sites. I am considering writing a tool to compare the schema of 2 databases and provide SQL code to transform one into the other&#8230; when I get time.</p>
-
-<p>Now I just need to convince the developers to use it.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/21/">&larr; Older</a>
@@ -515,6 +513,10 @@ The test page looked like this:</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -528,10 +530,6 @@ The test page looked like this:</p>
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

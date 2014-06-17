@@ -103,19 +103,19 @@
   </header>
 
 
-<div class="entry-content"><p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&#8217;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
+<div class="entry-content"><p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&rsquo;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
 
 <p>Doctrine 2.0 looks like it might finally be the ORM framework I have been seeking for PHP. While the older versions of Doctrine provided great functionality, they were too intrusive for my taste. I think an ORM should provide a true <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">data mapper</a>; in which the domain entities need know nothing about their persistence.</p>
 
-<p>Matthew Weier O&#8217;Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &#8220;real&#8221; namespaces, so its classes don&#8217;t follow the (current) Zend naming standard and the ZF autoloader won&#8217;t load them for us.</p>
+<p>Matthew Weier O&#8217;Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &ldquo;real&rdquo; namespaces, so its classes don&rsquo;t follow the (current) Zend naming standard and the ZF autoloader won&rsquo;t load them for us.</p>
 
 <p>Good News, Doctrine provides its own autoloader that we can leverage to load its own classes.</p>
 
-<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&#8217;t very useful).</p>
+<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&rsquo;t very useful).</p>
 
-<p>Good News, it&#8217;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
+<p>Good News, it&rsquo;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
 
-<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &#8220;Doctrine&#34; namespace.</p>
+<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &ldquo;Doctrine\&rdquo; namespace.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -148,7 +148,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>We can use all of Doctrine&#8217;s classes anywhere else in our code.</p>
+<p>We can use all of Doctrine&rsquo;s classes anywhere else in our code.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -223,6 +223,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -236,10 +240,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

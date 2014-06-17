@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I&#8217;ve been studying functional programming lately (it&#8217;s trendy) and while it&#8217;s great to just learn new languages and paradigm, it&# &hellip;">
+  <meta name="description" content="As a command line junky and a Vim user, this is something I&rsquo;ve been meaning to do for a long time. I mean, who actually uses Caps lock anyway? &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,46 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-04T11:14:00+10:00" pubdate data-updated="true">Sep 4<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As a command line junky and a Vim user, this is something I&rsquo;ve been meaning to do for a long time. I mean, who actually uses Caps lock anyway? Every time I&rsquo;ve had a look, the process has appeared to involve installation of third party software and in general seemed like too much effort. It turns out, if you only want to remap meta-keys (caps lock, alt, ctrl and command) you can do that easily through the OSX System Preferences.</p>
+
+<p>In &ldquo;Apple Menu&rdquo; (Top Left), &ldquo;System Preferences&rdquo;, &ldquo;Keyboard&rdquo;. On the &ldquo;Keyboard&rdquo; Tab (not &ldquo;Keyboard Shortcuts&rdquo;), there is a &ldquo;Modifier Keys&rdquo; button, which opens a dialog and provides a simple interface to remap (or disable) your modifier keys.</p>
+
+<p>I wish I&rsquo;d realised sooner that it was so simple, now to re-train my hands and free that poor little finger from its curled up hell.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a></h1>
     
     
@@ -106,19 +146,19 @@
   </header>
 
 
-  <div class="entry-content"><p>I&#8217;ve been studying functional programming lately (it&#8217;s trendy) and while it&#8217;s great to just learn new languages and paradigm, it&#8217;s always nice when the principles can be applied to everyday work.</p>
+  <div class="entry-content"><p>I&rsquo;ve been studying functional programming lately (it&rsquo;s trendy) and while it&rsquo;s great to just learn new languages and paradigm, it&rsquo;s always nice when the principles can be applied to everyday work.</p>
 
-<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &#8220;Object Oriented Software Construction&#8221;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&#8217;s discussion of the principle</a> he mentions that &#8220;it would be nice if the language itself would support this notion&#8221;.</p>
+<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &ldquo;Object Oriented Software Construction&rdquo;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&rsquo;s discussion of the principle</a> he mentions that &ldquo;it would be nice if the language itself would support this notion&rdquo;.</p>
 
 <p>If occurs to me that functional languages do indeed grant Mr. Fowler his wish.</p>
 
-<p>Functional programmers aim to compose programs using &#8220;pure&#8221; functions. In this case, &#8220;pure&#8221; is used to mean a functions that are &#8220;referentially transparent&#8221;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
+<p>Functional programmers aim to compose programs using &ldquo;pure&rdquo; functions. In this case, &ldquo;pure&rdquo; is used to mean a functions that are &ldquo;referentially transparent&rdquo;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
 
-<p>Of course, a program that takes no input, can&#8217;t access a data store and produces no output isn&#8217;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&#8217;t go into what a Monads are, it doesn&#8217;t matter, and I&#8217;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &#8220;only&#8221; perform calculation.</p>
+<p>Of course, a program that takes no input, can&rsquo;t access a data store and produces no output isn&rsquo;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&rsquo;t go into what a Monads are, it doesn&rsquo;t matter, and I&rsquo;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &ldquo;only&rdquo; perform calculation.</p>
 
-<p>These referentially transparent &#8220;pure&#8221; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&#8217;t have changed anything outside of itself.</p>
+<p>These referentially transparent &ldquo;pure&rdquo; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&rsquo;t have changed anything outside of itself.</p>
 
-<p>So, while the languages most of us use daily don&#8217;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&#8217;t that be nice.</p>
+<p>So, while the languages most of us use daily don&rsquo;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&rsquo;t that be nice.</p>
 </div>
   
   
@@ -198,64 +238,7 @@
 
 <p>In this instance, the answers to the question are shuffled, but the pattern is useful any time you want to perform an action only <em>after</em> the data if fetched. This may include calculating aggregates or even fetching extra, dependant data.</p>
 
-<p>As an aside, I don&#8217;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &#8220;fat&#8221; services and &#8220;lean&#8221; controllers in a future post.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/05/28/share-tmux-windows-across-sessions/">Share Tmux Windows Across Sessions</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-05-28T16:01:00+10:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When working in a terminal (the vast majority of the time) I run the terminal multiplexer <a href="http://tmux.sourceforge.net/">tmux</a>, with one session for each project I am currently working on. I like to have a window for my IRC client in every session, so I can keep an eye on it. The best way to do this is to share the tmux window across multiple tmux sessions.</p>
-
-<p>To perform this setup, we can create a new session for &#8220;shared&#8221; applications, opening irssi in a window named &#8220;irc&#8221;. Either manually create the windows and open the applications in them, or, if you&#8217;re lazy and use the same setup regularly. Script it, something like so:</p>
-
-<pre><code>tmux new-session -s shared "tmux new-window -n irc irssi"
-</code></pre>
-
-<p>You can use the automatically-assigned window names, but since I&#8217;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
-
-<p>Once the applications are running, we can link the windows to the working session using tmux&#8217;s <code>link-window</code> command, which has the basic form:</p>
-
-<pre><code>tmux link-window -s &lt;src-window&gt; -t &lt;dst-window&gt;
-</code></pre>
-
-<p>Any time a tmux command requires a reference to a window, we can provide an absolute reference to any window in any session using the <code>session:window</code> format where <code>session</code> is the name of the session and <code>window</code> is the name (or number) of the window in that session.</p>
-
-<p>Using this, we can use the <code>link-window</code> our &#8220;shared:irc&#8221; window to index &#8220;9&#8221; in the current session. Which looks like:</p>
-
-<pre><code>tmux link-window -s shared:irc -t 9
-</code></pre>
-
-<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&#8217;t get in the way of my &#8220;real work&#8221;.</p>
+<p>As an aside, I don&rsquo;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &ldquo;fat&rdquo; services and &ldquo;lean&rdquo; controllers in a future post.</p>
 </div>
   
   
@@ -280,6 +263,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -293,10 +280,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

@@ -103,16 +103,16 @@
   </header>
 
 
-<div class="entry-content"><p>If you have ever mistakenly installed grub (or any other boot manager) onto the MBR of the wrong drive (usually during setting up additional multi-boot OSs), you&#8217;ll know it can be a pain to get rid of. Most sources out there are for when you accidentally override the windows boot manager with an common *nix one (grub or lilo). This involves using the windows &#8220;repair&#8221; console on the CD.
-When you are running a pure linux system, this isn&#8217;t a useful option. This is the solution I found to wipe and re-install grub:</p>
+<div class="entry-content"><p>If you have ever mistakenly installed grub (or any other boot manager) onto the MBR of the wrong drive (usually during setting up additional multi-boot OSs), you&rsquo;ll know it can be a pain to get rid of. Most sources out there are for when you accidentally override the windows boot manager with an common *nix one (grub or lilo). This involves using the windows &ldquo;repair&rdquo; console on the CD.
+When you are running a pure linux system, this isn&rsquo;t a useful option. This is the solution I found to wipe and re-install grub:</p>
 
-<p>This will probably need to be done from a live CD, as if your MBR is broken, you probably can&#8217;t boot your installed system.</p>
+<p>This will probably need to be done from a live CD, as if your MBR is broken, you probably can&rsquo;t boot your installed system.</p>
 
 <h2>1. Wipe the MBR</h2>
 
-<p>The first <strong>446 bytes</strong> of the drive make up the Master Boot Record, the next 66 (totalling 512) is partition information, you probably <strong>don&#8217;t</strong> want to wipe that unless you intend of re-partitioning (and/or formatting) your disk anyway.</p>
+<p>The first <strong>446 bytes</strong> of the drive make up the Master Boot Record, the next 66 (totalling 512) is partition information, you probably <strong>don&rsquo;t</strong> want to wipe that unless you intend of re-partitioning (and/or formatting) your disk anyway.</p>
 
-<p>Use <code>dd</code> to &#8220;zero&#8221; those 446 bytes:</p>
+<p>Use <code>dd</code> to &ldquo;zero&rdquo; those 446 bytes:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>dd if=/dev/zero of=/dev/hd? ds=446 count=1</span></code></pre></td></tr></table></div></figure>
@@ -152,13 +152,13 @@ When you are running a pure linux system, this isn&#8217;t a useful option. This
 </span><span class='line'>setup (hd?)</span></code></pre></td></tr></table></div></figure>
 
 
-<p>If you &#8220;boot&#8221; is not on a seperate partition, you the first line might need to be</p>
+<p>If you &ldquo;boot&rdquo; is not on a seperate partition, you the first line might need to be</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>find /boot/grub/stage1</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Assuming your configuration is correct (i.e doesn&#8217;t need to be changed since before it broke) you should now be able to boot into your installed system again.</p>
+<p>Assuming your configuration is correct (i.e doesn&rsquo;t need to be changed since before it broke) you should now be able to boot into your installed system again.</p>
 </div>
 
 
@@ -220,6 +220,10 @@ When you are running a pure linux system, this isn&#8217;t a useful option. This
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -233,10 +237,6 @@ When you are running a pure linux system, this isn&#8217;t a useful option. This
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

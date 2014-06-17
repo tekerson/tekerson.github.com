@@ -4,7 +4,7 @@
   <title><![CDATA[Category: CouchDB | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/couchdb/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,13 +18,13 @@
     <link href="http://blog.tekerson.com/2008/04/15/initial-thoughts-on-couchdb/"/>
     <updated>2008-04-15T01:18:33+10:00</updated>
     <id>http://blog.tekerson.com/2008/04/15/initial-thoughts-on-couchdb</id>
-    <content type="html"><![CDATA[<p>Since I was first introduced to <a href="http://incubator.apache.org/couchdb/">CouchDB</a> late last year when Jan Lehnardt discussed it on the <a href="http://devzone.zend.com/article/2857-PHP-Abstract-Podcast-Episode-30-CouchDB">PHP Abstract Podcast</a> my interest was piqued. I have since read as much as I can about it, which doesn't actually amount to a great deal unfortunately. However, I think the idea has merit as an alternative to relational databases in various scenarios.</p>
+    <content type="html"><![CDATA[<p>Since I was first introduced to <a href="http://incubator.apache.org/couchdb/">CouchDB</a> late last year when Jan Lehnardt discussed it on the <a href="http://devzone.zend.com/article/2857-PHP-Abstract-Podcast-Episode-30-CouchDB">PHP Abstract Podcast</a> my interest was piqued. I have since read as much as I can about it, which doesn&rsquo;t actually amount to a great deal unfortunately. However, I think the idea has merit as an alternative to relational databases in various scenarios.</p>
 
-<p>I have been using <a href="http://www.danga.com/memcached/">memcached</a> to store aggregated objects and it often seems pointless to break them into disparate parts to fit into a relational schema. While I realise CouchDB is not an object cache, being able to store data "as is", in a form (JSON) that is directly malleable by many languages makes a lot of sense.</p>
+<p>I have been using <a href="http://www.danga.com/memcached/">memcached</a> to store aggregated objects and it often seems pointless to break them into disparate parts to fit into a relational schema. While I realise CouchDB is not an object cache, being able to store data &ldquo;as is&rdquo;, in a form (JSON) that is directly malleable by many languages makes a lot of sense.</p>
 
-<p>The "views", used to retrieve data, select the documents to return by passing them through user defined JavaScript filter functions, instead of querying using SQL as in most relational databases; providing near infinite flexibility for data retrieval.</p>
+<p>The &ldquo;views&rdquo;, used to retrieve data, select the documents to return by passing them through user defined JavaScript filter functions, instead of querying using SQL as in most relational databases; providing near infinite flexibility for data retrieval.</p>
 
-<p>The major concern that I haven't seen adequately addressed is performance, especially given larger datasets. With the unstructured nature of the data and the flexibility of the view functions, it seems performance could be a challenge. Though given <a href="http://www.erlang.org/">Erlang</a>'s ground up concurrency and some of the algorithmic genius they have apparently borrowed from <a href="http://labs.google.com/papers/mapreduce.html">Google's MapReduce</a> -- datasets don't get much larger than that -- I might yet be proved wrong. I hope I am.</p>
+<p>The major concern that I haven&rsquo;t seen adequately addressed is performance, especially given larger datasets. With the unstructured nature of the data and the flexibility of the view functions, it seems performance could be a challenge. Though given <a href="http://www.erlang.org/">Erlang</a>&rsquo;s ground up concurrency and some of the algorithmic genius they have apparently borrowed from <a href="http://labs.google.com/papers/mapreduce.html">Google&rsquo;s MapReduce</a> &mdash; datasets don&rsquo;t get much larger than that &mdash; I might yet be proved wrong. I hope I am.</p>
 ]]></content>
   </entry>
   

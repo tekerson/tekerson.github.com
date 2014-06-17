@@ -105,7 +105,7 @@
 
 <div class="entry-content"><p>I have been having a problem with Ubuntu since I installed it (only a few weeks ago now). Every so often, about once a day on average, my DNS settings were being reset.</p>
 
-<p>I had changed the settings in the &#8220;Networking&#8221; preferences interface, on numerous occasions only to discover later that the settings had been reverted. I figured it was due to the interface being set to DHCP, so I promptly changed it to a static setting (my preference in this case anyway) and thought I would be safe.</p>
+<p>I had changed the settings in the &ldquo;Networking&rdquo; preferences interface, on numerous occasions only to discover later that the settings had been reverted. I figured it was due to the interface being set to DHCP, so I promptly changed it to a static setting (my preference in this case anyway) and thought I would be safe.</p>
 
 <p>So I went ahead and manually added my DNS server (as described in a <a href="/archives/4">previous post</a>) to my /etc/resolv.conf</p>
 
@@ -116,9 +116,9 @@
 <p>And went about my business. Only to discover a day later it had reverted again. It seems that even though the interface (the only one on the system) is static, that the dhcpclient still automatically reconfigures the DNS settings, to prevent this, the options are either (in order of my preference):</p>
 
 <ol>
-<li><p>Change the dhcpclient configuration &em; Simply, elegant, sweet</p></li>
-<li><p>Make resolv.conf read only &em; That&#8217;ll show the sucker</p></li>
-<li><p>Uninstall the dhcpclient &em; I&#8217;d prefer not to, it comes in handy if the network breaks</p></li>
+<li><p> Change the dhcpclient configuration &em; Simply, elegant, sweet</p></li>
+<li><p> Make resolv.conf read only &em; That&rsquo;ll show the sucker</p></li>
+<li><p> Uninstall the dhcpclient &em; I&rsquo;d prefer not to, it comes in handy if the network breaks</p></li>
 </ol>
 
 
@@ -128,7 +128,7 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>prepend domain-name-servers 192.168.1.100;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The dhcpclient still updates my DNS settings, it&#8217;s just conveniently adds my preferred server to the top of the list. Isn&#8217;t that nice of it.</p>
+<p>The dhcpclient still updates my DNS settings, it&rsquo;s just conveniently adds my preferred server to the top of the list. Isn&rsquo;t that nice of it.</p>
 </div>
 
 
@@ -190,6 +190,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -203,10 +207,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

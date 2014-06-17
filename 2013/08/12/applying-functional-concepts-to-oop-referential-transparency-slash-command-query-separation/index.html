@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I&#8217;ve been studying functional programming lately (it&#8217;s trendy) and while it&#8217;s great to just learn new languages and paradigm, it&# &hellip;">
+  <meta name="description" content="I&rsquo;ve been studying functional programming lately (it&rsquo;s trendy) and while it&rsquo;s great to just learn new languages and paradigm, it& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,19 +103,19 @@
   </header>
 
 
-<div class="entry-content"><p>I&#8217;ve been studying functional programming lately (it&#8217;s trendy) and while it&#8217;s great to just learn new languages and paradigm, it&#8217;s always nice when the principles can be applied to everyday work.</p>
+<div class="entry-content"><p>I&rsquo;ve been studying functional programming lately (it&rsquo;s trendy) and while it&rsquo;s great to just learn new languages and paradigm, it&rsquo;s always nice when the principles can be applied to everyday work.</p>
 
-<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &#8220;Object Oriented Software Construction&#8221;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&#8217;s discussion of the principle</a> he mentions that &#8220;it would be nice if the language itself would support this notion&#8221;.</p>
+<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &ldquo;Object Oriented Software Construction&rdquo;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&rsquo;s discussion of the principle</a> he mentions that &ldquo;it would be nice if the language itself would support this notion&rdquo;.</p>
 
 <p>If occurs to me that functional languages do indeed grant Mr. Fowler his wish.</p>
 
-<p>Functional programmers aim to compose programs using &#8220;pure&#8221; functions. In this case, &#8220;pure&#8221; is used to mean a functions that are &#8220;referentially transparent&#8221;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
+<p>Functional programmers aim to compose programs using &ldquo;pure&rdquo; functions. In this case, &ldquo;pure&rdquo; is used to mean a functions that are &ldquo;referentially transparent&rdquo;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
 
-<p>Of course, a program that takes no input, can&#8217;t access a data store and produces no output isn&#8217;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&#8217;t go into what a Monads are, it doesn&#8217;t matter, and I&#8217;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &#8220;only&#8221; perform calculation.</p>
+<p>Of course, a program that takes no input, can&rsquo;t access a data store and produces no output isn&rsquo;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&rsquo;t go into what a Monads are, it doesn&rsquo;t matter, and I&rsquo;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &ldquo;only&rdquo; perform calculation.</p>
 
-<p>These referentially transparent &#8220;pure&#8221; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&#8217;t have changed anything outside of itself.</p>
+<p>These referentially transparent &ldquo;pure&rdquo; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&rsquo;t have changed anything outside of itself.</p>
 
-<p>So, while the languages most of us use daily don&#8217;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&#8217;t that be nice.</p>
+<p>So, while the languages most of us use daily don&rsquo;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&rsquo;t that be nice.</p>
 </div>
 
 
@@ -177,6 +177,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -190,10 +194,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

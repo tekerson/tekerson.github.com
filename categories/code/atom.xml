@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Code | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/code/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,19 +18,19 @@
     <link href="http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/"/>
     <updated>2013-08-12T23:34:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation</id>
-    <content type="html"><![CDATA[<p>I've been studying functional programming lately (it's trendy) and while it's great to just learn new languages and paradigm, it's always nice when the principles can be applied to everyday work.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been studying functional programming lately (it&rsquo;s trendy) and while it&rsquo;s great to just learn new languages and paradigm, it&rsquo;s always nice when the principles can be applied to everyday work.</p>
 
-<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in "Object Oriented Software Construction", it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler's discussion of the principle</a> he mentions that "it would be nice if the language itself would support this notion".</p>
+<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &ldquo;Object Oriented Software Construction&rdquo;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&rsquo;s discussion of the principle</a> he mentions that &ldquo;it would be nice if the language itself would support this notion&rdquo;.</p>
 
 <p>If occurs to me that functional languages do indeed grant Mr. Fowler his wish.</p>
 
-<p>Functional programmers aim to compose programs using "pure" functions. In this case, "pure" is used to mean a functions that are "referentially transparent", that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
+<p>Functional programmers aim to compose programs using &ldquo;pure&rdquo; functions. In this case, &ldquo;pure&rdquo; is used to mean a functions that are &ldquo;referentially transparent&rdquo;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
 
-<p>Of course, a program that takes no input, can't access a data store and produces no output isn't very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won't go into what a Monads are, it doesn't matter, and I'm not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that "only" perform calculation.</p>
+<p>Of course, a program that takes no input, can&rsquo;t access a data store and produces no output isn&rsquo;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&rsquo;t go into what a Monads are, it doesn&rsquo;t matter, and I&rsquo;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &ldquo;only&rdquo; perform calculation.</p>
 
-<p>These referentially transparent "pure" functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can't have changed anything outside of itself.</p>
+<p>These referentially transparent &ldquo;pure&rdquo; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&rsquo;t have changed anything outside of itself.</p>
 
-<p>So, while the languages most of us use daily don't offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn't that be nice.</p>
+<p>So, while the languages most of us use daily don&rsquo;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&rsquo;t that be nice.</p>
 ]]></content>
   </entry>
   
@@ -44,7 +44,7 @@
 <p>I was trying to randomize the order of elements within a list retrieved from a <a href="http://docs.angularjs.org/api/ngResource.$resource">ngResource</a> (answers in a quiz or poll application). The naive approach would be to write the code as if the resource fetch is synchronous.</p>
 
 <p>``` js
-angular.module('myApp').controller('MyCtrl', function ($scope, $resource, $routeParams) {</p>
+angular.module(&lsquo;myApp&rsquo;).controller(&lsquo;MyCtrl&rsquo;, function ($scope, $resource, $routeParams) {</p>
 
 <pre><code>var shuffle = function (list) { /* ... */ };
 var repo = $resource('/api/question/:id', {id: '@id'});
@@ -62,7 +62,7 @@ shuffle(question.anwers);
 <p>The solution for me, was to sort the list once, after it is retrieved. This can be accomplished by passing a callback, as the second argument to <code>$resource.get</code>, that will be called with the returned data once it becomes available. This allows you to perform any required manipulation on the data before it is assigned to the <code>$scope</code>.</p>
 
 <p>``` js
-angular.module('myApp').controller('MyCtrl', function ($scope, $resource, $routeParams) {</p>
+angular.module(&lsquo;myApp&rsquo;).controller(&lsquo;MyCtrl&rsquo;, function ($scope, $resource, $routeParams) {</p>
 
 <pre><code>var shuffle = function (list) { /* ... */ };
 var repo = $resource('/api/question/:id', {id: '@id'});
@@ -76,7 +76,7 @@ $scope.question = repo.get({id: $routeParams.id}, function (question) {
 
 <p>In this instance, the answers to the question are shuffled, but the pattern is useful any time you want to perform an action only <em>after</em> the data if fetched. This may include calculating aggregates or even fetching extra, dependant data.</p>
 
-<p>As an aside, I don't believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using "fat" services and "lean" controllers in a future post.</p>
+<p>As an aside, I don&rsquo;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &ldquo;fat&rdquo; services and &ldquo;lean&rdquo; controllers in a future post.</p>
 ]]></content>
   </entry>
   
@@ -85,19 +85,19 @@ $scope.question = repo.get({id: $routeParams.id}, function (question) {
     <link href="http://blog.tekerson.com/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/"/>
     <updated>2009-09-08T01:03:53+10:00</updated>
     <id>http://blog.tekerson.com/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework</id>
-    <content type="html"><![CDATA[<p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn't automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
+    <content type="html"><![CDATA[<p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&rsquo;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
 
 <p>Doctrine 2.0 looks like it might finally be the ORM framework I have been seeking for PHP. While the older versions of Doctrine provided great functionality, they were too intrusive for my taste. I think an ORM should provide a true <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">data mapper</a>; in which the domain entities need know nothing about their persistence.</p>
 
-<p>Matthew Weier O'Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including "real" namespaces, so its classes don't follow the (current) Zend naming standard and the ZF autoloader won't load them for us.</p>
+<p>Matthew Weier O'Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &ldquo;real&rdquo; namespaces, so its classes don&rsquo;t follow the (current) Zend naming standard and the ZF autoloader won&rsquo;t load them for us.</p>
 
 <p>Good News, Doctrine provides its own autoloader that we can leverage to load its own classes.</p>
 
-<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn't very useful).</p>
+<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&rsquo;t very useful).</p>
 
-<p>Good News, it's easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
+<p>Good News, it&rsquo;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
 
-<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the "Doctrine\" namespace.</p>
+<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &ldquo;Doctrine\&rdquo; namespace.</p>
 
 <p>``` php
 &lt;?php</p>
@@ -119,7 +119,7 @@ $scope.question = repo.get({id: $routeParams.id}, function (question) {
 
 <p>```</p>
 
-<p>We can use all of Doctrine's classes anywhere else in our code.
+<p>We can use all of Doctrine&rsquo;s classes anywhere else in our code.
 <code>php
 &lt;?php
 use Doctrine\ORM;
@@ -138,7 +138,7 @@ $manager = EntityManager::create(array('driver' =&gt; 'pdo_sqlite', 'path' =&gt;
     <id>http://blog.tekerson.com/2009/07/06/dependency-injection-container-resource-in-zend-framework</id>
     <content type="html"><![CDATA[<p>A good dependency injection container is a godsend when it comes to managing the dependency tree of even a moderately complex domain model. As such, it comes as no surprise there has been much discussion about them of late in the PHP and Zend Framework communities.</p>
 
-<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei's recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
+<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei&rsquo;s recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
 
 <p>The container resource copies any already instantiated objects from the old container into the new one, then replaces the default container.</p>
 
@@ -191,7 +191,7 @@ protected function _getBootstrap()
 <p>}
 ```</p>
 
-<p>I've also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
+<p>I&rsquo;ve also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
 
 <p>To use the container resource you will need to add the prefix and path to the bootstrappers plugin loader:</p>
 
@@ -199,7 +199,7 @@ protected function _getBootstrap()
 &lt;?php
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
-// ...</p>
+// &hellip;</p>
 
 <pre><code>protected function _initPlugins()
 {
@@ -210,7 +210,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 }
 </code></pre>
 
-<p>// ...
+<p>// &hellip;
 }
 ```</p>
 
@@ -225,11 +225,11 @@ resources.container.objects.Log_Writer.arguments.0 = "%Log_Writer.stream%"
 resources.container.options.Log_Writer.stream = APPLICATION_PATH "/../log/application.log"
 </code></pre>
 
-<p>There are 2 resources defined here, the "Log" and the "Log_Writer".</p>
+<p>There are 2 resources defined here, the &ldquo;Log&rdquo; and the &ldquo;Log_Writer&rdquo;.</p>
 
 <ol>
-<li><p>Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
-<li><p>The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
+<li><p> Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
+<li><p> The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
 </ol>
 
 
@@ -237,11 +237,11 @@ resources.container.options.Log_Writer.stream = APPLICATION_PATH "/../log/applic
 
 <p>``` php
 &lt;?php
-$logger = $this->getInvokeArg('bootstrap')->getResource('Log');
+$logger = $this->getInvokeArg(&lsquo;bootstrap&rsquo;)&ndash;>getResource(&lsquo;Log&rsquo;);
 // or, with the helper
-$logger = $this->_helper->resource('Log');</p>
+$logger = $this->_helper->resource(&lsquo;Log&rsquo;);</p>
 
-<p>$logger->log('A log message', Zend_Log::NOTICE);
+<p>$logger->log(&lsquo;A log message&rsquo;, Zend_Log::NOTICE);
 ```</p>
 
 <p>While this is a simple example, it can be really beneficial when working with, for example, a service layer. The service you need might depend on another service, both of which may depend on an Authorization service. All the services depend on their data mappers (which themselves depends on a database connection) and their entity factories, etc.
@@ -254,7 +254,7 @@ Instantiating a dependency tree like this for every object you need can lead to 
     <link href="http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2/"/>
     <updated>2009-06-28T00:43:35+10:00</updated>
     <id>http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2</id>
-    <content type="html"><![CDATA[<p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We're going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
+    <content type="html"><![CDATA[<p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We&rsquo;re going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
 
 <p>Note, there are still some bugs in Zend_Tool that prevent this working as it should, I will note the bugs and their fixes as we encounter them.</p>
 
@@ -270,7 +270,7 @@ Instantiating a dependency tree like this for every object you need can lead to 
 <pre><code>zf create controller index 1 guestbook
 </code></pre>
 
-<p>The "1" argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
+<p>The &ldquo;1&rdquo; argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
 
 <pre><code>zf create controller ?
 </code></pre>
@@ -281,14 +281,14 @@ Instantiating a dependency tree like this for every object you need can lead to 
 resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 </code></pre>
 
-<p>To check our module is working, we can navigate to our guestbook at http://aza/guestbook and we should see the default view for the index action.</p>
+<p>To check our module is working, we can navigate to our guestbook at <a href="http://aza/guestbook">http://aza/guestbook</a> and we should see the default view for the index action.</p>
 
-<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn't prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
-<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn't be but we don't really care, we're going to replace it anyway.</p>
+<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn&rsquo;t prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
+<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn&rsquo;t be but we don&rsquo;t really care, we&rsquo;re going to replace it anyway.</p>
 
 <h2>Create module bootstrap</h2>
 
-<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn't create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
+<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn&rsquo;t create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
 
 <p><code>php
 &lt;?php
@@ -297,7 +297,7 @@ class Guestbook_Bootstrap extends Zend_Application_Module_Bootstrap
 }
 </code></p>
 
-<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don't need any further bootstrapping.</p>
+<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don&rsquo;t need any further bootstrapping.</p>
 
 <p><strong>Important note</strong>: <strong><em>All</em> bootstrap functions</strong> for <strong>every module</strong> are run for <strong>every request</strong>.</p>
 
@@ -307,7 +307,7 @@ class Guestbook_Bootstrap extends Zend_Application_Module_Bootstrap
 
 <p>Now we have the module skeleton in place, lets start porting the guestbook code to our module. This turns out to be fairly easy; the majority of the changes involve prefixing class names with the module name.</p>
 
-<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it's on the right hand side in zip or tar.gz form).</p>
+<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it&rsquo;s on the right hand side in zip or tar.gz form).</p>
 
 <h2>Importing Quickstart</h2>
 
@@ -336,48 +336,41 @@ application/modules/guestbook/forms/</p>
 
 <p>Now we have the files in the right place, we need to update the files to be modular.</p>
 
-<p>We'll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
+<p>We&rsquo;ll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
 
-<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with "Default<em>", but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of "Default</em>" with "Guestbook_" in the application/modules/guestbook/models/ directory is all we need.</p>
+<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with &ldquo;Default<em>&rdquo;, but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of &ldquo;Default</em>&rdquo; with &ldquo;Guestbook_&rdquo; in the application/modules/guestbook/models/ directory is all we need.</p>
 
-<p>The controller is a little trickier because it isn't already prefixed (controllers in the default module aren't), but it's still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
+<p>The controller is a little trickier because it isn&rsquo;t already prefixed (controllers in the default module aren&rsquo;t), but it&rsquo;s still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
 
 <p>Finally, we get to the view. In our index view (application/modules/guestbook/views/scripts/index/index.phtml) we need to update the parameters passed to the url helper to reference our controller. Adding the module, and changing the controller leaves the first link looking like this:
 ``` html</p>
 
-<p><a href="<?php echo $this->url(
-    array(
-        'module'    => 'guestbook',
-        'controller' => 'index',
-        'action'     => 'sign'
-    ), 
-    'default', 
-    true) ?>">Sign Our Guestbook</a></p>
-```
+<p><p><a href="<?php echo $this->url(</p>
 
-Done!
+<pre><code>array(
+    'module'    =&gt; 'guestbook',
+    'controller' =&gt; 'index',
+    'action'     =&gt; 'sign'
+), 
+'default', 
+true) ?&gt;"&gt;Sign Our Guestbook&lt;/a&gt;&lt;/p&gt;
+</code></pre>
 
+<p>```</p>
 
+<p>Done!</p>
 
-## Connect the database
+<h2>Connect the database</h2>
 
+<p>I&rsquo;ll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.</p>
 
-I'll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.
+<h2>Conclusion</h2>
 
+<p>We have just ported the Quickstart guestbook application to a Zend Framework Module. Modularizing applications allows for easier code reuse across applications. Hopefully modules will become standardized to the point that there will be a repository of modules that can be added to your application and providing drop in functionality.</p>
 
+<h2>Download</h2>
 
-## Conclusion
-
-
-We have just ported the Quickstart guestbook application to a Zend Framework Module. Modularizing applications allows for easier code reuse across applications. Hopefully modules will become standardized to the point that there will be a repository of modules that can be added to your application and providing drop in functionality.
-
-
-
-## Download
-
-
-For those who had trouble following along, I've made the entire application (including database) available via my [github repository](http://github.com/tekerson/A-Zend-Application/tree/master).
-
+<p>For those who had trouble following along, I&rsquo;ve made the entire application (including database) available via my <a href="http://github.com/tekerson/A-Zend-Application/tree/master">github repository</a>.</p>
 ]]></content>
   </entry>
   

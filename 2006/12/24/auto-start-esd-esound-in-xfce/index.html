@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="As you may be aware I am a relatively recent convert to Ubuntu. As such I am still tweaking my desktop to my liking (Who am I kidding, I don&#8217;t &hellip;">
+  <meta name="description" content="As you may be aware I am a relatively recent convert to Ubuntu. As such I am still tweaking my desktop to my liking (Who am I kidding, I don&rsquo;t &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,11 +103,11 @@
   </header>
 
 
-<div class="entry-content"><p>As you may be aware I am a relatively recent convert to Ubuntu. As such I am still tweaking my desktop to my liking (Who am I kidding, I don&#8217;t think I&#8217;ll ever finish tweaking it).</p>
+<div class="entry-content"><p>As you may be aware I am a relatively recent convert to Ubuntu. As such I am still tweaking my desktop to my liking (Who am I kidding, I don&rsquo;t think I&rsquo;ll ever finish tweaking it).</p>
 
-<p>I was previously running Gnome (Ubuntu&#8217;s default) Desktop, except with XFWM as by Window Manager, as I have never liked Metacity (Gnome&#8217;s default WM). Today, I changed my default session (from the &#8220;Options&#8221; menu in the GDM &#8211; the graphical login screen) to <a href="http://www.xfce.org/">XFCE</a>, as many of the Gnome features I don&#8217;t use anyway, and I have always liked XFCE, it was on my desktop in my <a href="http://gentoo.org">Gentoo</a> day&#8217;s (that or <a href="http://icculus.org/openbox/">Openbox</a>).</p>
+<p>I was previously running Gnome (Ubuntu&rsquo;s default) Desktop, except with XFWM as by Window Manager, as I have never liked Metacity (Gnome&rsquo;s default WM). Today, I changed my default session (from the &ldquo;Options&rdquo; menu in the GDM &mdash; the graphical login screen) to <a href="http://www.xfce.org/">XFCE</a>, as many of the Gnome features I don&rsquo;t use anyway, and I have always liked XFCE, it was on my desktop in my <a href="http://gentoo.org">Gentoo</a> day&rsquo;s (that or <a href="http://icculus.org/openbox/">Openbox</a>).</p>
 
-<p>Everything seemed to work fine. There were a few things I needed to configure because they were handled by Gnome application previously, but on the whole most things were very similar. The first issue I noticed was I had no sound (There is almost always music playing on my machine, as it should be). After some investigation, I discovered that ESD hadn&#8217;t started:</p>
+<p>Everything seemed to work fine. There were a few things I needed to configure because they were handled by Gnome application previously, but on the whole most things were very similar. The first issue I noticed was I had no sound (There is almost always music playing on my machine, as it should be). After some investigation, I discovered that ESD hadn&rsquo;t started:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -115,9 +115,9 @@
 </span><span class='line'>5981 pts/1    S+     0:00 grep esd</span></code></pre></td></tr></table></div></figure>
 
 
-<p>A quick search led me to a <a href="http://ubuntuforums.org/showthread.php?p=375042">post</a> on the Ubuntu Forums which wasn&#8217;t directly very helpful, but it indicated that, at least I wasn&#8217;t the only one. And it also inspired my solution.</p>
+<p>A quick search led me to a <a href="http://ubuntuforums.org/showthread.php?p=375042">post</a> on the Ubuntu Forums which wasn&rsquo;t directly very helpful, but it indicated that, at least I wasn&rsquo;t the only one. And it also inspired my solution.</p>
 
-<p>I wrote a quick script to start ESD, but only if it isn&#8217;t already running (thanks to the problem encountered in the aforementioned post)</p>
+<p>I wrote a quick script to start ESD, but only if it isn&rsquo;t already running (thanks to the problem encountered in the aforementioned post)</p>
 
 <p>~/bin/startesd</p>
 
@@ -141,17 +141,17 @@
 </span><span class='line'>fi;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Then, by adding an entry to run that script into XFCE&#8217;s (new to me, but apparently not so new) <a href="http://xfce-diary.blogspot.com/2005/07/autostart-editor.html">&#8220;autostart-editor&#8221;</a></p>
+<p>Then, by adding an entry to run that script into XFCE&rsquo;s (new to me, but apparently not so new) <a href="http://xfce-diary.blogspot.com/2005/07/autostart-editor.html">&ldquo;autostart-editor&rdquo;</a></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>$ xfce4-autostart-editor</span></code></pre></td></tr></table></div></figure>
 
 
-<p>or &#8220;Autostarted Applications&#8221; in the settings menu.</p>
+<p>or &ldquo;Autostarted Applications&rdquo; in the settings menu.</p>
 
 <p>I had sound, without having to manually start ESD each time.</p>
 
-<p>The only other configuration I need to get round to doing it configuring my multimedia keys… but that can wait &#8216;till some other time.</p>
+<p>The only other configuration I need to get round to doing it configuring my multimedia keys… but that can wait &lsquo;till some other time.</p>
 </div>
 
 
@@ -213,6 +213,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -226,10 +230,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

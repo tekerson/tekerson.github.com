@@ -103,9 +103,9 @@
   </header>
 
 
-<div class="entry-content"><p>While writing a fairly standard sign-up/log-in system, I got to the point of validating the password to make sure it only contained acceptable characters. Now for me this would usually mean a regular expression. But, since this system wasn&#8217;t for me I decided to make the &#8220;valid characters&#8221; configurable, and generally the people configuring it won&#8217;t be able to write a regular expression.</p>
+<div class="entry-content"><p>While writing a fairly standard sign-up/log-in system, I got to the point of validating the password to make sure it only contained acceptable characters. Now for me this would usually mean a regular expression. But, since this system wasn&rsquo;t for me I decided to make the &ldquo;valid characters&rdquo; configurable, and generally the people configuring it won&rsquo;t be able to write a regular expression.</p>
 
-<p>My solution is to use <a href="http://php.net/trim">php&#8217;s trim()</a> (or more specifically <a href="http://php.net/rtrim">rtrim()</a>, but it doesn&#8217;t really matter) by passing the users input as the first argument, and the string of valid characters as the second; I should get an empty string in return. So the test, only allowing lowercase letters, becomes:</p>
+<p>My solution is to use <a href="http://php.net/trim">php&rsquo;s trim()</a> (or more specifically <a href="http://php.net/rtrim">rtrim()</a>, but it doesn&rsquo;t really matter) by passing the users input as the first argument, and the string of valid characters as the second; I should get an empty string in return. So the test, only allowing lowercase letters, becomes:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -118,9 +118,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Simple! I don&#8217;t know how it compares speed wise with other methods, but it seems simple and effective and I can&#8217;t imagine it&#8217;s terribly slow unless your strings get larger.</p>
+<p>Simple! I don&rsquo;t know how it compares speed wise with other methods, but it seems simple and effective and I can&rsquo;t imagine it&rsquo;s terribly slow unless your strings get larger.</p>
 
-<p>I&#8217;m also not sure how it would handle multi-byte characters. But I don&#8217;t <strong>think</strong> it would be a problem if it doesn&#8217;t. Anyone got any insight?</p>
+<p>I&rsquo;m also not sure how it would handle multi-byte characters. But I don&rsquo;t <strong>think</strong> it would be a problem if it doesn&rsquo;t. Anyone got any insight?</p>
 </div>
 
 
@@ -182,6 +182,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -195,10 +199,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

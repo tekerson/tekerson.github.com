@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Netcat (nc) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I &hellip;">
+  <meta name="description" content="Netcat (nc) is a really useful little utility, available for most (all?) OSs. It&rsquo;s often used for low level network tinkering. Recently, I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,9 +103,9 @@
   </header>
 
 
-<div class="entry-content"><p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &#8220;Web Hooks&#8221;.</p>
+<div class="entry-content"><p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&rsquo;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &ldquo;Web Hooks&rdquo;.</p>
 
-<p>In my specific case, it was the Facebook &#8220;Real-Time&#8221; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
+<p>In my specific case, it was the Facebook &ldquo;Real-Time&rdquo; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
 
 <p>To overcome this, we need to be able to consistently repeat a request from Facebook while fine-tuning the handler to perform the required task.</p>
 
@@ -114,7 +114,7 @@
 <pre><code>nc -l 8000 &gt; request.txt
 </code></pre>
 
-<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &#8220;request.txt&#8221;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&#8217;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &#8220;request.txt&#8221;, where we can view it, edit it and &#8211; most importantly &#8211; replay it.</p>
+<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &ldquo;request.txt&rdquo;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&rsquo;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &ldquo;request.txt&rdquo;, where we can view it, edit it and &mdash; most importantly &mdash; replay it.</p>
 
 <p>We can also use <code>nc</code> to handle sending the request for us by piping the saved file through to the target server.</p>
 
@@ -177,6 +177,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -190,10 +194,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

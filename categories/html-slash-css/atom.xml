@@ -4,7 +4,7 @@
   <title><![CDATA[Category: HTML/CSS | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/html-slash-css/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,12 +18,12 @@
     <link href="http://blog.tekerson.com/2007/02/19/single-or-double-quotes-for-html-attributes/"/>
     <updated>2007-02-19T09:02:42+10:00</updated>
     <id>http://blog.tekerson.com/2007/02/19/single-or-double-quotes-for-html-attributes</id>
-    <content type="html"><![CDATA[<p>The issue of whether to use single quotes or double quotation marks in HTML attributes is a topic that has been somewhat debated for some time now. The reason there is debate is due to the differences in, and the leniency of the relevant standards or recommendations. So here's my take.</p>
+    <content type="html"><![CDATA[<p>The issue of whether to use single quotes or double quotation marks in HTML attributes is a topic that has been somewhat debated for some time now. The reason there is debate is due to the differences in, and the leniency of the relevant standards or recommendations. So here&rsquo;s my take.</p>
 
-<p>The W3C's <a href="http://www.w3.org/TR/html401/">HTML 4.01 Recommendation</a> allows the use of either single or double quotation marks and in certain cases no quotation marks are required at all.
+<p>The W3C&rsquo;s <a href="http://www.w3.org/TR/html401/">HTML 4.01 Recommendation</a> allows the use of either single or double quotation marks and in certain cases no quotation marks are required at all.
 To quote the recommendation:</p>
 
-<blockquote><p>By default, SGML requires that all attribute values be delimited using either double quotation marks (ASCII decimal 34) or single quotation marks (ASCII decimal 39). Single quote marks can be included within the attribute value when the value is delimited by double quote marks, and vice versa. Authors may also use numeric character references to represent double quotes (&#34;) and single quotes (&#39;). For double quotes authors can also use the character entity reference ".
+<blockquote><p>By default, SGML requires that all attribute values be delimited using either double quotation marks (ASCII decimal 34) or single quotation marks (ASCII decimal 39). Single quote marks can be included within the attribute value when the value is delimited by double quote marks, and vice versa. Authors may also use numeric character references to represent double quotes (&#34;) and single quotes (&#39;). For double quotes authors can also use the character entity reference &ldquo;.
 In certain cases, authors may specify the value of an attribute without any quotation marks. The attribute value may only contain letters (a-z and A-Z), digits (0-9), hyphens (ASCII decimal 45), periods (ASCII decimal 46), underscores (ASCII decimal 95), and colons (ASCII decimal 58). We recommend using quotation marks even when it is possible to eliminate them.</p></blockquote>
 
 <p><a href="http://www.w3.org/TR/xhtml1/">XHTML1</a> is a little stricter, saying that all attribute values must be quoted, even those which appear to be numeric, but (as far as I can tell) still allows the use of either quote.</p>
@@ -43,7 +43,7 @@ In certain cases, authors may specify the value of an attribute without any quot
 &lt;/form&gt;
 </code></p>
 
-<p>This would work fine in most cases, but consider the case where the $name variable contains an apostrophe such as in "O'Brien". The resulting HTML would look like this:</p>
+<p>This would work fine in most cases, but consider the case where the $name variable contains an apostrophe such as in &ldquo;O'Brien&rdquo;. The resulting HTML would look like this:</p>
 
 <p><code>
 &lt;form …&gt;
@@ -52,7 +52,7 @@ In certain cases, authors may specify the value of an attribute without any quot
 &lt;/form&gt;
 </code></p>
 
-<p>This would obviously cause problems with the display, causing only an "O" to be displayed inside the text field (not to mention invalid markup). Of course, you could run the value through the PHP's <a href="http://php.net/addslashes">addslashes()</a> function, and the problem would be solved. But addslashes is one of those functions I try to use very sparingly, it has a tendency to bite you by adding slashes where they are not intended, such as before slashes intended to be escaping other characters. Instead, I prefer to use double quotes around all attributes, like so:</p>
+<p>This would obviously cause problems with the display, causing only an &ldquo;O&rdquo; to be displayed inside the text field (not to mention invalid markup). Of course, you could run the value through the PHP&rsquo;s <a href="http://php.net/addslashes">addslashes()</a> function, and the problem would be solved. But addslashes is one of those functions I try to use very sparingly, it has a tendency to bite you by adding slashes where they are not intended, such as before slashes intended to be escaping other characters. Instead, I prefer to use double quotes around all attributes, like so:</p>
 
 <p><code>
 &lt;form …&gt;
@@ -61,11 +61,11 @@ In certain cases, authors may specify the value of an attribute without any quot
 &lt;/form&gt;
 </code></p>
 
-<p>The advantage is that, by passing the variables through a <a href="http://php.net/htmlentities">htmlentities</a> function (or equivalent). This will convert any double quotes in the variable to the HTML entity "&quot;", preventing the reverse of the problem described with "O'Brien" and ensuring the markup is going to be valid and the value is as intended. This only works for double quotes because there is no standard HTML entity for single quotes (The ASCII code can be used, and &amp;apos; is supported in some browsers, but these aren't as widely supported as &amp;quot;).</p>
+<p>The advantage is that, by passing the variables through a <a href="http://php.net/htmlentities">htmlentities</a> function (or equivalent). This will convert any double quotes in the variable to the HTML entity &ldquo;&quot;&rdquo;, preventing the reverse of the problem described with &ldquo;O'Brien&rdquo; and ensuring the markup is going to be valid and the value is as intended. This only works for double quotes because there is no standard HTML entity for single quotes (The ASCII code can be used, and &amp;apos; is supported in some browsers, but these aren&rsquo;t as widely supported as &amp;quot;).</p>
 
 <p>On the surface, the approach of converting the HTML entities may appear to be no better or worse than the method of escaping the single quotes with addslashes. The advantage is, converting the HTML entities will also account for other characters that should be converted as well, for example the ampersand (&amp;) that, while they may not cause the page to fail to function (most browsers will compensate), will render the HTML invalid if not converted. As such, this conversion would need to be done even with the escaping using slashes, so why use both? Taking this into consideration, I have yet to find a good reason for using single quotes (at least if the value contains dynamic content).</p>
 
-<p>So that's my vote, and my reasoning behind it. Vote 1: Double quotes for attribute value delimiters.</p>
+<p>So that&rsquo;s my vote, and my reasoning behind it. Vote 1: Double quotes for attribute value delimiters.</p>
 ]]></content>
   </entry>
   
@@ -74,9 +74,9 @@ In certain cases, authors may specify the value of an attribute without any quot
     <link href="http://blog.tekerson.com/2006/11/04/priority-when-multiple-css-classes-are-applied/"/>
     <updated>2006-11-04T02:16:59+10:00</updated>
     <id>http://blog.tekerson.com/2006/11/04/priority-when-multiple-css-classes-are-applied</id>
-    <content type="html"><![CDATA[<p>I've used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I've checked it out and it works like this.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I&rsquo;ve checked it out and it works like this.</p>
 
-<p>I had a page, who's table cells all had a CSS class that applied a background colour, some font attributes and what have you.
+<p>I had a page, who&rsquo;s table cells all had a CSS class that applied a background colour, some font attributes and what have you.
 The class (from an external stylesheet file):
 ```
 td.listCell
@@ -112,17 +112,17 @@ was applied individually to each cell like:
 <p></head>
 ```</p>
 
-<p>On my way I went, coded the javascript to search the table and add the 'searchHighlight' class to the cells that needed hightlighting. Easy. Except it didn't work.</p>
+<p>On my way I went, coded the javascript to search the table and add the &lsquo;searchHighlight&rsquo; class to the cells that needed hightlighting. Easy. Except it didn&rsquo;t work.</p>
 
-<p>When the Javascript found it's target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
+<p>When the Javascript found it&rsquo;s target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
 
-<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it's normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
+<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it&rsquo;s normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
 
-<p>So I created a simple test page, to make sure I was wasn't going (more) insane, and that multiple CSS styles ever worked.
+<p>So I created a simple test page, to make sure I was wasn&rsquo;t going (more) insane, and that multiple CSS styles ever worked.
 The test page looked like this:</p>
 
 <p>```
-&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+&lt;!DOCTYPE html PUBLIC &ldquo;&ndash;//W3C//DTD XHTML 1.0 Strict//EN&rdquo; &ldquo;<a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</a>&rdquo;>
 <html></p>
 
 <pre><code>&lt;head&gt;
@@ -144,11 +144,11 @@ The test page looked like this:</p>
 <p></html>
 ```</p>
 
-<p>The results are sort of what I expected... the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn't matter. So they are getting the bold from the normal style, and the background from the special style.</p>
+<p>The results are sort of what I expected&hellip; the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn&rsquo;t matter. So they are getting the bold from the normal style, and the background from the special style.</p>
 
-<p>Great. So why didn't it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that 'special' is declared first) and the results are very different, the 'special' class is ignored completely.</p>
+<p>Great. So why didn&rsquo;t it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that &lsquo;special&rsquo; is declared first) and the results are very different, the &lsquo;special&rsquo; class is ignored completely.</p>
 
-<p>That's right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn't know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
+<p>That&rsquo;s right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn&rsquo;t know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
 
 <p>For example, if (from my test page) I remove the special style, and put it in an external style sheet, and include it like so:
 ```
@@ -160,7 +160,7 @@ The test page looked like this:</p>
 …
 ```</p>
 
-<p>It works, but doing this doesn't:
+<p>It works, but doing this doesn&rsquo;t:
 ```
 …
 <link rel="stylesheet" type="text/css" href="stylesheet.css" /></p>

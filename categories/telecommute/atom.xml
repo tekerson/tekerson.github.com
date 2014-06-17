@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Telecommute | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/telecommute/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -20,15 +20,15 @@
     <id>http://blog.tekerson.com/2008/12/16/telecommute-experience-part-2</id>
     <content type="html"><![CDATA[<p>I have been telecommuting for a bit over a month now, and things have settled quite well.</p>
 
-<p>We have set up an office, away from the entertainment area (except the foosball table, that's in the office :)). This has been good to keep some separation between those trying to get work done and the rest of the household population.</p>
+<p>We have set up an office, away from the entertainment area (except the foosball table, that&rsquo;s in the office :)). This has been good to keep some separation between those trying to get work done and the rest of the household population.</p>
 
 <p>With the time difference, office hours work well. An 8 hour stint from 1pm to 9pm (Canada) is the same as 7am to 3pm (Australia). Giving plenty of time in the morning to enjoy the snow, while still allowing ample real-time communication with the office during business hours, and even leaving some time after the work day to relax.</p>
 
-<p>The work itself hasn't changed much. A good issue tracker makes things much easier (We use <a href="http://eventum.mysql.org/">MySQL's Eventum</a>) because everyone can easily see a current list of priorities and who is doing what, which is always important but even more so without real-time contact.</p>
+<p>The work itself hasn&rsquo;t changed much. A good issue tracker makes things much easier (We use <a href="http://eventum.mysql.org/">MySQL&rsquo;s Eventum</a>) because everyone can easily see a current list of priorities and who is doing what, which is always important but even more so without real-time contact.</p>
 
 <p>A good local development environment has also been invaluable, being able to develop and test completely without a connection to the world ensures I can still be productive even when the Internet is on the fritz. Using virtual machines I have set up individual environments for each project. <a href="http://git.or.cz/">Git</a> (via git-svn) for version control allows me to work; branching, committing, merging and reverting all locally.</p>
 
-<p>Communication has primarily been via instant messenger, which was already the case in the office anyway, so no real transition there. Skype is also great if you need voice communication (I generally don't).</p>
+<p>Communication has primarily been via instant messenger, which was already the case in the office anyway, so no real transition there. Skype is also great if you need voice communication (I generally don&rsquo;t).</p>
 
 <p>Using these tools, the transition has been smooth and painless. We have even successfully deployed a major project since I have been here. So far, so good.</p>
 ]]></content>
@@ -39,15 +39,15 @@
     <link href="http://blog.tekerson.com/2008/11/24/telecommute-experience-part-1/"/>
     <updated>2008-11-24T23:27:59+10:00</updated>
     <id>http://blog.tekerson.com/2008/11/24/telecommute-experience-part-1</id>
-    <content type="html"><![CDATA[<p>I've just started telecommuting, and not wanting to take it slowly, I've jumped straight into an international arrangement; living in Canada and working in Brisbane, Australia. This is my story...</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve just started telecommuting, and not wanting to take it slowly, I&rsquo;ve jumped straight into an international arrangement; living in Canada and working in Brisbane, Australia. This is my story&hellip;</p>
 
-<p>After almost 3 years with my current employer, I decided I needed to get out of the office. Not that there is anything particularly wrong with the office, it's just not the most exciting environment and I was getting pretty over it.</p>
+<p>After almost 3 years with my current employer, I decided I needed to get out of the office. Not that there is anything particularly wrong with the office, it&rsquo;s just not the most exciting environment and I was getting pretty over it.</p>
 
 <p>It just so happened that a number of my friends were in a similar situation, and a plan was hatched to move ourselves to Canada for 6 months. Once an approximate timetable was established, we approached our respective employers. After explaining the plan to make the move and maintain our current employment, for the most part we met little resistance; this was a little surprising to me.</p>
 
 <p>So the approximate plans were filled with some more details, and off we went.</p>
 
-<p>To Be Continued...</p>
+<p>To Be Continued&hellip;</p>
 ]]></content>
   </entry>
   

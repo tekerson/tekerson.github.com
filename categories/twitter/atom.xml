@@ -4,7 +4,7 @@
   <title><![CDATA[Category: twitter | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/twitter/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -18,11 +18,11 @@
     <link href="http://blog.tekerson.com/2009/03/17/following-hashtags-on-twitter/"/>
     <updated>2009-03-17T00:24:59+10:00</updated>
     <id>http://blog.tekerson.com/2009/03/17/following-hashtags-on-twitter</id>
-    <content type="html"><![CDATA[<p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don't believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the "correct" tag).</p>
+    <content type="html"><![CDATA[<p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don&rsquo;t believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the &ldquo;correct&rdquo; tag).</p>
 
-<p>I found that this can be done using twitter's own search function, simply put all the tags into the "Any of these words" box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the "Feed for this query" (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
+<p>I found that this can be done using twitter&rsquo;s own search function, simply put all the tags into the &ldquo;Any of these words&rdquo; box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the &ldquo;Feed for this query&rdquo; (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
 
-<p>This allowed me to keep up with chatter at the conference, even from people I don't usually follow.</p>
+<p>This allowed me to keep up with chatter at the conference, even from people I don&rsquo;t usually follow.</p>
 ]]></content>
   </entry>
   

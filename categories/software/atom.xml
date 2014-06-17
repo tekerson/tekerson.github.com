@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Software | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/software/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -14,32 +14,71 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Getting the tools: Haskell Edition]]></title>
+    <link href="http://blog.tekerson.com/2014/06/18/getting-the-tools-haskell-edition/"/>
+    <updated>2014-06-18T00:30:36+10:00</updated>
+    <id>http://blog.tekerson.com/2014/06/18/getting-the-tools-haskell-edition</id>
+    <content type="html"><![CDATA[<p>I prefer to reserve the system-level package manager for system-level packages, which my development tools generally are not. As such, my tools are installed in my <code>~/opt/</code> directory where possible (then symlinked to <code>~/bin/</code>).</p>
+
+<p>In this post, I&rsquo;m looking at how I did this for my Haskell tool-set.</p>
+
+<p>Haskell&rsquo;s <code>cabal</code> is a great dependency management/build tool with built-in sandbox capabilities. It is also often used to install many Haskell tools, such as <code>hlint</code>, <code>pointfree</code> and <code>doctest</code>.</p>
+
+<p>I was originally installing these tools by creating a subdirectory per tool (e.g. <code>~/opt/haskell/hlint/</code>) and using <code>cabal sandbox init; cabal install hlint</code> to install the tool (<code>hlint</code> in this case) within the sandbox.</p>
+
+<p>But, I didn&rsquo;t like having a set of &ldquo;empty&rdquo; directories (containing only the hidden <code>.cabal-sandbox</code> and <code>cabal.sandbox.config</code>). With a few extra arguments (thanks to some tips from <a href="https://twitter.com/benkolera">Ben Kolera</a> at the last <a href="http://bfpg.org">BFPG</a> hack night) we can forgo the superfluous subdirectories and reveal the sandboxes.</p>
+
+<p>Here is an example of installing <code>hlint</code>:</p>
+
+<p>```</p>
+
+<h1>in ~/opt/haskell</h1>
+
+<p>PKG=hlint
+cabal &mdash;sandbox-config-file=$PKG.sandbox.config sandbox init &mdash;sandbox=$PKG
+cabal &mdash;sandbox-config-file=$PKG.sandbox.config install $PKG
+```</p>
+
+<p>This creates a sandbox config file called <code>hlint.sandbox.config</code> and a visible sandbox in the <code>hlint</code> directory.</p>
+
+<p>You can then symlink the executable onto your path:
+<code>
+ln -s ~/opt/haskell/hlint/bin/hlint ~/bin/hlint
+</code></p>
+
+<p>This is how I have installed all of these tools and is my currently preferred method. There are other variations on this that can also be used, for instance, adding the package&rsquo;s <code>bin</code> directory to your path, or copying the actual executable out of the sandbox (then you could even delete the sandbox if you choose).</p>
+
+<p>This works for all of the packages I mentioned above, and probably any others that you want to install just for the executable binary.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Share tmux Windows Across Sessions]]></title>
     <link href="http://blog.tekerson.com/2013/05/28/share-tmux-windows-across-sessions/"/>
     <updated>2013-05-28T16:01:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/05/28/share-tmux-windows-across-sessions</id>
     <content type="html"><![CDATA[<p>When working in a terminal (the vast majority of the time) I run the terminal multiplexer <a href="http://tmux.sourceforge.net/">tmux</a>, with one session for each project I am currently working on. I like to have a window for my IRC client in every session, so I can keep an eye on it. The best way to do this is to share the tmux window across multiple tmux sessions.</p>
 
-<p>To perform this setup, we can create a new session for "shared" applications, opening irssi in a window named "irc". Either manually create the windows and open the applications in them, or, if you're lazy and use the same setup regularly. Script it, something like so:</p>
+<p>To perform this setup, we can create a new session for &ldquo;shared&rdquo; applications, opening irssi in a window named &ldquo;irc&rdquo;. Either manually create the windows and open the applications in them, or, if you&rsquo;re lazy and use the same setup regularly. Script it, something like so:</p>
 
 <pre><code>tmux new-session -s shared "tmux new-window -n irc irssi"
 </code></pre>
 
-<p>You can use the automatically-assigned window names, but since I'm referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
+<p>You can use the automatically-assigned window names, but since I&rsquo;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
 
-<p>Once the applications are running, we can link the windows to the working session using tmux's <code>link-window</code> command, which has the basic form:</p>
+<p>Once the applications are running, we can link the windows to the working session using tmux&rsquo;s <code>link-window</code> command, which has the basic form:</p>
 
 <pre><code>tmux link-window -s &lt;src-window&gt; -t &lt;dst-window&gt;
 </code></pre>
 
 <p>Any time a tmux command requires a reference to a window, we can provide an absolute reference to any window in any session using the <code>session:window</code> format where <code>session</code> is the name of the session and <code>window</code> is the name (or number) of the window in that session.</p>
 
-<p>Using this, we can use the <code>link-window</code> our "shared:irc" window to index "9" in the current session. Which looks like:</p>
+<p>Using this, we can use the <code>link-window</code> our &ldquo;shared:irc&rdquo; window to index &ldquo;9&rdquo; in the current session. Which looks like:</p>
 
 <pre><code>tmux link-window -s shared:irc -t 9
 </code></pre>
 
-<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don't get in the way of my "real work".</p>
+<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&rsquo;t get in the way of my &ldquo;real work&rdquo;.</p>
 ]]></content>
   </entry>
   
@@ -48,9 +87,9 @@
     <link href="http://blog.tekerson.com/2008/09/05/basic-branching-with-git/"/>
     <updated>2008-09-05T22:48:22+10:00</updated>
     <id>http://blog.tekerson.com/2008/09/05/basic-branching-with-git</id>
-    <content type="html"><![CDATA[<p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it's <strong>easy!</strong></p>
+    <content type="html"><![CDATA[<p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it&rsquo;s <strong>easy!</strong></p>
 
-<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using "<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>" to work on multiple things at once, but this is very limiting.</p>
+<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using &ldquo;<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>&rdquo; to work on multiple things at once, but this is very limiting.</p>
 
 <p>So, Here we go. My basic workflow now look like this.</p>
 
@@ -61,7 +100,7 @@
 
 <p>Then you can work within this branch as you always would.</p>
 
-<p>Work, work, work...</p>
+<p>Work, work, work&hellip;</p>
 
 <pre><code>&lt;code&gt;&lt;a&gt;&lt;/a&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add manual page"&gt;git add&lt;/a&gt; files_i_have_edited.txt
 &lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-commit.html" title="git-commit manual page"&gt;git commit&lt;/a&gt; -m 'My changes'&lt;/code&gt;
@@ -82,12 +121,12 @@
 <pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; my_branch&lt;/code&gt;
 </code></pre>
 
-<p>this "edit, commit, pull" cycle can continue until the task is complete. Then, once you're satisfied you can delete the branch with</p>
+<p>this &ldquo;edit, commit, pull&rdquo; cycle can continue until the task is complete. Then, once you&rsquo;re satisfied you can delete the branch with</p>
 
 <pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html" title="git-branch manual page"&gt;git branch&lt;/a&gt; -d my_branch&lt;/code&gt;
 </code></pre>
 
-<p>It's still in the history of course, but no need to keep old branches around.</p>
+<p>It&rsquo;s still in the history of course, but no need to keep old branches around.</p>
 
 <p>Hope that makes things clear to anyone else who was confused as I was by some of the overly complicated explanation of branching in git.</p>
 ]]></content>
@@ -98,13 +137,13 @@
     <link href="http://blog.tekerson.com/2008/04/15/initial-thoughts-on-couchdb/"/>
     <updated>2008-04-15T01:18:33+10:00</updated>
     <id>http://blog.tekerson.com/2008/04/15/initial-thoughts-on-couchdb</id>
-    <content type="html"><![CDATA[<p>Since I was first introduced to <a href="http://incubator.apache.org/couchdb/">CouchDB</a> late last year when Jan Lehnardt discussed it on the <a href="http://devzone.zend.com/article/2857-PHP-Abstract-Podcast-Episode-30-CouchDB">PHP Abstract Podcast</a> my interest was piqued. I have since read as much as I can about it, which doesn't actually amount to a great deal unfortunately. However, I think the idea has merit as an alternative to relational databases in various scenarios.</p>
+    <content type="html"><![CDATA[<p>Since I was first introduced to <a href="http://incubator.apache.org/couchdb/">CouchDB</a> late last year when Jan Lehnardt discussed it on the <a href="http://devzone.zend.com/article/2857-PHP-Abstract-Podcast-Episode-30-CouchDB">PHP Abstract Podcast</a> my interest was piqued. I have since read as much as I can about it, which doesn&rsquo;t actually amount to a great deal unfortunately. However, I think the idea has merit as an alternative to relational databases in various scenarios.</p>
 
-<p>I have been using <a href="http://www.danga.com/memcached/">memcached</a> to store aggregated objects and it often seems pointless to break them into disparate parts to fit into a relational schema. While I realise CouchDB is not an object cache, being able to store data "as is", in a form (JSON) that is directly malleable by many languages makes a lot of sense.</p>
+<p>I have been using <a href="http://www.danga.com/memcached/">memcached</a> to store aggregated objects and it often seems pointless to break them into disparate parts to fit into a relational schema. While I realise CouchDB is not an object cache, being able to store data &ldquo;as is&rdquo;, in a form (JSON) that is directly malleable by many languages makes a lot of sense.</p>
 
-<p>The "views", used to retrieve data, select the documents to return by passing them through user defined JavaScript filter functions, instead of querying using SQL as in most relational databases; providing near infinite flexibility for data retrieval.</p>
+<p>The &ldquo;views&rdquo;, used to retrieve data, select the documents to return by passing them through user defined JavaScript filter functions, instead of querying using SQL as in most relational databases; providing near infinite flexibility for data retrieval.</p>
 
-<p>The major concern that I haven't seen adequately addressed is performance, especially given larger datasets. With the unstructured nature of the data and the flexibility of the view functions, it seems performance could be a challenge. Though given <a href="http://www.erlang.org/">Erlang</a>'s ground up concurrency and some of the algorithmic genius they have apparently borrowed from <a href="http://labs.google.com/papers/mapreduce.html">Google's MapReduce</a> -- datasets don't get much larger than that -- I might yet be proved wrong. I hope I am.</p>
+<p>The major concern that I haven&rsquo;t seen adequately addressed is performance, especially given larger datasets. With the unstructured nature of the data and the flexibility of the view functions, it seems performance could be a challenge. Though given <a href="http://www.erlang.org/">Erlang</a>&rsquo;s ground up concurrency and some of the algorithmic genius they have apparently borrowed from <a href="http://labs.google.com/papers/mapreduce.html">Google&rsquo;s MapReduce</a> &mdash; datasets don&rsquo;t get much larger than that &mdash; I might yet be proved wrong. I hope I am.</p>
 ]]></content>
   </entry>
   

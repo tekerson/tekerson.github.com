@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="This is part one of a series exploring modular application development in Zend Framework. In this entry we&#8217;ll look at downloading and &hellip;">
+  <meta name="description" content="This is part one of a series exploring modular application development in Zend Framework. In this entry we&rsquo;ll look at downloading and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,7 +103,7 @@
   </header>
 
 
-<div class="entry-content"><p>This is part one of a series exploring modular application development in Zend Framework. In this entry we&#8217;ll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We&#8217;ll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
+<div class="entry-content"><p>This is part one of a series exploring modular application development in Zend Framework. In this entry we&rsquo;ll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We&rsquo;ll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
 
 <h2>Install Zend Framework</h2>
 
@@ -113,14 +113,14 @@
 tar zxf ZendFramework-1.8.4.tar.gz
 </code></pre>
 
-<p>We&#8217;ll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
+<p>We&rsquo;ll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
 
 <pre><code>ln -s ZendFramework-1.8.4 ZendFramework
 </code></pre>
 
 <h2>Install Zend_Tool</h2>
 
-<p>Creating an alias allows command &#8220;zf&#8221; to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
+<p>Creating an alias allows command &ldquo;zf&rdquo; to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
 
 <pre><code>alias zf=`pwd`/ZendFramework/bin/zf.sh
 </code></pre>
@@ -131,22 +131,22 @@ tar zxf ZendFramework-1.8.4.tar.gz
 # Zend Framework Version: 1.8.4
 </code></pre>
 
-<p>If this works, we&#8217;re ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
+<p>If this works, we&rsquo;re ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
 
 <h2>Create the project</h2>
 
-<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we&#8217;ll call our project &#8220;aza&#8221; (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
+<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we&rsquo;ll call our project &ldquo;aza&rdquo; (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
 
 <pre><code>zf create project aza
 </code></pre>
 
 <p>This should produce a project structure that looks like this</p>
 
-<p>[caption id=&#8221;attachment_131&#8221; align=&#8221;alignnone&#8221; width=&#8221;324&#8221; caption=&#8221;Directory Listing of new project&#8221;]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
+<p>[caption id=&ldquo;attachment_131&rdquo; align=&ldquo;alignnone&rdquo; width=&ldquo;324&rdquo; caption=&ldquo;Directory Listing of new project&rdquo;]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
 
 <h2>Setup the web server</h2>
 
-<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace &#8220;/WORKING/PATH/&#8221; with the absolute path to the directory in which you are working (run pwd if you&#8217;re not sure).</p>
+<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace &ldquo;/WORKING/PATH/&rdquo; with the absolute path to the directory in which you are working (run pwd if you&rsquo;re not sure).</p>
 
 <pre><code>&lt;VirtualHost *:80&gt;
     ServerName aza
@@ -163,12 +163,12 @@ tar zxf ZendFramework-1.8.4.tar.gz
 &lt;/VirtualHost&gt;
 </code></pre>
 
-<p>Don&#8217;t forget to restart the web server to enable the site.</p>
+<p>Don&rsquo;t forget to restart the web server to enable the site.</p>
 
 <h2>Test our page!</h2>
 
 <p>We should now be able to navigate to our site and be warmly welcomed to our new Zend Framework application!
-We&#8217;ll stop here for now. In the next post, we&#8217;ll start looking at creating our first module.</p>
+We&rsquo;ll stop here for now. In the next post, we&rsquo;ll start looking at creating our first module.</p>
 
 <h2>Updates</h2>
 
@@ -235,6 +235,10 @@ Updated for ZF Version 1.8.4</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -248,10 +252,6 @@ Updated for ZF Version 1.8.4</p>
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

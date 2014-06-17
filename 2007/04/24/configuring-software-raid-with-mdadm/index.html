@@ -108,9 +108,9 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
 
 <p>Never fear, software raid to the rescue. While I was (and still am) led to believe that software RAID is considerably slower than its hardware equivalent, my current array performs comparably, even slightly better (at least for reads), than the individual disks. So it is definitely a viable solution.</p>
 
-<p>So I now have a simple 2 disk mirrored array, and in it&#8217;s creation dispelled a few more of my own misconceptions.</p>
+<p>So I now have a simple 2 disk mirrored array, and in it&rsquo;s creation dispelled a few more of my own misconceptions.</p>
 
-<p>RAID array can be configured using partitions on an already partitioned drive (probably even using the 2 partitions on the same disk, but I didn&#8217;t try as it sort of defeats the purpose).</p>
+<p>RAID array can be configured using partitions on an already partitioned drive (probably even using the 2 partitions on the same disk, but I didn&rsquo;t try as it sort of defeats the purpose).</p>
 
 <p>Using mdadm, a newer much friendlier (than the older raidtools) solution to software RAID on linux, to set up a software RAID is actually a fairly simple task.</p>
 
@@ -120,7 +120,7 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
 </pre></td><td class='code'><pre><code class=''><span class='line'>mdadm --create --verbose /dev/md0 --level=1 --raid-devices=2 /dev/hdb1 /dev/hdc1</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Where /dev/md0 is the new software raid device and /dev/hdb1 and /dev/hdc1 are the 2 partitions that are to be used to create the array. If there is already data that needs to be preservered the &#8220;Create Degraded array, Add new disk&#8221; approach (described in much more detail in an <a href="http://nst.sourceforge.net/nst/docs/user/ch14.html">article on SourceForge</a>).</p>
+<p>Where /dev/md0 is the new software raid device and /dev/hdb1 and /dev/hdc1 are the 2 partitions that are to be used to create the array. If there is already data that needs to be preservered the &ldquo;Create Degraded array, Add new disk&rdquo; approach (described in much more detail in an <a href="http://nst.sourceforge.net/nst/docs/user/ch14.html">article on SourceForge</a>).</p>
 
 <p>and then</p>
 
@@ -132,7 +132,7 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
 
 <p>I am yet to set up monitoring, but according to <a href="http://www.linuxdevcenter.com/pub/a/linux/2002/12/05/RAID.html">Linux dev center</a> that is fairly simple too.</p>
 
-<p>The configuration of a RAID array was much simpler and less interesting than I anticipated, but I suppose that&#8217;s a good thing for the server administration world in general.</p>
+<p>The configuration of a RAID array was much simpler and less interesting than I anticipated, but I suppose that&rsquo;s a good thing for the server administration world in general.</p>
 </div>
 
 
@@ -194,6 +194,10 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -207,10 +211,6 @@ The motherboard in my (much newer) desktop machine comes equipped with a RAID co
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

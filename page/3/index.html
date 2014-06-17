@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Introduction I recently grabbed the pre-print release of Lorna Jane Mitchell&#8217;s new book &#8220;PHP Web Services: APIs for the Modern Web&#8221 &hellip;">
+  <meta name="description" content="When working in a terminal (the vast majority of the time) I run the terminal multiplexer tmux, with one session for each project I am currently &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,63 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2013/05/28/share-tmux-windows-across-sessions/">Share Tmux Windows Across Sessions</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-28T16:01:00+10:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When working in a terminal (the vast majority of the time) I run the terminal multiplexer <a href="http://tmux.sourceforge.net/">tmux</a>, with one session for each project I am currently working on. I like to have a window for my IRC client in every session, so I can keep an eye on it. The best way to do this is to share the tmux window across multiple tmux sessions.</p>
+
+<p>To perform this setup, we can create a new session for &ldquo;shared&rdquo; applications, opening irssi in a window named &ldquo;irc&rdquo;. Either manually create the windows and open the applications in them, or, if you&rsquo;re lazy and use the same setup regularly. Script it, something like so:</p>
+
+<pre><code>tmux new-session -s shared "tmux new-window -n irc irssi"
+</code></pre>
+
+<p>You can use the automatically-assigned window names, but since I&rsquo;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
+
+<p>Once the applications are running, we can link the windows to the working session using tmux&rsquo;s <code>link-window</code> command, which has the basic form:</p>
+
+<pre><code>tmux link-window -s &lt;src-window&gt; -t &lt;dst-window&gt;
+</code></pre>
+
+<p>Any time a tmux command requires a reference to a window, we can provide an absolute reference to any window in any session using the <code>session:window</code> format where <code>session</code> is the name of the session and <code>window</code> is the name (or number) of the window in that session.</p>
+
+<p>Using this, we can use the <code>link-window</code> our &ldquo;shared:irc&rdquo; window to index &ldquo;9&rdquo; in the current session. Which looks like:</p>
+
+<pre><code>tmux link-window -s shared:irc -t 9
+</code></pre>
+
+<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&rsquo;t get in the way of my &ldquo;real work&rdquo;.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2013/05/08/php-web-services-by-lorna-mitchell/">&#8220;PHP Web Services&#8221; by Lorna Mitchell</a></h1>
     
     
@@ -108,23 +165,23 @@
 
   <div class="entry-content"><h2>Introduction</h2>
 
-<p>I recently grabbed the pre-print release of Lorna Jane Mitchell&#8217;s new book &#8220;PHP Web Services: APIs for the Modern Web&#8221;, now available in Print and Ebook formats <a href="http://shop.oreilly.com/product/0636920028291.do">through O&#8217;Reilly</a>. APIs are such an integral part of modern web application development. Lorna herself specialises in API development and integration, rarely working on anything that could be called front-end.</p>
+<p>I recently grabbed the pre-print release of Lorna Jane Mitchell&rsquo;s new book &ldquo;PHP Web Services: APIs for the Modern Web&rdquo;, now available in Print and Ebook formats <a href="http://shop.oreilly.com/product/0636920028291.do">through O&#8217;Reilly</a>. APIs are such an integral part of modern web application development. Lorna herself specialises in API development and integration, rarely working on anything that could be called front-end.</p>
 
 <p>Every system I have worked on recently has been heavily API based. With the current trend in single-page JavaScript web applications and client-side MV*, the server is being relegated more and more to the role of data provider through custom APIs.</p>
 
 <h2>Content</h2>
 
-<p>In the preface, Lorna enumerates many scenarios in which building APIs is a prudent strategy and why PHP is a pragmatic way to &#8220;solve the web problem&#8221;; being built with the web in mind from the beginning it comes with many useful tools for delivering and consuming web services built in.</p>
+<p>In the preface, Lorna enumerates many scenarios in which building APIs is a prudent strategy and why PHP is a pragmatic way to &ldquo;solve the web problem&rdquo;; being built with the web in mind from the beginning it comes with many useful tools for delivering and consuming web services built in.</p>
 
 <p>With this introduction (as well as the usual typographical conventions) out of the way, we are thrown straight into the nuts-and-bolts of the basics of HTTP request/response and how the browser/web server is analogous to the API consumer/provider we will be building. A very practical and useful part of the chapter is the introduction to a number of tools and techniques for making and inspecting requests against HTTP servers, I have personally used the section on Curl as a reference a number of times already.</p>
 
-<p>No introduction to HTTP, especially as a platform for APIs, would be complete without an explanation of the HTTP verbs and this book doesn&#8217;t disappoint, with a thorough explanation of the common verbs and PHP code examples of their usage. Delving deeper into the HTTP protocol, we find a much more comprehensive look at request and response headers, a look at a number of common headers and a detailed look at the very important, but in my experience - underutilised, <code>Accept</code> header for content negotiation, including example code to parse it correctly taking into accounts the weighting of the preferences. This is great low level information for building a flexible API service.</p>
+<p>No introduction to HTTP, especially as a platform for APIs, would be complete without an explanation of the HTTP verbs and this book doesn&rsquo;t disappoint, with a thorough explanation of the common verbs and PHP code examples of their usage. Delving deeper into the HTTP protocol, we find a much more comprehensive look at request and response headers, a look at a number of common headers and a detailed look at the very important, but in my experience &ndash; underutilised, <code>Accept</code> header for content negotiation, including example code to parse it correctly taking into accounts the weighting of the preferences. This is great low level information for building a flexible API service.</p>
 
-<p>A chapter each is given to XML and JSON data formats, the advantages and disadvantages of each. Asking the question, &#8220;which format is superior?&#8221; (Hint: it depends); Some useful guidelines regarding the scenarios in which each format may be an appropriate choice are provided. There are, of course, code snippets showing how to work with each format.</p>
+<p>A chapter each is given to XML and JSON data formats, the advantages and disadvantages of each. Asking the question, &ldquo;which format is superior?&rdquo; (Hint: it depends); Some useful guidelines regarding the scenarios in which each format may be an appropriate choice are provided. There are, of course, code snippets showing how to work with each format.</p>
 
-<p>The chapter on RPC and SOAP provides a substantial look into these styles of services with examples of real-world APIs, snippets to create and consume them and tools to make working with them more friendly. In spite of the book appearing somewhat biased towards REST style services (or maybe that&#8217;s just me), this chapter is full of great information and tips for REST and SOAP style services, but if this is your primary interest there are probably better books.</p>
+<p>The chapter on RPC and SOAP provides a substantial look into these styles of services with examples of real-world APIs, snippets to create and consume them and tools to make working with them more friendly. In spite of the book appearing somewhat biased towards REST style services (or maybe that&rsquo;s just me), this chapter is full of great information and tips for REST and SOAP style services, but if this is your primary interest there are probably better books.</p>
 
-<p>The REST chapter brings together many of the concepts explored in the previous chapters about HTTP, verbs, headers, URLs and data formats to describe REST services in a useful, accurate and fairly succinct way. Thorough explanations of how to implement the standard CRUD operations so fundamental to REST are provided. Special mention is also given to hypermedia and content negotiation/media types, which are important aspects of &#8220;pure&#8221; REST services. Ever pragmatic, the chapter concludes with a section reminding readers to remember not to be caught up in the &#8220;trendy&#8221;, and that it is more important for an API to be &#8220;useful&#8221; than it is to be &#8220;RESTful&#8221;.</p>
+<p>The REST chapter brings together many of the concepts explored in the previous chapters about HTTP, verbs, headers, URLs and data formats to describe REST services in a useful, accurate and fairly succinct way. Thorough explanations of how to implement the standard CRUD operations so fundamental to REST are provided. Special mention is also given to hypermedia and content negotiation/media types, which are important aspects of &ldquo;pure&rdquo; REST services. Ever pragmatic, the chapter concludes with a section reminding readers to remember not to be caught up in the &ldquo;trendy&rdquo;, and that it is more important for an API to be &ldquo;useful&rdquo; than it is to be &ldquo;RESTful&rdquo;.</p>
 
 <p>The debugging chapter looks into what to do when it all goes wrong. As APIs are generally hidden behind the actual application interface the techniques for debugging them can be a bit different. Lorna introduces a couple of tools for inspecting the requests and responses on the wire to allow the tracking of anomalies without interrupting the data flow and breaking request/response formats.</p>
 
@@ -132,9 +189,9 @@
 
 <h2>Conclusion &amp; Recommendations</h2>
 
-<p>That was longer than I intended, but I see that as testament to the breadth of information contained within the seemingly modest tome, every chapter has something. Weighing in at a little over 100 pages &#8220;PHP Web Services&#8221; provides a great foundation to the practicalities of using PHP to build modern web services.</p>
+<p>That was longer than I intended, but I see that as testament to the breadth of information contained within the seemingly modest tome, every chapter has something. Weighing in at a little over 100 pages &ldquo;PHP Web Services&rdquo; provides a great foundation to the practicalities of using PHP to build modern web services.</p>
 
-<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn&#8217;t dive deep enough for the seasoned professionals. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
+<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn&rsquo;t dive deep enough for the seasoned professionals. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
 
 <p>All in all, I think the book provides a solid overview of many of the considerations of web service development and would be a great guide to anyone venturing into building such services in PHP.</p>
 </div>
@@ -172,55 +229,17 @@
   </header>
 
 
-  <div class="entry-content"><p>As I previously blogged, I&#8217;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
+  <div class="entry-content"><p>As I previously blogged, I&rsquo;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
 
-<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; &#8220;You never know when it&#8217;s going to disappear.&#8221; citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell&#8217;s suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">&#8220;don&#8217;t read the comments&#8221;</a>, I have to wonder if having comments is worth the effort involved?</p>
+<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; &ldquo;You never know when it&rsquo;s going to disappear.&rdquo; citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell&rsquo;s suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">&ldquo;don&rsquo;t read the comments&rdquo;</a>, I have to wonder if having comments is worth the effort involved?</p>
 
-<p>For now, it looks like I&#8217;m going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where&#8217;s the love?</p>
+<p>For now, it looks like I&rsquo;m going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where&rsquo;s the love?</p>
 
-<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes &#8220;turn off comments and encourage others to respond by writing [&#8230;] on their own blog.&#8221; I think this is a fantastic idea (I&#8217;m doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, &#8220;trackbacks&#8221; were an attempt at solving this issue, but I&#8217;m not sure that worked too well.</p>
+<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes &ldquo;turn off comments and encourage others to respond by writing [&hellip;] on their own blog.&rdquo; I think this is a fantastic idea (I&rsquo;m doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, &ldquo;trackbacks&rdquo; were an attempt at solving this issue, but I&rsquo;m not sure that worked too well.</p>
 
-<p>This is one advantage the &#8220;walled gardens&#8221; currently hold - they have the ability to aggregate the posts into a single congruous conversation.</p>
+<p>This is one advantage the &ldquo;walled gardens&rdquo; currently hold &ndash; they have the ability to aggregate the posts into a single congruous conversation.</p>
 
-<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I&#8217;ll&#8230; Probably never see it&#8230; Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/03/24/reboot/">Reboot</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-24T18:25:00+10:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Wow, it&#8217;s been over 3 years since my last post! And, like so many entertainment franchises, I think it&#8217;s time for a reboot. I stopped blogging when I moved away from PHP because I no longer felt confident enough in my work to open up anything I was doing to any kind of public scrutiny. Having since (mostly) returned to PHP, doing some consulting and contracting and embarking on a venture of my own, I feel it is time once again to put some of my experiences and thoughts into writing.</p>
-
-<p>To facilitate this, and because my Wordpress install was so hideously out of date, I&#8217;ve decided to changed to a static blogging solution: <a href="http://octopress.org/">Octopress</a>. As such, the blog is currently without much of a design. This may (or may not) be remedied at a later time. I will write in more detail about the platform and the migration in a future post.</p>
+<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I&rsquo;ll&hellip; Probably never see it&hellip; Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
 </div>
   
   
@@ -245,6 +264,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -258,10 +281,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

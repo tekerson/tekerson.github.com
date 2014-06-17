@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Haskell | Deprecated Behaviour]]></title>
+  <link href="http://blog.tekerson.com/categories/haskell/atom.xml" rel="self"/>
+  <link href="http://blog.tekerson.com/"/>
+  <updated>2014-06-18T01:06:20+10:00</updated>
+  <id>http://blog.tekerson.com/</id>
+  <author>
+    <name><![CDATA[Brenton Alker]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Getting the tools: Haskell Edition]]></title>
+    <link href="http://blog.tekerson.com/2014/06/18/getting-the-tools-haskell-edition/"/>
+    <updated>2014-06-18T00:30:36+10:00</updated>
+    <id>http://blog.tekerson.com/2014/06/18/getting-the-tools-haskell-edition</id>
+    <content type="html"><![CDATA[<p>I prefer to reserve the system-level package manager for system-level packages, which my development tools generally are not. As such, my tools are installed in my <code>~/opt/</code> directory where possible (then symlinked to <code>~/bin/</code>).</p>
+
+<p>In this post, I&rsquo;m looking at how I did this for my Haskell tool-set.</p>
+
+<p>Haskell&rsquo;s <code>cabal</code> is a great dependency management/build tool with built-in sandbox capabilities. It is also often used to install many Haskell tools, such as <code>hlint</code>, <code>pointfree</code> and <code>doctest</code>.</p>
+
+<p>I was originally installing these tools by creating a subdirectory per tool (e.g. <code>~/opt/haskell/hlint/</code>) and using <code>cabal sandbox init; cabal install hlint</code> to install the tool (<code>hlint</code> in this case) within the sandbox.</p>
+
+<p>But, I didn&rsquo;t like having a set of &ldquo;empty&rdquo; directories (containing only the hidden <code>.cabal-sandbox</code> and <code>cabal.sandbox.config</code>). With a few extra arguments (thanks to some tips from <a href="https://twitter.com/benkolera">Ben Kolera</a> at the last <a href="http://bfpg.org">BFPG</a> hack night) we can forgo the superfluous subdirectories and reveal the sandboxes.</p>
+
+<p>Here is an example of installing <code>hlint</code>:</p>
+
+<p>```</p>
+
+<h1>in ~/opt/haskell</h1>
+
+<p>PKG=hlint
+cabal &mdash;sandbox-config-file=$PKG.sandbox.config sandbox init &mdash;sandbox=$PKG
+cabal &mdash;sandbox-config-file=$PKG.sandbox.config install $PKG
+```</p>
+
+<p>This creates a sandbox config file called <code>hlint.sandbox.config</code> and a visible sandbox in the <code>hlint</code> directory.</p>
+
+<p>You can then symlink the executable onto your path:
+<code>
+ln -s ~/opt/haskell/hlint/bin/hlint ~/bin/hlint
+</code></p>
+
+<p>This is how I have installed all of these tools and is my currently preferred method. There are other variations on this that can also be used, for instance, adding the package&rsquo;s <code>bin</code> directory to your path, or copying the actual executable out of the sandbox (then you could even delete the sandbox if you choose).</p>
+
+<p>This works for all of the packages I mentioned above, and probably any others that you want to install just for the executable binary.</p>
+]]></content>
+  </entry>
+  
+</feed>

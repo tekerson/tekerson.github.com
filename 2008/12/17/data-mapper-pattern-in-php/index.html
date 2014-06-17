@@ -103,15 +103,15 @@
   </header>
 
 
-<div class="entry-content"><p>I have been trying to get together a post on the <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">Data Mapper</a> pattern since I started experimenting with it in a personal project. It seems to me to be a fantastic answer to the decoupling of in-memory data objects and the data store. I still don&#8217;t have all the answers, but Rob Allen&#8217;s recent post <a href="http://akrabat.com/2008/12/13/on-models-in-a-zend-framework-application/">On models in a Zend Framework application</a>, and the associated discussion provoked me to publish some of what I do have.</p>
+<div class="entry-content"><p>I have been trying to get together a post on the <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">Data Mapper</a> pattern since I started experimenting with it in a personal project. It seems to me to be a fantastic answer to the decoupling of in-memory data objects and the data store. I still don&rsquo;t have all the answers, but Rob Allen&rsquo;s recent post <a href="http://akrabat.com/2008/12/13/on-models-in-a-zend-framework-application/">On models in a Zend Framework application</a>, and the associated discussion provoked me to publish some of what I do have.</p>
 
 <p><em>Warning</em>: This post will be quite long and is very code heavy, but I hope it illustrates some of my current thoughts.</p>
 
 <p>Anyway, lets get down to it.</p>
 
-<p>I will be showing 4 classes. Two (2) Abstract &#8220;library&#8221; classes, and 2 examples of their use;</p>
+<p>I will be showing 4 classes. Two (2) Abstract &ldquo;library&rdquo; classes, and 2 examples of their use;</p>
 
-<p>And now, the code. Instead of breaking the code into little pieces, I&#8217;ll add inline comments to explain what&#8217;s going on.</p>
+<p>And now, the code. Instead of breaking the code into little pieces, I&rsquo;ll add inline comments to explain what&rsquo;s going on.</p>
 
 <h2>Classes</h2>
 
@@ -617,7 +617,7 @@
 
 <h2>Example</h2>
 
-<p>Ok, I realize that I&#8217;ve dumped a lot of code and we&#8217;re nearly finished. Now we finally get to see how it all fits together to do something. Here, I am creating a simple example where I fetch a User based on their ID, change the Users name, and store it back to the database.</p>
+<p>Ok, I realize that I&rsquo;ve dumped a lot of code and we&rsquo;re nearly finished. Now we finally get to see how it all fits together to do something. Here, I am creating a simple example where I fetch a User based on their ID, change the Users name, and store it back to the database.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -648,7 +648,7 @@
 
 <p>These simple examples could be expanded in may directions. Such as;</p>
 
-<p>Validation of the DomainObject fields, I haven&#8217;t decided if the validation should be contained in the DomainObject or the Mapper.</p>
+<p>Validation of the DomainObject fields, I haven&rsquo;t decided if the validation should be contained in the DomainObject or the Mapper.</p>
 
 <p>An <a href="http://martinfowler.com/eaaCatalog/identityMap.html">identity map</a> to ensure only 1 instance of each DomainObject exists in memory at a time.</p>
 
@@ -718,6 +718,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -731,10 +735,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

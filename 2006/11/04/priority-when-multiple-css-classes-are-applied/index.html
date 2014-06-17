@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I&#8217;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the &hellip;">
+  <meta name="description" content="I&rsquo;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,9 +103,9 @@
   </header>
 
 
-<div class="entry-content"><p>I&#8217;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I&#8217;ve checked it out and it works like this.</p>
+<div class="entry-content"><p>I&rsquo;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I&rsquo;ve checked it out and it works like this.</p>
 
-<p>I had a page, who&#8217;s table cells all had a CSS class that applied a background colour, some font attributes and what have you.
+<p>I had a page, who&rsquo;s table cells all had a CSS class that applied a background colour, some font attributes and what have you.
 The class (from an external stylesheet file):</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -150,13 +150,13 @@ The class (from an external stylesheet file):</p>
 </span><span class='line'>&lt;/head&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>On my way I went, coded the javascript to search the table and add the &#8216;searchHighlight&#8217; class to the cells that needed hightlighting. Easy. Except it didn&#8217;t work.</p>
+<p>On my way I went, coded the javascript to search the table and add the &lsquo;searchHighlight&rsquo; class to the cells that needed hightlighting. Easy. Except it didn&rsquo;t work.</p>
 
-<p>When the Javascript found it&#8217;s target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
+<p>When the Javascript found it&rsquo;s target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
 
-<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it&#8217;s normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
+<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it&rsquo;s normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
 
-<p>So I created a simple test page, to make sure I was wasn&#8217;t going (more) insane, and that multiple CSS styles ever worked.
+<p>So I created a simple test page, to make sure I was wasn&rsquo;t going (more) insane, and that multiple CSS styles ever worked.
 The test page looked like this:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -195,11 +195,11 @@ The test page looked like this:</p>
 </span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The results are sort of what I expected&#8230; the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn&#8217;t matter. So they are getting the bold from the normal style, and the background from the special style.</p>
+<p>The results are sort of what I expected&hellip; the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn&rsquo;t matter. So they are getting the bold from the normal style, and the background from the special style.</p>
 
-<p>Great. So why didn&#8217;t it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that &#8216;special&#8217; is declared first) and the results are very different, the &#8216;special&#8217; class is ignored completely.</p>
+<p>Great. So why didn&rsquo;t it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that &lsquo;special&rsquo; is declared first) and the results are very different, the &lsquo;special&rsquo; class is ignored completely.</p>
 
-<p>That&#8217;s right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn&#8217;t know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
+<p>That&rsquo;s right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn&rsquo;t know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
 
 <p>For example, if (from my test page) I remove the special style, and put it in an external style sheet, and include it like so:</p>
 
@@ -217,7 +217,7 @@ The test page looked like this:</p>
 </span><span class='line'>…</span></code></pre></td></tr></table></div></figure>
 
 
-<p>It works, but doing this doesn&#8217;t:</p>
+<p>It works, but doing this doesn&rsquo;t:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -295,6 +295,10 @@ The test page looked like this:</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -308,10 +312,6 @@ The test page looked like this:</p>
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

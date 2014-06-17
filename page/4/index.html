@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="The furor surrounding the amusing chaos that ensued following ReadWriteWeb&#8217;s article on Facebook Connect has been interesting, in that it &hellip;">
+  <meta name="description" content="Wow, it&rsquo;s been over 3 years since my last post! And, like so many entertainment franchises, I think it&rsquo;s time for a reboot. I stopped &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,44 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2013/03/24/reboot/">Reboot</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-24T18:25:00+10:00" pubdate data-updated="true">Mar 24<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Wow, it&rsquo;s been over 3 years since my last post! And, like so many entertainment franchises, I think it&rsquo;s time for a reboot. I stopped blogging when I moved away from PHP because I no longer felt confident enough in my work to open up anything I was doing to any kind of public scrutiny. Having since (mostly) returned to PHP, doing some consulting and contracting and embarking on a venture of my own, I feel it is time once again to put some of my experiences and thoughts into writing.</p>
+
+<p>To facilitate this, and because my Wordpress install was so hideously out of date, I&rsquo;ve decided to changed to a static blogging solution: <a href="http://octopress.org/">Octopress</a>. As such, the blog is currently without much of a design. This may (or may not) be remedied at a later time. I will write in more detail about the platform and the migration in a future post.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/">The Silver Lining of the ReadWriteWeb/Facebook Login Debacle</a></h1>
     
     
@@ -106,9 +144,9 @@
   </header>
 
 
-  <div class="entry-content"><p>The furor surrounding the amusing chaos that ensued following <a href="http://www.readwriteweb.com/archives/facebook_wants_to_be_your_one_true_loginpage5.php">ReadWriteWeb&#8217;s article on Facebook Connect</a> has been interesting, in that it brings attention to developers assumptions about the way users interact with their products.</p>
+  <div class="entry-content"><p>The furor surrounding the amusing chaos that ensued following <a href="http://www.readwriteweb.com/archives/facebook_wants_to_be_your_one_true_loginpage5.php">ReadWriteWeb&rsquo;s article on Facebook Connect</a> has been interesting, in that it brings attention to developers assumptions about the way users interact with their products.</p>
 
-<p>There have been articles debating who is the cause of the confusion; whether it&#8217;s the <a href="http://funkatron.com/site/comments/were-the-stupid-ones-facebook-google-and-our-failure-as-developers/">Developers</a> or the <a href="http://www.lastpodcast.net/2010/02/10/facebook-login-is-hard-welcome-to-idiocracy">Users</a> that need to try harder.</p>
+<p>There have been articles debating who is the cause of the confusion; whether it&rsquo;s the <a href="http://funkatron.com/site/comments/were-the-stupid-ones-facebook-google-and-our-failure-as-developers/">Developers</a> or the <a href="http://www.lastpodcast.net/2010/02/10/facebook-login-is-hard-welcome-to-idiocracy">Users</a> that need to try harder.</p>
 
 <p>But in all this, what I think has been missed is the <em>success</em> of <a href="http://developers.facebook.com/connect.php">Facebook Connect</a>. There are hundreds of comments on the ReadWriteWeb article from users who failed (for whatever reason) to find their way to Facebook, yet still managed to use Facebook Connect to leave a comment.</p>
 
@@ -148,19 +186,19 @@
   </header>
 
 
-  <div class="entry-content"><p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&#8217;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
+  <div class="entry-content"><p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&rsquo;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
 
 <p>Doctrine 2.0 looks like it might finally be the ORM framework I have been seeking for PHP. While the older versions of Doctrine provided great functionality, they were too intrusive for my taste. I think an ORM should provide a true <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">data mapper</a>; in which the domain entities need know nothing about their persistence.</p>
 
-<p>Matthew Weier O&#8217;Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &#8220;real&#8221; namespaces, so its classes don&#8217;t follow the (current) Zend naming standard and the ZF autoloader won&#8217;t load them for us.</p>
+<p>Matthew Weier O&#8217;Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &ldquo;real&rdquo; namespaces, so its classes don&rsquo;t follow the (current) Zend naming standard and the ZF autoloader won&rsquo;t load them for us.</p>
 
 <p>Good News, Doctrine provides its own autoloader that we can leverage to load its own classes.</p>
 
-<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&#8217;t very useful).</p>
+<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&rsquo;t very useful).</p>
 
-<p>Good News, it&#8217;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
+<p>Good News, it&rsquo;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
 
-<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &#8220;Doctrine&#34; namespace.</p>
+<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &ldquo;Doctrine\&rdquo; namespace.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -193,7 +231,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>We can use all of Doctrine&#8217;s classes anywhere else in our code.</p>
+<p>We can use all of Doctrine&rsquo;s classes anywhere else in our code.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -207,207 +245,6 @@
 
 
 <p>I still have a lot to learn and the documentation on 2.0 is a little sparse as yet, but this is a start.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/07/06/dependency-injection-container-resource-in-zend-framework/">Dependency Injection Container Resource in Zend Framework</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-07-06T13:00:51+10:00" pubdate data-updated="true">Jul 6<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>A good dependency injection container is a godsend when it comes to managing the dependency tree of even a moderately complex domain model. As such, it comes as no surprise there has been much discussion about them of late in the PHP and Zend Framework communities.</p>
-
-<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei&#8217;s recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
-
-<p>The container resource copies any already instantiated objects from the old container into the new one, then replaces the default container.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">Tek_Application_Resource_Container</span> <span class="k">extends</span> <span class="nx">Zend_Application_Resource_ResourceAbstract</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="nv">$_container</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getContainer</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="k">null</span> <span class="o">===</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nv">$options</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getOptions</span><span class="p">();</span>
-</span><span class='line'>            <span class="nv">$container</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_getBootstrap</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">();</span>
-</span><span class='line'>            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$container</span> <span class="nx">instanceof</span> <span class="nx">Yadif_Container</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                <span class="nv">$config</span> <span class="o">=</span> <span class="nb">isset</span><span class="p">(</span><span class="nv">$options</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">])</span> <span class="o">?</span> <span class="k">new</span> <span class="nx">Zend_Config</span><span class="p">(</span><span class="nv">$options</span><span class="p">[</span><span class="s1">&#39;options&#39;</span><span class="p">])</span> <span class="o">:</span> <span class="k">null</span><span class="p">;</span>
-</span><span class='line'>                <span class="nv">$container</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Yadif_Container</span><span class="p">(</span><span class="k">array</span><span class="p">(),</span> <span class="nv">$config</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>                <span class="c1">// import instances from the existing (Zend_Registry) container</span>
-</span><span class='line'>                <span class="k">foreach</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_getBootstrap</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">()</span> <span class="k">as</span> <span class="nv">$key</span> <span class="o">=&gt;</span> <span class="nv">$instance</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>                    <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">__set</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="nv">$instance</span><span class="p">);</span>
-</span><span class='line'>                <span class="p">}</span>
-</span><span class='line'>            <span class="p">}</span>
-</span><span class='line'>            <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">addComponents</span><span class="p">(</span><span class="nv">$options</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">]);</span>
-</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span> <span class="o">=</span> <span class="nv">$container</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">init</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContainer</span><span class="p">();</span>
-</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_getBootstrap</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">setContainer</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span><span class="p">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_container</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_getBootstrap</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$app</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getBootstrap</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getApplication</span><span class="p">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$app</span> <span class="nx">instanceof</span> <span class="nx">Zend_Application</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">getBootstrap</span><span class="p">();</span>
-</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>            <span class="k">return</span> <span class="nv">$app</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I&#8217;ve also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
-
-<p>To use the container resource you will need to add the prefix and path to the bootstrappers plugin loader:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">Bootstrap</span> <span class="k">extends</span> <span class="nx">Zend_Application_Bootstrap_Bootstrap</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'><span class="c1">// ...</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_initPlugins</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>       <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getPluginLoader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">addPrefixPath</span><span class="p">(</span>
-</span><span class='line'>           <span class="s1">&#39;Tek_Application_Resource&#39;</span><span class="p">,</span>
-</span><span class='line'>           <span class="s1">&#39;Tek/Application/Resource&#39;</span>
-</span><span class='line'>       <span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="c1">// ...</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then you can add the resources and their dependencies via the normal configuration system. This means adding lines like:</p>
-
-<pre><code>resources.container.objects.Log.class = "Zend_Log"
-resources.container.objects.Log.arguments.0 = "Log_Writer"
-
-resources.container.objects.Log_Writer.class = "Zend_Log_Writer_Stream"
-resources.container.objects.Log_Writer.arguments.0 = "%Log_Writer.stream%"
-
-resources.container.options.Log_Writer.stream = APPLICATION_PATH "/../log/application.log"
-</code></pre>
-
-<p>There are 2 resources defined here, the &#8220;Log&#8221; and the &#8220;Log_Writer&#8221;.</p>
-
-<ol>
-<li><p>Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
-<li><p>The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
-</ol>
-
-
-<p>Now, the controller can write a log like this.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="nv">$logger</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getInvokeArg</span><span class="p">(</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getResource</span><span class="p">(</span><span class="s1">&#39;Log&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="c1">// or, with the helper</span>
-</span><span class='line'><span class="nv">$logger</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_helper</span><span class="o">-&gt;</span><span class="na">resource</span><span class="p">(</span><span class="s1">&#39;Log&#39;</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nv">$logger</span><span class="o">-&gt;</span><span class="na">log</span><span class="p">(</span><span class="s1">&#39;A log message&#39;</span><span class="p">,</span> <span class="nx">Zend_Log</span><span class="o">::</span><span class="na">NOTICE</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>While this is a simple example, it can be really beneficial when working with, for example, a service layer. The service you need might depend on another service, both of which may depend on an Authorization service. All the services depend on their data mappers (which themselves depends on a database connection) and their entity factories, etc.
-Instantiating a dependency tree like this for every object you need can lead to duplicate and hard to modify code. Dependency injection coupled with a good container can provide highly versatile code whose behaviour can be drastically changed by only modifying a configuration file.</p>
 </div>
   
   
@@ -432,6 +269,10 @@ Instantiating a dependency tree like this for every object you need can lead to 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -445,10 +286,6 @@ Instantiating a dependency tree like this for every object you need can lead to 
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

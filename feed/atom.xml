@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-05-06T14:19:19+10:00</updated>
+  <updated>2014-06-18T01:06:20+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -14,15 +14,56 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Getting the tools: Haskell Edition]]></title>
+    <link href="http://blog.tekerson.com/2014/06/18/getting-the-tools-haskell-edition/"/>
+    <updated>2014-06-18T00:30:36+10:00</updated>
+    <id>http://blog.tekerson.com/2014/06/18/getting-the-tools-haskell-edition</id>
+    <content type="html"><![CDATA[<p>I prefer to reserve the system-level package manager for system-level packages, which my development tools generally are not. As such, my tools are installed in my <code>~/opt/</code> directory where possible (then symlinked to <code>~/bin/</code>).</p>
+
+<p>In this post, I&rsquo;m looking at how I did this for my Haskell tool-set.</p>
+
+<p>Haskell&rsquo;s <code>cabal</code> is a great dependency management/build tool with built-in sandbox capabilities. It is also often used to install many Haskell tools, such as <code>hlint</code>, <code>pointfree</code> and <code>doctest</code>.</p>
+
+<p>I was originally installing these tools by creating a subdirectory per tool (e.g. <code>~/opt/haskell/hlint/</code>) and using <code>cabal sandbox init; cabal install hlint</code> to install the tool (<code>hlint</code> in this case) within the sandbox.</p>
+
+<p>But, I didn&rsquo;t like having a set of &ldquo;empty&rdquo; directories (containing only the hidden <code>.cabal-sandbox</code> and <code>cabal.sandbox.config</code>). With a few extra arguments (thanks to some tips from <a href="https://twitter.com/benkolera">Ben Kolera</a> at the last <a href="http://bfpg.org">BFPG</a> hack night) we can forgo the superfluous subdirectories and reveal the sandboxes.</p>
+
+<p>Here is an example of installing <code>hlint</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># in ~/opt/haskell
+</span><span class='line'>PKG=hlint
+</span><span class='line'>cabal --sandbox-config-file=$PKG.sandbox.config sandbox init --sandbox=$PKG
+</span><span class='line'>cabal --sandbox-config-file=$PKG.sandbox.config install $PKG</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This creates a sandbox config file called <code>hlint.sandbox.config</code> and a visible sandbox in the <code>hlint</code> directory.</p>
+
+<p>You can then symlink the executable onto your path:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ln -s ~/opt/haskell/hlint/bin/hlint ~/bin/hlint</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This is how I have installed all of these tools and is my currently preferred method. There are other variations on this that can also be used, for instance, adding the package&rsquo;s <code>bin</code> directory to your path, or copying the actual executable out of the sandbox (then you could even delete the sandbox if you choose).</p>
+
+<p>This works for all of the packages I mentioned above, and probably any others that you want to install just for the executable binary.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Open and close SSH tunnel in script]]></title>
     <link href="http://blog.tekerson.com/2014/05/06/open-and-close-ssh-tunnel-in-script/"/>
     <updated>2014-05-06T13:38:00+10:00</updated>
     <id>http://blog.tekerson.com/2014/05/06/open-and-close-ssh-tunnel-in-script</id>
-    <content type="html"><![CDATA[<p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&#8217;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
+    <content type="html"><![CDATA[<p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&rsquo;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
 
 <p>In that spirit, I wanted a script to create an ssh tunnel and connect my irc client (irssi) to my bouncer (znc), behind my home firewall.</p>
 
-<p>So, this is what I&#8217;m using:</p>
+<p>So, this is what I&rsquo;m using:</p>
 
 <pre><code>#!/bin/bash
 ssh -f -o ExitOnForwardFailure=yes -L 6667:localhost:6667 user@home.example.com sleep 30
@@ -31,7 +72,7 @@ irssi
 
 <p>The <code>-f -o ExitOnForwardFailure=yes</code> combination makes ssh wait until the forwarded ports have been established before backgrounding. Effectively, this blocks the script until the ports are ready to use.</p>
 
-<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&#8217;re using it. So, once I quit irssi, the tunnel closes.</p>
+<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&rsquo;re using it. So, once I quit irssi, the tunnel closes.</p>
 
 <p>Then, irssi configured to connect to localhost:6667 which is tunneled to localhost:6667 on the target machine, where it finds znc!</p>
 ]]></content>
@@ -42,9 +83,9 @@ irssi
     <link href="http://blog.tekerson.com/2013/11/06/replay-web-hook-requests-with-netcat/"/>
     <updated>2013-11-06T17:45:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/11/06/replay-web-hook-requests-with-netcat</id>
-    <content type="html"><![CDATA[<p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&#8217;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &#8220;Web Hooks&#8221;.</p>
+    <content type="html"><![CDATA[<p>Netcat (<code>nc</code>) is a really useful little utility, available for most (all?) OSs. It&rsquo;s often used for low level network tinkering. Recently, I found an everyday (for me) use; Testing HTTP &ldquo;Web Hooks&rdquo;.</p>
 
-<p>In my specific case, it was the Facebook &#8220;Real-Time&#8221; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
+<p>In my specific case, it was the Facebook &ldquo;Real-Time&rdquo; API, which POSTs data back to your registered endpoint when a given event occurs on Facebook. But, navigating to Facebook, performing an action and waiting for them to notify your server is a relatively slow process, and makes debugging painfully slow.</p>
 
 <p>To overcome this, we need to be able to consistently repeat a request from Facebook while fine-tuning the handler to perform the required task.</p>
 
@@ -53,7 +94,7 @@ irssi
 <pre><code>nc -l 8000 &gt; request.txt
 </code></pre>
 
-<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &#8220;request.txt&#8221;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&#8217;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &#8220;request.txt&#8221;, where we can view it, edit it and &#8211; most importantly &#8211; replay it.</p>
+<p>This will cause <code>nc</code> to listen on port 8000 and write any incoming HTTP requests to &ldquo;request.txt&rdquo;. Then, we just need to coerce the target service to send us a request at the correct location (you could use port 80, if you don&rsquo;t need to keep the web server running). Note: the listening <code>nc</code> process will not reply to the request, so the connection will stay open until the client times out or you manually kill the process. Once the request is received, it will be stored in &ldquo;request.txt&rdquo;, where we can view it, edit it and &mdash; most importantly &mdash; replay it.</p>
 
 <p>We can also use <code>nc</code> to handle sending the request for us by piping the saved file through to the target server.</p>
 
@@ -69,11 +110,11 @@ irssi
     <link href="http://blog.tekerson.com/2013/09/04/remapping-capslock-to-ctrl-in-osx/"/>
     <updated>2013-09-04T11:14:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/09/04/remapping-capslock-to-ctrl-in-osx</id>
-    <content type="html"><![CDATA[<p>As a keyboard line junky and a Vim user, this is something I&#8217;ve been meaning to do for a long time. I mean, who actually uses Caps lock anyway? Every time I&#8217;ve had a look, the process has appeared to involve installation of third party software and in general seemed like too much effort. It turns out, if you only want to remap meta-keys (caps lock, alt, ctrl and command) you can do that easily through the OSX System Preferences.</p>
+    <content type="html"><![CDATA[<p>As a command line junky and a Vim user, this is something I&rsquo;ve been meaning to do for a long time. I mean, who actually uses Caps lock anyway? Every time I&rsquo;ve had a look, the process has appeared to involve installation of third party software and in general seemed like too much effort. It turns out, if you only want to remap meta-keys (caps lock, alt, ctrl and command) you can do that easily through the OSX System Preferences.</p>
 
-<p>In &#8220;Apple Menu&#8221; (Top Left), &#8220;System Preferences&#8221;, &#8220;Keyboard&#8221;. On the &#8220;Keyboard&#8221; Tab (not &#8220;Keyboard Shortcuts&#8221;), there is a &#8220;Modifier Keys&#8221; button, which opens a dialog and provides a simple interface to remap (or disable) your modifier keys.</p>
+<p>In &ldquo;Apple Menu&rdquo; (Top Left), &ldquo;System Preferences&rdquo;, &ldquo;Keyboard&rdquo;. On the &ldquo;Keyboard&rdquo; Tab (not &ldquo;Keyboard Shortcuts&rdquo;), there is a &ldquo;Modifier Keys&rdquo; button, which opens a dialog and provides a simple interface to remap (or disable) your modifier keys.</p>
 
-<p>I wish I&#8217;d realised sooner that it was so simple, now to re-train my hands and free that poor little finger from its curled up hell.</p>
+<p>I wish I&rsquo;d realised sooner that it was so simple, now to re-train my hands and free that poor little finger from its curled up hell.</p>
 ]]></content>
   </entry>
   
@@ -82,19 +123,19 @@ irssi
     <link href="http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/"/>
     <updated>2013-08-12T23:34:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation</id>
-    <content type="html"><![CDATA[<p>I&#8217;ve been studying functional programming lately (it&#8217;s trendy) and while it&#8217;s great to just learn new languages and paradigm, it&#8217;s always nice when the principles can be applied to everyday work.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;ve been studying functional programming lately (it&rsquo;s trendy) and while it&rsquo;s great to just learn new languages and paradigm, it&rsquo;s always nice when the principles can be applied to everyday work.</p>
 
-<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &#8220;Object Oriented Software Construction&#8221;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&#8217;s discussion of the principle</a> he mentions that &#8220;it would be nice if the language itself would support this notion&#8221;.</p>
+<p>Command-Query separation is probably one of the lesser known principles of object-oriented programming (OOP). Proposed by Bertrand Meyer in &ldquo;Object Oriented Software Construction&rdquo;, it states that a function (or method) should perform a Command (do something) or a Query (return a value) but not both. So, any function that returns a value should not modify state. In <a href="http://martinfowler.com/bliki/CommandQuerySeparation.html">Martin Fowler&rsquo;s discussion of the principle</a> he mentions that &ldquo;it would be nice if the language itself would support this notion&rdquo;.</p>
 
 <p>If occurs to me that functional languages do indeed grant Mr. Fowler his wish.</p>
 
-<p>Functional programmers aim to compose programs using &#8220;pure&#8221; functions. In this case, &#8220;pure&#8221; is used to mean a functions that are &#8220;referentially transparent&#8221;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
+<p>Functional programmers aim to compose programs using &ldquo;pure&rdquo; functions. In this case, &ldquo;pure&rdquo; is used to mean a functions that are &ldquo;referentially transparent&rdquo;, that is, they only depend upon their parameters. A pure function, given the same set of parameters, will always return the same result. No external influences, including variables, databases, inputs or outputs can be used or modified by its execution.</p>
 
-<p>Of course, a program that takes no input, can&#8217;t access a data store and produces no output isn&#8217;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&#8217;t go into what a Monads are, it doesn&#8217;t matter, and I&#8217;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &#8220;only&#8221; perform calculation.</p>
+<p>Of course, a program that takes no input, can&rsquo;t access a data store and produces no output isn&rsquo;t very useful. As such, even the most pure of the functional languages have to allow the nasty real-world into its pristine clean-room. The difference though, is the strict boundaries that are constructed to protect the pure world from the impure. In Haskell, which is often held up as the purest of functional languages, this airlock is provided by the IO Monad. I won&rsquo;t go into what a Monads are, it doesn&rsquo;t matter, and I&rsquo;m not sure I even explain them even if I wanted to. The point is, there are language features that strictly separate functions that alter state with those that &ldquo;only&rdquo; perform calculation.</p>
 
-<p>These referentially transparent &#8220;pure&#8221; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&#8217;t have changed anything outside of itself.</p>
+<p>These referentially transparent &ldquo;pure&rdquo; functions are revered because they can be reused, re-ordered or parallelized and are guaranteed to always produce the same result. This makes programs more predictable and thus simpler to debug. When you know a function is pure, you need only check its return value; it can&rsquo;t have changed anything outside of itself.</p>
 
-<p>So, while the languages most of us use daily don&#8217;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&#8217;t that be nice.</p>
+<p>So, while the languages most of us use daily don&rsquo;t offer this as a feature, maybe following the principle more often would make for more predictable, bug free code. Wouldn&rsquo;t that be nice.</p>
 ]]></content>
   </entry>
   
@@ -147,7 +188,7 @@ irssi
 
 <p>In this instance, the answers to the question are shuffled, but the pattern is useful any time you want to perform an action only <em>after</em> the data if fetched. This may include calculating aggregates or even fetching extra, dependant data.</p>
 
-<p>As an aside, I don&#8217;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &#8220;fat&#8221; services and &#8220;lean&#8221; controllers in a future post.</p>
+<p>As an aside, I don&rsquo;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &ldquo;fat&rdquo; services and &ldquo;lean&rdquo; controllers in a future post.</p>
 ]]></content>
   </entry>
   
@@ -158,26 +199,26 @@ irssi
     <id>http://blog.tekerson.com/2013/05/28/share-tmux-windows-across-sessions</id>
     <content type="html"><![CDATA[<p>When working in a terminal (the vast majority of the time) I run the terminal multiplexer <a href="http://tmux.sourceforge.net/">tmux</a>, with one session for each project I am currently working on. I like to have a window for my IRC client in every session, so I can keep an eye on it. The best way to do this is to share the tmux window across multiple tmux sessions.</p>
 
-<p>To perform this setup, we can create a new session for &#8220;shared&#8221; applications, opening irssi in a window named &#8220;irc&#8221;. Either manually create the windows and open the applications in them, or, if you&#8217;re lazy and use the same setup regularly. Script it, something like so:</p>
+<p>To perform this setup, we can create a new session for &ldquo;shared&rdquo; applications, opening irssi in a window named &ldquo;irc&rdquo;. Either manually create the windows and open the applications in them, or, if you&rsquo;re lazy and use the same setup regularly. Script it, something like so:</p>
 
 <pre><code>tmux new-session -s shared "tmux new-window -n irc irssi"
 </code></pre>
 
-<p>You can use the automatically-assigned window names, but since I&#8217;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
+<p>You can use the automatically-assigned window names, but since I&rsquo;m referencing them across sessions, I feel explicitly naming them (with the <code>-n</code>) is more robust.</p>
 
-<p>Once the applications are running, we can link the windows to the working session using tmux&#8217;s <code>link-window</code> command, which has the basic form:</p>
+<p>Once the applications are running, we can link the windows to the working session using tmux&rsquo;s <code>link-window</code> command, which has the basic form:</p>
 
 <pre><code>tmux link-window -s &lt;src-window&gt; -t &lt;dst-window&gt;
 </code></pre>
 
 <p>Any time a tmux command requires a reference to a window, we can provide an absolute reference to any window in any session using the <code>session:window</code> format where <code>session</code> is the name of the session and <code>window</code> is the name (or number) of the window in that session.</p>
 
-<p>Using this, we can use the <code>link-window</code> our &#8220;shared:irc&#8221; window to index &#8220;9&#8221; in the current session. Which looks like:</p>
+<p>Using this, we can use the <code>link-window</code> our &ldquo;shared:irc&rdquo; window to index &ldquo;9&rdquo; in the current session. Which looks like:</p>
 
 <pre><code>tmux link-window -s shared:irc -t 9
 </code></pre>
 
-<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&#8217;t get in the way of my &#8220;real work&#8221;.</p>
+<p>The target parameter is optional, without it the window will be placed in the next available index, but I like to place it at the end of the list so they don&rsquo;t get in the way of my &ldquo;real work&rdquo;.</p>
 ]]></content>
   </entry>
   
@@ -188,23 +229,23 @@ irssi
     <id>http://blog.tekerson.com/2013/05/08/php-web-services-by-lorna-mitchell</id>
     <content type="html"><![CDATA[<h2>Introduction</h2>
 
-<p>I recently grabbed the pre-print release of Lorna Jane Mitchell&#8217;s new book &#8220;PHP Web Services: APIs for the Modern Web&#8221;, now available in Print and Ebook formats <a href="http://shop.oreilly.com/product/0636920028291.do">through O&#8217;Reilly</a>. APIs are such an integral part of modern web application development. Lorna herself specialises in API development and integration, rarely working on anything that could be called front-end.</p>
+<p>I recently grabbed the pre-print release of Lorna Jane Mitchell&rsquo;s new book &ldquo;PHP Web Services: APIs for the Modern Web&rdquo;, now available in Print and Ebook formats <a href="http://shop.oreilly.com/product/0636920028291.do">through O&#8217;Reilly</a>. APIs are such an integral part of modern web application development. Lorna herself specialises in API development and integration, rarely working on anything that could be called front-end.</p>
 
 <p>Every system I have worked on recently has been heavily API based. With the current trend in single-page JavaScript web applications and client-side MV*, the server is being relegated more and more to the role of data provider through custom APIs.</p>
 
 <h2>Content</h2>
 
-<p>In the preface, Lorna enumerates many scenarios in which building APIs is a prudent strategy and why PHP is a pragmatic way to &#8220;solve the web problem&#8221;; being built with the web in mind from the beginning it comes with many useful tools for delivering and consuming web services built in.</p>
+<p>In the preface, Lorna enumerates many scenarios in which building APIs is a prudent strategy and why PHP is a pragmatic way to &ldquo;solve the web problem&rdquo;; being built with the web in mind from the beginning it comes with many useful tools for delivering and consuming web services built in.</p>
 
 <p>With this introduction (as well as the usual typographical conventions) out of the way, we are thrown straight into the nuts-and-bolts of the basics of HTTP request/response and how the browser/web server is analogous to the API consumer/provider we will be building. A very practical and useful part of the chapter is the introduction to a number of tools and techniques for making and inspecting requests against HTTP servers, I have personally used the section on Curl as a reference a number of times already.</p>
 
-<p>No introduction to HTTP, especially as a platform for APIs, would be complete without an explanation of the HTTP verbs and this book doesn&#8217;t disappoint, with a thorough explanation of the common verbs and PHP code examples of their usage. Delving deeper into the HTTP protocol, we find a much more comprehensive look at request and response headers, a look at a number of common headers and a detailed look at the very important, but in my experience - underutilised, <code>Accept</code> header for content negotiation, including example code to parse it correctly taking into accounts the weighting of the preferences. This is great low level information for building a flexible API service.</p>
+<p>No introduction to HTTP, especially as a platform for APIs, would be complete without an explanation of the HTTP verbs and this book doesn&rsquo;t disappoint, with a thorough explanation of the common verbs and PHP code examples of their usage. Delving deeper into the HTTP protocol, we find a much more comprehensive look at request and response headers, a look at a number of common headers and a detailed look at the very important, but in my experience &ndash; underutilised, <code>Accept</code> header for content negotiation, including example code to parse it correctly taking into accounts the weighting of the preferences. This is great low level information for building a flexible API service.</p>
 
-<p>A chapter each is given to XML and JSON data formats, the advantages and disadvantages of each. Asking the question, &#8220;which format is superior?&#8221; (Hint: it depends); Some useful guidelines regarding the scenarios in which each format may be an appropriate choice are provided. There are, of course, code snippets showing how to work with each format.</p>
+<p>A chapter each is given to XML and JSON data formats, the advantages and disadvantages of each. Asking the question, &ldquo;which format is superior?&rdquo; (Hint: it depends); Some useful guidelines regarding the scenarios in which each format may be an appropriate choice are provided. There are, of course, code snippets showing how to work with each format.</p>
 
-<p>The chapter on RPC and SOAP provides a substantial look into these styles of services with examples of real-world APIs, snippets to create and consume them and tools to make working with them more friendly. In spite of the book appearing somewhat biased towards REST style services (or maybe that&#8217;s just me), this chapter is full of great information and tips for REST and SOAP style services, but if this is your primary interest there are probably better books.</p>
+<p>The chapter on RPC and SOAP provides a substantial look into these styles of services with examples of real-world APIs, snippets to create and consume them and tools to make working with them more friendly. In spite of the book appearing somewhat biased towards REST style services (or maybe that&rsquo;s just me), this chapter is full of great information and tips for REST and SOAP style services, but if this is your primary interest there are probably better books.</p>
 
-<p>The REST chapter brings together many of the concepts explored in the previous chapters about HTTP, verbs, headers, URLs and data formats to describe REST services in a useful, accurate and fairly succinct way. Thorough explanations of how to implement the standard CRUD operations so fundamental to REST are provided. Special mention is also given to hypermedia and content negotiation/media types, which are important aspects of &#8220;pure&#8221; REST services. Ever pragmatic, the chapter concludes with a section reminding readers to remember not to be caught up in the &#8220;trendy&#8221;, and that it is more important for an API to be &#8220;useful&#8221; than it is to be &#8220;RESTful&#8221;.</p>
+<p>The REST chapter brings together many of the concepts explored in the previous chapters about HTTP, verbs, headers, URLs and data formats to describe REST services in a useful, accurate and fairly succinct way. Thorough explanations of how to implement the standard CRUD operations so fundamental to REST are provided. Special mention is also given to hypermedia and content negotiation/media types, which are important aspects of &ldquo;pure&rdquo; REST services. Ever pragmatic, the chapter concludes with a section reminding readers to remember not to be caught up in the &ldquo;trendy&rdquo;, and that it is more important for an API to be &ldquo;useful&rdquo; than it is to be &ldquo;RESTful&rdquo;.</p>
 
 <p>The debugging chapter looks into what to do when it all goes wrong. As APIs are generally hidden behind the actual application interface the techniques for debugging them can be a bit different. Lorna introduces a couple of tools for inspecting the requests and responses on the wire to allow the tracking of anomalies without interrupting the data flow and breaking request/response formats.</p>
 
@@ -212,9 +253,9 @@ irssi
 
 <h2>Conclusion &amp; Recommendations</h2>
 
-<p>That was longer than I intended, but I see that as testament to the breadth of information contained within the seemingly modest tome, every chapter has something. Weighing in at a little over 100 pages &#8220;PHP Web Services&#8221; provides a great foundation to the practicalities of using PHP to build modern web services.</p>
+<p>That was longer than I intended, but I see that as testament to the breadth of information contained within the seemingly modest tome, every chapter has something. Weighing in at a little over 100 pages &ldquo;PHP Web Services&rdquo; provides a great foundation to the practicalities of using PHP to build modern web services.</p>
 
-<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn&#8217;t dive deep enough for the seasoned professionals. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
+<p>I feel the target audience for the book is the PHP developer who has built a few web sites, but never looked much deeper into the workings of the HTTP protocol and its implications. It provides a broad overview of important concepts, but probably doesn&rsquo;t dive deep enough for the seasoned professionals. The code snippets are just that, snippets, a demonstration of the core concept, they are not full libraries that should be dropped directly into production code.</p>
 
 <p>All in all, I think the book provides a solid overview of many of the considerations of web service development and would be a great guide to anyone venturing into building such services in PHP.</p>
 ]]></content>
@@ -225,17 +266,17 @@ irssi
     <link href="http://blog.tekerson.com/2013/03/28/ideas-of-march-wheres-the-love/"/>
     <updated>2013-03-28T21:43:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/03/28/ideas-of-march-wheres-the-love</id>
-    <content type="html"><![CDATA[<p>As I previously blogged, I&#8217;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
+    <content type="html"><![CDATA[<p>As I previously blogged, I&rsquo;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
 
-<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; &#8220;You never know when it&#8217;s going to disappear.&#8221; citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell&#8217;s suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">&#8220;don&#8217;t read the comments&#8221;</a>, I have to wonder if having comments is worth the effort involved?</p>
+<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; &ldquo;You never know when it&rsquo;s going to disappear.&rdquo; citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell&rsquo;s suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">&ldquo;don&rsquo;t read the comments&rdquo;</a>, I have to wonder if having comments is worth the effort involved?</p>
 
-<p>For now, it looks like I&#8217;m going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where&#8217;s the love?</p>
+<p>For now, it looks like I&rsquo;m going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where&rsquo;s the love?</p>
 
-<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes &#8220;turn off comments and encourage others to respond by writing [&#8230;] on their own blog.&#8221; I think this is a fantastic idea (I&#8217;m doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, &#8220;trackbacks&#8221; were an attempt at solving this issue, but I&#8217;m not sure that worked too well.</p>
+<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes &ldquo;turn off comments and encourage others to respond by writing [&hellip;] on their own blog.&rdquo; I think this is a fantastic idea (I&rsquo;m doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, &ldquo;trackbacks&rdquo; were an attempt at solving this issue, but I&rsquo;m not sure that worked too well.</p>
 
-<p>This is one advantage the &#8220;walled gardens&#8221; currently hold - they have the ability to aggregate the posts into a single congruous conversation.</p>
+<p>This is one advantage the &ldquo;walled gardens&rdquo; currently hold &ndash; they have the ability to aggregate the posts into a single congruous conversation.</p>
 
-<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I&#8217;ll&#8230; Probably never see it&#8230; Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
+<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I&rsquo;ll&hellip; Probably never see it&hellip; Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
 ]]></content>
   </entry>
   
@@ -244,9 +285,9 @@ irssi
     <link href="http://blog.tekerson.com/2013/03/24/reboot/"/>
     <updated>2013-03-24T18:25:00+10:00</updated>
     <id>http://blog.tekerson.com/2013/03/24/reboot</id>
-    <content type="html"><![CDATA[<p>Wow, it&#8217;s been over 3 years since my last post! And, like so many entertainment franchises, I think it&#8217;s time for a reboot. I stopped blogging when I moved away from PHP because I no longer felt confident enough in my work to open up anything I was doing to any kind of public scrutiny. Having since (mostly) returned to PHP, doing some consulting and contracting and embarking on a venture of my own, I feel it is time once again to put some of my experiences and thoughts into writing.</p>
+    <content type="html"><![CDATA[<p>Wow, it&rsquo;s been over 3 years since my last post! And, like so many entertainment franchises, I think it&rsquo;s time for a reboot. I stopped blogging when I moved away from PHP because I no longer felt confident enough in my work to open up anything I was doing to any kind of public scrutiny. Having since (mostly) returned to PHP, doing some consulting and contracting and embarking on a venture of my own, I feel it is time once again to put some of my experiences and thoughts into writing.</p>
 
-<p>To facilitate this, and because my Wordpress install was so hideously out of date, I&#8217;ve decided to changed to a static blogging solution: <a href="http://octopress.org/">Octopress</a>. As such, the blog is currently without much of a design. This may (or may not) be remedied at a later time. I will write in more detail about the platform and the migration in a future post.</p>
+<p>To facilitate this, and because my Wordpress install was so hideously out of date, I&rsquo;ve decided to changed to a static blogging solution: <a href="http://octopress.org/">Octopress</a>. As such, the blog is currently without much of a design. This may (or may not) be remedied at a later time. I will write in more detail about the platform and the migration in a future post.</p>
 ]]></content>
   </entry>
   
@@ -255,9 +296,9 @@ irssi
     <link href="http://blog.tekerson.com/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle/"/>
     <updated>2010-02-18T00:11:13+10:00</updated>
     <id>http://blog.tekerson.com/2010/02/18/the-silver-lining-of-the-readwriteweb-facebook-login-debacle</id>
-    <content type="html"><![CDATA[<p>The furor surrounding the amusing chaos that ensued following <a href="http://www.readwriteweb.com/archives/facebook_wants_to_be_your_one_true_loginpage5.php">ReadWriteWeb&#8217;s article on Facebook Connect</a> has been interesting, in that it brings attention to developers assumptions about the way users interact with their products.</p>
+    <content type="html"><![CDATA[<p>The furor surrounding the amusing chaos that ensued following <a href="http://www.readwriteweb.com/archives/facebook_wants_to_be_your_one_true_loginpage5.php">ReadWriteWeb&rsquo;s article on Facebook Connect</a> has been interesting, in that it brings attention to developers assumptions about the way users interact with their products.</p>
 
-<p>There have been articles debating who is the cause of the confusion; whether it&#8217;s the <a href="http://funkatron.com/site/comments/were-the-stupid-ones-facebook-google-and-our-failure-as-developers/">Developers</a> or the <a href="http://www.lastpodcast.net/2010/02/10/facebook-login-is-hard-welcome-to-idiocracy">Users</a> that need to try harder.</p>
+<p>There have been articles debating who is the cause of the confusion; whether it&rsquo;s the <a href="http://funkatron.com/site/comments/were-the-stupid-ones-facebook-google-and-our-failure-as-developers/">Developers</a> or the <a href="http://www.lastpodcast.net/2010/02/10/facebook-login-is-hard-welcome-to-idiocracy">Users</a> that need to try harder.</p>
 
 <p>But in all this, what I think has been missed is the <em>success</em> of <a href="http://developers.facebook.com/connect.php">Facebook Connect</a>. There are hundreds of comments on the ReadWriteWeb article from users who failed (for whatever reason) to find their way to Facebook, yet still managed to use Facebook Connect to leave a comment.</p>
 
@@ -270,19 +311,19 @@ irssi
     <link href="http://blog.tekerson.com/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/"/>
     <updated>2009-09-08T01:03:53+10:00</updated>
     <id>http://blog.tekerson.com/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework</id>
-    <content type="html"><![CDATA[<p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&#8217;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
+    <content type="html"><![CDATA[<p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&rsquo;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
 
 <p>Doctrine 2.0 looks like it might finally be the ORM framework I have been seeking for PHP. While the older versions of Doctrine provided great functionality, they were too intrusive for my taste. I think an ORM should provide a true <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">data mapper</a>; in which the domain entities need know nothing about their persistence.</p>
 
-<p>Matthew Weier O&#8217;Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &#8220;real&#8221; namespaces, so its classes don&#8217;t follow the (current) Zend naming standard and the ZF autoloader won&#8217;t load them for us.</p>
+<p>Matthew Weier O&#8217;Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &ldquo;real&rdquo; namespaces, so its classes don&rsquo;t follow the (current) Zend naming standard and the ZF autoloader won&rsquo;t load them for us.</p>
 
 <p>Good News, Doctrine provides its own autoloader that we can leverage to load its own classes.</p>
 
-<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&#8217;t very useful).</p>
+<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&rsquo;t very useful).</p>
 
-<p>Good News, it&#8217;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
+<p>Good News, it&rsquo;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
 
-<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &#8220;Doctrine&#34; namespace.</p>
+<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &ldquo;Doctrine\&rdquo; namespace.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -315,7 +356,7 @@ irssi
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>We can use all of Doctrine&#8217;s classes anywhere else in our code.</p>
+<p>We can use all of Doctrine&rsquo;s classes anywhere else in our code.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -339,7 +380,7 @@ irssi
     <id>http://blog.tekerson.com/2009/07/06/dependency-injection-container-resource-in-zend-framework</id>
     <content type="html"><![CDATA[<p>A good dependency injection container is a godsend when it comes to managing the dependency tree of even a moderately complex domain model. As such, it comes as no surprise there has been much discussion about them of late in the PHP and Zend Framework communities.</p>
 
-<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei&#8217;s recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
+<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei&rsquo;s recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
 
 <p>The container resource copies any already instantiated objects from the old container into the new one, then replaces the default container.</p>
 
@@ -432,7 +473,7 @@ irssi
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>I&#8217;ve also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
+<p>I&rsquo;ve also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
 
 <p>To use the container resource you will need to add the prefix and path to the bootstrappers plugin loader:</p>
 
@@ -476,11 +517,11 @@ resources.container.objects.Log_Writer.arguments.0 = "%Log_Writer.stream%"
 resources.container.options.Log_Writer.stream = APPLICATION_PATH "/../log/application.log"
 </code></pre>
 
-<p>There are 2 resources defined here, the &#8220;Log&#8221; and the &#8220;Log_Writer&#8221;.</p>
+<p>There are 2 resources defined here, the &ldquo;Log&rdquo; and the &ldquo;Log_Writer&rdquo;.</p>
 
 <ol>
-<li><p>Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
-<li><p>The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
+<li><p> Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
+<li><p> The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
 </ol>
 
 
@@ -511,7 +552,7 @@ Instantiating a dependency tree like this for every object you need can lead to 
     <link href="http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2/"/>
     <updated>2009-06-28T00:43:35+10:00</updated>
     <id>http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2</id>
-    <content type="html"><![CDATA[<p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We&#8217;re going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
+    <content type="html"><![CDATA[<p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We&rsquo;re going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
 
 <p>Note, there are still some bugs in Zend_Tool that prevent this working as it should, I will note the bugs and their fixes as we encounter them.</p>
 
@@ -527,7 +568,7 @@ Instantiating a dependency tree like this for every object you need can lead to 
 <pre><code>zf create controller index 1 guestbook
 </code></pre>
 
-<p>The &#8220;1&#8221; argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
+<p>The &ldquo;1&rdquo; argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
 
 <pre><code>zf create controller ?
 </code></pre>
@@ -538,14 +579,14 @@ Instantiating a dependency tree like this for every object you need can lead to 
 resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 </code></pre>
 
-<p>To check our module is working, we can navigate to our guestbook at http://aza/guestbook and we should see the default view for the index action.</p>
+<p>To check our module is working, we can navigate to our guestbook at <a href="http://aza/guestbook">http://aza/guestbook</a> and we should see the default view for the index action.</p>
 
-<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn&#8217;t prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
-<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn&#8217;t be but we don&#8217;t really care, we&#8217;re going to replace it anyway.</p>
+<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn&rsquo;t prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
+<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn&rsquo;t be but we don&rsquo;t really care, we&rsquo;re going to replace it anyway.</p>
 
 <h2>Create module bootstrap</h2>
 
-<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn&#8217;t create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
+<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn&rsquo;t create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -558,7 +599,7 @@ resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don&#8217;t need any further bootstrapping.</p>
+<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don&rsquo;t need any further bootstrapping.</p>
 
 <p><strong>Important note</strong>: <strong><em>All</em> bootstrap functions</strong> for <strong>every module</strong> are run for <strong>every request</strong>.</p>
 
@@ -568,7 +609,7 @@ resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 
 <p>Now we have the module skeleton in place, lets start porting the guestbook code to our module. This turns out to be fairly easy; the majority of the changes involve prefixing class names with the module name.</p>
 
-<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it&#8217;s on the right hand side in zip or tar.gz form).</p>
+<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it&rsquo;s on the right hand side in zip or tar.gz form).</p>
 
 <h2>Importing Quickstart</h2>
 
@@ -597,11 +638,11 @@ application/modules/guestbook/forms/</p>
 
 <p>Now we have the files in the right place, we need to update the files to be modular.</p>
 
-<p>We&#8217;ll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
+<p>We&rsquo;ll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
 
-<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with &#8220;Default<em>&#8221;, but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of &#8220;Default</em>&#8221; with &#8220;Guestbook_&#8221; in the application/modules/guestbook/models/ directory is all we need.</p>
+<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with &ldquo;Default<em>&rdquo;, but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of &ldquo;Default</em>&rdquo; with &ldquo;Guestbook_&rdquo; in the application/modules/guestbook/models/ directory is all we need.</p>
 
-<p>The controller is a little trickier because it isn&#8217;t already prefixed (controllers in the default module aren&#8217;t), but it&#8217;s still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
+<p>The controller is a little trickier because it isn&rsquo;t already prefixed (controllers in the default module aren&rsquo;t), but it&rsquo;s still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
 
 <p>Finally, we get to the view. In our index view (application/modules/guestbook/views/scripts/index/index.phtml) we need to update the parameters passed to the url helper to reference our controller. Adding the module, and changing the controller leaves the first link looking like this:</p>
 
@@ -628,7 +669,7 @@ application/modules/guestbook/forms/</p>
 
 <h2>Connect the database</h2>
 
-<p>I&#8217;ll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.</p>
+<p>I&rsquo;ll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.</p>
 
 <h2>Conclusion</h2>
 
@@ -636,7 +677,7 @@ application/modules/guestbook/forms/</p>
 
 <h2>Download</h2>
 
-<p>For those who had trouble following along, I&#8217;ve made the entire application (including database) available via my <a href="http://github.com/tekerson/A-Zend-Application/tree/master">github repository</a>.</p>
+<p>For those who had trouble following along, I&rsquo;ve made the entire application (including database) available via my <a href="http://github.com/tekerson/A-Zend-Application/tree/master">github repository</a>.</p>
 ]]></content>
   </entry>
   
@@ -645,7 +686,7 @@ application/modules/guestbook/forms/</p>
     <link href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/"/>
     <updated>2009-06-17T19:45:29+10:00</updated>
     <id>http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1</id>
-    <content type="html"><![CDATA[<p>This is part one of a series exploring modular application development in Zend Framework. In this entry we&#8217;ll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We&#8217;ll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
+    <content type="html"><![CDATA[<p>This is part one of a series exploring modular application development in Zend Framework. In this entry we&rsquo;ll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We&rsquo;ll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
 
 <h2>Install Zend Framework</h2>
 
@@ -655,14 +696,14 @@ application/modules/guestbook/forms/</p>
 tar zxf ZendFramework-1.8.4.tar.gz
 </code></pre>
 
-<p>We&#8217;ll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
+<p>We&rsquo;ll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
 
 <pre><code>ln -s ZendFramework-1.8.4 ZendFramework
 </code></pre>
 
 <h2>Install Zend_Tool</h2>
 
-<p>Creating an alias allows command &#8220;zf&#8221; to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
+<p>Creating an alias allows command &ldquo;zf&rdquo; to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
 
 <pre><code>alias zf=`pwd`/ZendFramework/bin/zf.sh
 </code></pre>
@@ -673,22 +714,22 @@ tar zxf ZendFramework-1.8.4.tar.gz
 # Zend Framework Version: 1.8.4
 </code></pre>
 
-<p>If this works, we&#8217;re ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
+<p>If this works, we&rsquo;re ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
 
 <h2>Create the project</h2>
 
-<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we&#8217;ll call our project &#8220;aza&#8221; (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
+<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we&rsquo;ll call our project &ldquo;aza&rdquo; (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
 
 <pre><code>zf create project aza
 </code></pre>
 
 <p>This should produce a project structure that looks like this</p>
 
-<p>[caption id=&#8221;attachment_131&#8221; align=&#8221;alignnone&#8221; width=&#8221;324&#8221; caption=&#8221;Directory Listing of new project&#8221;]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
+<p>[caption id=&ldquo;attachment_131&rdquo; align=&ldquo;alignnone&rdquo; width=&ldquo;324&rdquo; caption=&ldquo;Directory Listing of new project&rdquo;]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
 
 <h2>Setup the web server</h2>
 
-<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace &#8220;/WORKING/PATH/&#8221; with the absolute path to the directory in which you are working (run pwd if you&#8217;re not sure).</p>
+<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace &ldquo;/WORKING/PATH/&rdquo; with the absolute path to the directory in which you are working (run pwd if you&rsquo;re not sure).</p>
 
 <pre><code>&lt;VirtualHost *:80&gt;
     ServerName aza
@@ -705,12 +746,12 @@ tar zxf ZendFramework-1.8.4.tar.gz
 &lt;/VirtualHost&gt;
 </code></pre>
 
-<p>Don&#8217;t forget to restart the web server to enable the site.</p>
+<p>Don&rsquo;t forget to restart the web server to enable the site.</p>
 
 <h2>Test our page!</h2>
 
 <p>We should now be able to navigate to our site and be warmly welcomed to our new Zend Framework application!
-We&#8217;ll stop here for now. In the next post, we&#8217;ll start looking at creating our first module.</p>
+We&rsquo;ll stop here for now. In the next post, we&rsquo;ll start looking at creating our first module.</p>
 
 <h2>Updates</h2>
 
@@ -724,7 +765,7 @@ Updated for ZF Version 1.8.4</p>
     <link href="http://blog.tekerson.com/2009/05/26/re-sequence-a-column-in-mysql/"/>
     <updated>2009-05-26T23:13:24+10:00</updated>
     <id>http://blog.tekerson.com/2009/05/26/re-sequence-a-column-in-mysql</id>
-    <content type="html"><![CDATA[<p>When you have an &#8220;position&#8221; column in a table, to allow the user to select the order of elements in the table or as an optimization for pagination. They always seem to get out of sequence at some point&#8211;ending up with gaps in the sequence.
+    <content type="html"><![CDATA[<p>When you have an &ldquo;position&rdquo; column in a table, to allow the user to select the order of elements in the table or as an optimization for pagination. They always seem to get out of sequence at some point&mdash;ending up with gaps in the sequence.
 This is something I run into not quiet often enough to remember how to do it, yet often enough to to be frustrating. So here is an easy solution to re-sequence the position column in a table, maintaining the current order, just closing any gaps.</p>
 
 <p>SET @pos := 0;
@@ -739,11 +780,11 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     <link href="http://blog.tekerson.com/2009/03/17/following-hashtags-on-twitter/"/>
     <updated>2009-03-17T00:24:59+10:00</updated>
     <id>http://blog.tekerson.com/2009/03/17/following-hashtags-on-twitter</id>
-    <content type="html"><![CDATA[<p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don&#8217;t believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the &#8220;correct&#8221; tag).</p>
+    <content type="html"><![CDATA[<p>The <a href="http://hashtags.org">hashtags</a> service allows you to see some interesting information, such as popular tags and a graph of a particular tags usage over time. It also offers the ability to follow a tag by providing an RSS feed, but I don&rsquo;t believe it can provide a single feed of multiple tags. While I was at the PHP Quebec conference I was looking for an easy way to follow all the tweets with the various hashtags in use (there was some disagreement as to the &ldquo;correct&rdquo; tag).</p>
 
-<p>I found that this can be done using twitter&#8217;s own search function, simply put all the tags into the &#8220;Any of these words&#8221; box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the &#8220;Feed for this query&#8221; (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
+<p>I found that this can be done using twitter&rsquo;s own search function, simply put all the tags into the &ldquo;Any of these words&rdquo; box on the <a href="http://search.twitter.com/advanced">twitter advanced search interface</a> and run the search. On the results screen, subscribe to the URL for the &ldquo;Feed for this query&rdquo; (at the top right of the page) and put it into your favourite feed reader, set the refresh rate to every few minutes (you can probably set it lower if your software allows, but do your really need it?) and watch the conversation.</p>
 
-<p>This allowed me to keep up with chatter at the conference, even from people I don&#8217;t usually follow.</p>
+<p>This allowed me to keep up with chatter at the conference, even from people I don&rsquo;t usually follow.</p>
 ]]></content>
   </entry>
   
@@ -752,41 +793,41 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     <link href="http://blog.tekerson.com/2009/03/11/php-quebec-wrap-up-from-a-conference-newb/"/>
     <updated>2009-03-11T21:02:09+10:00</updated>
     <id>http://blog.tekerson.com/2009/03/11/php-quebec-wrap-up-from-a-conference-newb</id>
-    <content type="html"><![CDATA[<p>As I am in Canada for only 3 more weeks, and we don&#8217;t get too many PHP conferences in Brisbane, I took the opportunity to attended my first ever PHP conference. I thought I would share my thoughts, and maybe those more experienced can help me do it &#8220;better&#8221; next time.</p>
+    <content type="html"><![CDATA[<p>As I am in Canada for only 3 more weeks, and we don&rsquo;t get too many PHP conferences in Brisbane, I took the opportunity to attended my first ever PHP conference. I thought I would share my thoughts, and maybe those more experienced can help me do it &ldquo;better&rdquo; next time.</p>
 
-<p>After flying across the country we checked into the hotel, the Hilton Bonaventure in Montreal. The front desk apparently didn&#8217;t know we were there for the conference because we didn&#8217;t &#8220;book with the others&#8221;. I&#8217;m not sure what that means, or what difference it would have made? The hotel offered free wireless in the foyer and conference halls, but not in the rooms. Luckily, we were close enough to the foyer to access their wireless from our room (once I sorted out some driver issues on my laptop).</p>
+<p>After flying across the country we checked into the hotel, the Hilton Bonaventure in Montreal. The front desk apparently didn&rsquo;t know we were there for the conference because we didn&rsquo;t &ldquo;book with the others&rdquo;. I&rsquo;m not sure what that means, or what difference it would have made? The hotel offered free wireless in the foyer and conference halls, but not in the rooms. Luckily, we were close enough to the foyer to access their wireless from our room (once I sorted out some driver issues on my laptop).</p>
 
 <h2>Day 1</h2>
 
-<p>After missing most of the openning keynote on the first day in favour of eating (I didn&#8217;t know breakfast would be available) I jumped into the sessions. Starting with <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney&#8217;s</a> <a href="http://conf.phpquebec.com/en/session#practical_zend_framework_jutsu_with_dojo">Practical Zend Framework Jutsu with Dojo</a>, which provided a practical overview to an area of the Zend Framework I have been planning on investigating, but haven&#8217;t yet got round to. This was followed up by <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall&#8217;s</a> explaining their process of <a href="http://conf.phpquebec.com/en/session#building_ria_application_in_php">Building RIA Application in PHP</a>. This wasn&#8217;t a talk I intended to attend (Sara Goleman&#8217;s talk was scheduled for this time, but was unable to attend due to illness) but it was interesting to see the differences in building a PHP application without a HTML front end.<a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall"></a></p>
+<p>After missing most of the openning keynote on the first day in favour of eating (I didn&rsquo;t know breakfast would be available) I jumped into the sessions. Starting with <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney&rsquo;s</a> <a href="http://conf.phpquebec.com/en/session#practical_zend_framework_jutsu_with_dojo">Practical Zend Framework Jutsu with Dojo</a>, which provided a practical overview to an area of the Zend Framework I have been planning on investigating, but haven&rsquo;t yet got round to. This was followed up by <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall&rsquo;s</a> explaining their process of <a href="http://conf.phpquebec.com/en/session#building_ria_application_in_php">Building RIA Application in PHP</a>. This wasn&rsquo;t a talk I intended to attend (Sara Goleman&rsquo;s talk was scheduled for this time, but was unable to attend due to illness) but it was interesting to see the differences in building a PHP application without a HTML front end.<a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall"></a></p>
 
-<p>After lunch, <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethan&#8217;s</a> looked into search and indexing. <a href="http://conf.phpquebec.com/en/session#of_haystacks_and_needles">Of Haystacks and Needles</a>, introduced MySQL full text, Selenium and Solr. While I have used Selenium, Solr seems like a useful step up for systems with higher requirements. The afternoon sessions were <a href="http://conf.phpquebec.com/en/session#a_tour_of_mysql_high_availability">A tour of MySQL High Availability</a> by <a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a>, which talked about the difference between scaling for performance and scaling for HA, and techniques for the latter, for me there wasn&#8217;t much I hadn&#8217;t used before, but some of the monitoring tools warrant further research. <a href="http://conf.phpquebec.com/en/session#stupid_browser_tricks">Stupid Browser Tricks</a> by <a href="http://conf.phpquebec.com/en/conferencier#sean_coates">Sean Coates</a>, was in a similar boat. It was a good introduction to some useful browser side tools (Firebug, YSlow! and Selenium IDE) but I had hoped for a deeper look into Selenium. Isn&#8217;t everyone using firebug by now? FirePHP is a nice addition though.</p>
+<p>After lunch, <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethan&rsquo;s</a> looked into search and indexing. <a href="http://conf.phpquebec.com/en/session#of_haystacks_and_needles">Of Haystacks and Needles</a>, introduced MySQL full text, Selenium and Solr. While I have used Selenium, Solr seems like a useful step up for systems with higher requirements. The afternoon sessions were <a href="http://conf.phpquebec.com/en/session#a_tour_of_mysql_high_availability">A tour of MySQL High Availability</a> by <a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a>, which talked about the difference between scaling for performance and scaling for HA, and techniques for the latter, for me there wasn&rsquo;t much I hadn&rsquo;t used before, but some of the monitoring tools warrant further research. <a href="http://conf.phpquebec.com/en/session#stupid_browser_tricks">Stupid Browser Tricks</a> by <a href="http://conf.phpquebec.com/en/conferencier#sean_coates">Sean Coates</a>, was in a similar boat. It was a good introduction to some useful browser side tools (Firebug, YSlow! and Selenium IDE) but I had hoped for a deeper look into Selenium. Isn&rsquo;t everyone using firebug by now? FirePHP is a nice addition though.</p>
 
 <h2>Day 2</h2>
 
-<p>Day 2 started with a quick breakfast (I&#8217;m a fast learner ;)), then the <a href="http://conf.phpquebec.com/en/session#php_code_review">PHP Code Review Part #1</a>, with <a href="http://conf.phpquebec.com/en/conferencier#sebastian_bergmann">Sebastian Bergmann</a> and <a href="http://conf.phpquebec.com/en/conferencier#stefan_priebsch">Stefan Priebsch</a> delving into some not particularly pretty examples of code from well known PHP applications such as Wordpress. It&#8217;s reassuring to know other people write and release bad code too :) I didn&#8217;t attend Part #2 of the session, where they took code samples from the audience and critiqued them. Instead I opted to drop in on <a href="http://conf.phpquebec.com/en/conferencier#chris_hartjes">Chris Hartjes</a> expaining why <a href="http://conf.phpquebec.com/en/session#deployment_is_not_a_4_letter_word">Deployment Is Not A 4 Letter Word</a> and that with some planning and appropriate tools, in your absence even the sysadmin should be able to deploy your application with confidence.</p>
+<p>Day 2 started with a quick breakfast (I&rsquo;m a fast learner ;)), then the <a href="http://conf.phpquebec.com/en/session#php_code_review">PHP Code Review Part #1</a>, with <a href="http://conf.phpquebec.com/en/conferencier#sebastian_bergmann">Sebastian Bergmann</a> and <a href="http://conf.phpquebec.com/en/conferencier#stefan_priebsch">Stefan Priebsch</a> delving into some not particularly pretty examples of code from well known PHP applications such as Wordpress. It&rsquo;s reassuring to know other people write and release bad code too :) I didn&rsquo;t attend Part #2 of the session, where they took code samples from the audience and critiqued them. Instead I opted to drop in on <a href="http://conf.phpquebec.com/en/conferencier#chris_hartjes">Chris Hartjes</a> expaining why <a href="http://conf.phpquebec.com/en/session#deployment_is_not_a_4_letter_word">Deployment Is Not A 4 Letter Word</a> and that with some planning and appropriate tools, in your absence even the sysadmin should be able to deploy your application with confidence.</p>
 
-<p>The pre-lunch keynote was <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall</a> again discussing RIA in <a href="http://conf.phpquebec.com/en/session#beyond_the_browser">Beyond the Browser</a>. Is the browser dead? Not yet, but it certainly has some growing competition. After a break, I listened to <a href="http://conf.phpquebec.com/en/conferencier#ilia_alshanetsky">Ilia Alshanetsky</a> talk about <a href="http://conf.phpquebec.com/en/session#premature_optimization_mistakes">Premature Optimization Mistakes</a>, focusing on optimising the server stack itself before delving into application level optimisation. Arguing it usually provides more results without the risk of breaking the application. <a href="http://conf.phpquebec.com/en/session#php_for_the_enterprise">PHP for the Enterprise</a> then examined how PHP has reached a level where it is suitable for projects that were once considered the realm of &#8220;real&#8221; programming languages. Most of the talk discussed more technical details of scaling PHP to an enterprise level, such as database buffer sizes, performance monitoring and caching at various levels.</p>
+<p>The pre-lunch keynote was <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall</a> again discussing RIA in <a href="http://conf.phpquebec.com/en/session#beyond_the_browser">Beyond the Browser</a>. Is the browser dead? Not yet, but it certainly has some growing competition. After a break, I listened to <a href="http://conf.phpquebec.com/en/conferencier#ilia_alshanetsky">Ilia Alshanetsky</a> talk about <a href="http://conf.phpquebec.com/en/session#premature_optimization_mistakes">Premature Optimization Mistakes</a>, focusing on optimising the server stack itself before delving into application level optimisation. Arguing it usually provides more results without the risk of breaking the application. <a href="http://conf.phpquebec.com/en/session#php_for_the_enterprise">PHP for the Enterprise</a> then examined how PHP has reached a level where it is suitable for projects that were once considered the realm of &ldquo;real&rdquo; programming languages. Most of the talk discussed more technical details of scaling PHP to an enterprise level, such as database buffer sizes, performance monitoring and caching at various levels.</p>
 
-<p>The day ended with the career fair which saw a number of, primarily local, employers (including the armed forces?) set up booths and discuss their work and employment with the potential candidates at the conference. While I wasn&#8217;t actively seeking employment, I did have a chat with some of the representatives. Given the location of the conference, it wasn&#8217;t too big a surprise that the majority were bilingual and in some cases French only offices.</p>
+<p>The day ended with the career fair which saw a number of, primarily local, employers (including the armed forces?) set up booths and discuss their work and employment with the potential candidates at the conference. While I wasn&rsquo;t actively seeking employment, I did have a chat with some of the representatives. Given the location of the conference, it wasn&rsquo;t too big a surprise that the majority were bilingual and in some cases French only offices.</p>
 
 <h2>Day 3</h2>
 
-<p>My final day of the conference started with <a href="http://conf.phpquebec.com/en/conferencier#owen_byrne">Owen Byrne</a> discussing <a href="http://conf.phpquebec.com/en/session#growing_a_development_team_while_building_a_huge_app_at_500_miles/hour">Growing a Development Team While Building a Huge App at 500 miles/hour</a>; which I attended, hoping to garner an insight into building a team and managing agile development on a large project. While the project was an interesting one, Owen seemed to be more interested in giving out t-shirts and I didn&#8217;t feel we got very deep into the whole process. Being a fairly heavy user and fan of Zend Framework, I joined <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> in his search for some of <a href="http://conf.phpquebec.com/en/session#zf">Zend Framework&#8217;s Little Known Gems</a>. The talk was targeted at using the components in isolation and I discovered a number of components that may come in handy in future projects, with or without the MVC stack.</p>
+<p>My final day of the conference started with <a href="http://conf.phpquebec.com/en/conferencier#owen_byrne">Owen Byrne</a> discussing <a href="http://conf.phpquebec.com/en/session#growing_a_development_team_while_building_a_huge_app_at_500_miles/hour">Growing a Development Team While Building a Huge App at 500 miles/hour</a>; which I attended, hoping to garner an insight into building a team and managing agile development on a large project. While the project was an interesting one, Owen seemed to be more interested in giving out t-shirts and I didn&rsquo;t feel we got very deep into the whole process. Being a fairly heavy user and fan of Zend Framework, I joined <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> in his search for some of <a href="http://conf.phpquebec.com/en/session#zf">Zend Framework&rsquo;s Little Known Gems</a>. The talk was targeted at using the components in isolation and I discovered a number of components that may come in handy in future projects, with or without the MVC stack.</p>
 
 <p><a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a> then talked further about MySQL, this time focusing on performance as opposed to high availability. There were a few points about the inner working of the InnoDB storage engine that got my attention, including some builds available from Percona we may need to look at.</p>
 
-<p>The round-table <a href="http://conf.phpquebec.com/en/session#framework">Framework Comparison</a>, featuring <a href="http://conf.phpquebec.com/en/conferencier#fabien_potencier">Fabien Potencier</a> (Symfony) <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethans</a> (ezComponents) and <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> (Zend Framework) seemed to indicate that all 3 frameworks solve much the same problem, they even went as far as agreeing you should use components from the other frameworks when your primary framework doesn&#8217;t include one. Much different to the &#8220;my framework is better&#8221; &#8220;discussions&#8221; we too often see.</p>
+<p>The round-table <a href="http://conf.phpquebec.com/en/session#framework">Framework Comparison</a>, featuring <a href="http://conf.phpquebec.com/en/conferencier#fabien_potencier">Fabien Potencier</a> (Symfony) <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethans</a> (ezComponents) and <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> (Zend Framework) seemed to indicate that all 3 frameworks solve much the same problem, they even went as far as agreeing you should use components from the other frameworks when your primary framework doesn&rsquo;t include one. Much different to the &ldquo;my framework is better&rdquo; &ldquo;discussions&rdquo; we too often see.</p>
 
-<p>Finally, <a href="http://conf.phpquebec.com/en/conferencier#chris_shiflett">Chris Shiflett</a> addressed <a href="http://conf.phpquebec.com/en/session#security-centered_design__dont_just_plan_for_security_design_for_it">Security-Centered Design: Don&#8217;t Just Plan for Security; Design For It</a> provided an alternative look at some interesting security topics. Instead of focusing on technical details, he primarly focused on security from a user perspective as &#8220;user perception is as important as reality&#8221;. Giving examples of various recent attacks on high profile sites that, while not actually the fault of the site, would be perceived as such by most users. He also put forward ideas about using &#8220;ambient signifiers&#8221; to assist in the fight against phishing, and how the normal (request-reload) web model can mean important information is missed due to &#8220;change blindness&#8221; including a live demonstration. He suggesting AJAX might be a suitable solution in this case (as long as it&#8217;s still accessible of course).</p>
+<p>Finally, <a href="http://conf.phpquebec.com/en/conferencier#chris_shiflett">Chris Shiflett</a> addressed <a href="http://conf.phpquebec.com/en/session#security-centered_design__dont_just_plan_for_security_design_for_it">Security-Centered Design: Don&rsquo;t Just Plan for Security; Design For It</a> provided an alternative look at some interesting security topics. Instead of focusing on technical details, he primarly focused on security from a user perspective as &ldquo;user perception is as important as reality&rdquo;. Giving examples of various recent attacks on high profile sites that, while not actually the fault of the site, would be perceived as such by most users. He also put forward ideas about using &ldquo;ambient signifiers&rdquo; to assist in the fight against phishing, and how the normal (request-reload) web model can mean important information is missed due to &ldquo;change blindness&rdquo; including a live demonstration. He suggesting AJAX might be a suitable solution in this case (as long as it&rsquo;s still accessible of course).</p>
 
 <h2>Conclusions</h2>
 
 <p>All-in-all the conference was a great experience, the hotel was really nice (especially compared to some of the hostels where I usually slum on my travels) and the talks were wide ranging and generally well presented.</p>
 
-<p>Some of the material I found too &#8220;introductory&#8221;, but I think that may be because I primarily attended sessions on topics I am familiar with hoping to learn more, whereas using the talks as introductions to new topics might have been a better idea. How do people usually select talks?</p>
+<p>Some of the material I found too &ldquo;introductory&rdquo;, but I think that may be because I primarily attended sessions on topics I am familiar with hoping to learn more, whereas using the talks as introductions to new topics might have been a better idea. How do people usually select talks?</p>
 
-<p>I also didn&#8217;t attend much in the way of &#8220;extra-conference&#8221; activities; social events outside of the conference schedule. I am a little disappointed about this, as it would have been good to chat to some members of the community in a less formal setting, so this is something I think I would do much more of next time. And there will be a next time.</p>
+<p>I also didn&rsquo;t attend much in the way of &ldquo;extra-conference&rdquo; activities; social events outside of the conference schedule. I am a little disappointed about this, as it would have been good to chat to some members of the community in a less formal setting, so this is something I think I would do much more of next time. And there will be a next time.</p>
 ]]></content>
   </entry>
   
@@ -795,9 +836,9 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     <link href="http://blog.tekerson.com/2009/03/03/converting-a-flat-array-with-parent-ids-to-a-nested-tree/"/>
     <updated>2009-03-03T21:37:32+10:00</updated>
     <id>http://blog.tekerson.com/2009/03/03/converting-a-flat-array-with-parent-ids-to-a-nested-tree</id>
-    <content type="html"><![CDATA[<p>Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry, or a navigation menu structure). The &#8220;Adjacency List&#8221; method; probably the most common, involves storing a reference to the parent in each of the children.</p>
+    <content type="html"><![CDATA[<p>Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry, or a navigation menu structure). The &ldquo;Adjacency List&rdquo; method; probably the most common, involves storing a reference to the parent in each of the children.</p>
 
-<p>Here is a snippet for converting the rows stored using the adjacency list method into a hierarchical array in PHP. My goal was to do this in 1 pass, without recursion. I ended up using 2 passes, I think 1 pass is achievable if you can guarantee the parent will always be returned before all of its children. But since I couldn&#8217;t, the first pass is to change the id of the row to be the key of the array.</p>
+<p>Here is a snippet for converting the rows stored using the adjacency list method into a hierarchical array in PHP. My goal was to do this in 1 pass, without recursion. I ended up using 2 passes, I think 1 pass is achievable if you can guarantee the parent will always be returned before all of its children. But since I couldn&rsquo;t, the first pass is to change the id of the row to be the key of the array.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -971,19 +1012,19 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     <link href="http://blog.tekerson.com/2009/02/13/environment-specific-bootstrapping-for-zend-framework/"/>
     <updated>2009-02-13T19:40:05+10:00</updated>
     <id>http://blog.tekerson.com/2009/02/13/environment-specific-bootstrapping-for-zend-framework</id>
-    <content type="html"><![CDATA[<p>When you build an application, it is often deployed to a number of servers each with a different set of configurations. The development and production servers, with different debug, logging, and database details is an obvious example. Many approaches I have seen to dealing with this, including Anis uddin Ahmad&#8217;s <a href="http://www.ajaxray.com/blog/2009/02/03/advanced-bootstrapping-configure-your-zend-framework-application-for-multiple-host/">post that inspired this one</a>, involve determining the domain the application is running on, and loading a pre-determined configuration for that host.</p>
+    <content type="html"><![CDATA[<p>When you build an application, it is often deployed to a number of servers each with a different set of configurations. The development and production servers, with different debug, logging, and database details is an obvious example. Many approaches I have seen to dealing with this, including Anis uddin Ahmad&rsquo;s <a href="http://www.ajaxray.com/blog/2009/02/03/advanced-bootstrapping-configure-your-zend-framework-application-for-multiple-host/">post that inspired this one</a>, involve determining the domain the application is running on, and loading a pre-determined configuration for that host.</p>
 
 <p>There are 2 downfalls to that solution from my point of view;</p>
 
 <ol>
-<li><p>Each new environment involves editing the source of the application</p></li>
-<li><p>If the application involves command line components, there is no way to determine the domain, requiring a special case</p></li>
+<li><p> Each new environment involves editing the source of the application</p></li>
+<li><p> If the application involves command line components, there is no way to determine the domain, requiring a special case</p></li>
 </ol>
 
 
-<p>My solution may look familiar if you have ever looked at <a href="http://www.djangoproject.com/">python&#8217;s django</a>. It involves using environment variables, which can be set through the web server, or on the command line - even in crontab. Basically, I set an environment variable specifying the location of the configuration file to load into the application. I actually allow a list of configuration files,so you can have a &#8220;base&#8221; and only override specific configuration as required per location.</p>
+<p>My solution may look familiar if you have ever looked at <a href="http://www.djangoproject.com/">python&rsquo;s django</a>. It involves using environment variables, which can be set through the web server, or on the command line &ndash; even in crontab. Basically, I set an environment variable specifying the location of the configuration file to load into the application. I actually allow a list of configuration files,so you can have a &ldquo;base&rdquo; and only override specific configuration as required per location.</p>
 
-<p>To add and environment variable in apache, you use the mod_env module&#8217;s <a href="http://httpd.apache.org/docs/1.3/mod/mod_env.html#setenv">SetEnv directive</a>.</p>
+<p>To add and environment variable in apache, you use the mod_env module&rsquo;s <a href="http://httpd.apache.org/docs/1.3/mod/mod_env.html#setenv">SetEnv directive</a>.</p>
 
 <p><code>SetEnv APPLICATION_CONFIG /path/to/config/basic.php:/path/to/config/development.php</code></p>
 
@@ -1021,568 +1062,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 
 
 <p>In this example I am using simple PHP files to store the configuration arrays, you could also use any other format <a href="http://framework.zend.com/manual/en/zend.config.html">Zend_Config</a> can read. You could also use a simple array and <a href="http://php.net/array_merge">array_merge()</a> instead on Zend_Config if you are not using the framework.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Data Mapper Pattern in PHP]]></title>
-    <link href="http://blog.tekerson.com/2008/12/17/data-mapper-pattern-in-php/"/>
-    <updated>2008-12-17T18:58:14+10:00</updated>
-    <id>http://blog.tekerson.com/2008/12/17/data-mapper-pattern-in-php</id>
-    <content type="html"><![CDATA[<p>I have been trying to get together a post on the <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">Data Mapper</a> pattern since I started experimenting with it in a personal project. It seems to me to be a fantastic answer to the decoupling of in-memory data objects and the data store. I still don&#8217;t have all the answers, but Rob Allen&#8217;s recent post <a href="http://akrabat.com/2008/12/13/on-models-in-a-zend-framework-application/">On models in a Zend Framework application</a>, and the associated discussion provoked me to publish some of what I do have.</p>
-
-<p><em>Warning</em>: This post will be quite long and is very code heavy, but I hope it illustrates some of my current thoughts.</p>
-
-<p>Anyway, lets get down to it.</p>
-
-<p>I will be showing 4 classes. Two (2) Abstract &#8220;library&#8221; classes, and 2 examples of their use;</p>
-
-<p>And now, the code. Instead of breaking the code into little pieces, I&#8217;ll add inline comments to explain what&#8217;s going on.</p>
-
-<h2>Classes</h2>
-
-<h3>Library Classes</h3>
-
-<h4>MapperAbstract</h4>
-
-<p>MapperAbstract is the base class for mappers. It defines a standard interface for all mappers.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">abstract</span> <span class="k">class</span> <span class="nc">MapperAbstract</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Create a new instance of the DomainObject that this</span>
-</span><span class='line'><span class="sd">     * mapper is responsible for. Optionally populating it</span>
-</span><span class='line'><span class="sd">     * from a data array.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param array $data</span>
-</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">create</span><span class="p">(</span><span class="k">array</span> <span class="nv">$data</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$obj</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_create</span><span class="p">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nv">$data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nv">$obj</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">populate</span><span class="p">(</span><span class="nv">$obj</span><span class="p">,</span> <span class="nv">$data</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$obj</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Save the DomainObject</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * Store the DomainObject in persistent storage. Either insert</span>
-</span><span class='line'><span class="sd">     * or update the store as required.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">save</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="nb">is_null</span><span class="p">(</span><span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">getId</span><span class="p">()))</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_insert</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_update</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Delete the DomainObject</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * Delete the DomainObject from persistent storage.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_delete</span><span class="p">(</span><span class="nv">$obj</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Populate the DomainObject with the values</span>
-</span><span class='line'><span class="sd">     * from the data array.</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * To be implemented by the concrete mapper class</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     * @param array $data</span>
-</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">abstract</span> <span class="k">public</span> <span class="k">function</span> <span class="nf">populate</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$data</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Create a new instance of a DomainObject</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * @return DomainObjectAbstract</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_create</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Insert the DomainObject to persistent storage </span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_insert</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Update the DomainObject in persistent storage </span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_update</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Delete the DomainObject from peristent Storage</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">abstract</span> <span class="k">protected</span> <span class="k">function</span> <span class="nf">_delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>DomainObjectAbstract</h4>
-
-<p>A basic class describing an object that is part of the <a href="http://martinfowler.com/eaaCatalog/domainModel.html">Domain Model</a>. This model assumes that all DomainObjects have an integer as the primary key, but it would be a trivial change to make it a GUID for example. It also ensures the ID is immutable.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">abstract</span> <span class="k">class</span> <span class="nc">DomainObjectAbstract</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="nv">$_id</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Get the ID of this object (unique to the</span>
-</span><span class='line'><span class="sd">     * object type)</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @return int</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getId</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Set the id for this object.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param int $id</span>
-</span><span class='line'><span class="sd">     * @return int</span>
-</span><span class='line'><span class="sd">     * @throws Exception If the id on the object is already set</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">setId</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">is_null</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span><span class="p">))</span> <span class="p">{</span>
-</span><span class='line'>            <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s1">&#39;ID is immutable&#39;</span><span class="p">);</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_id</span> <span class="o">=</span> <span class="nv">$id</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Example Implementation Classes</h3>
-
-<h4>User</h4>
-
-<p>A concrete DomainObject describing a user. This is a <strong>very</strong> barebones example, usually getters/setters would be used to set protected properties.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">User</span> <span class="k">extends</span> <span class="nx">DomainObjectAbstract</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nv">$firstname</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nv">$lastname</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">public</span> <span class="nv">$username</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Get the full name of the User</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * Demonstrates how other functions can be</span>
-</span><span class='line'><span class="sd">     * added to the DomainObject</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @return string</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">getName</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">firstname</span> <span class="o">.</span> <span class="s1">&#39; &#39;</span> <span class="o">.</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lastname</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>UserMapper</h4>
-
-<p>A concrete implementation of a mapper between the User domain object and persistent storage.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">class</span> <span class="nc">UserMapper</span> <span class="k">extends</span> <span class="nx">MapperAbstract</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Fetch a user object by ID</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * An example skeleton of a &quot;Fetch&quot; function showing</span>
-</span><span class='line'><span class="sd">     * how the database data ($dataFromDb) is used to</span>
-</span><span class='line'><span class="sd">     * create a new User instance via the create function.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param string $id</span>
-</span><span class='line'><span class="sd">     * @return User</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">findById</span><span class="p">(</span><span class="nv">$id</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// Query database for User with $id</span>
-</span><span class='line'>        <span class="c1">// ...</span>
-</span><span class='line'>        <span class="nv">$dataFromDb</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>                <span class="s1">&#39;id&#39;</span>        <span class="o">=&gt;</span> <span class="nv">$id</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;firstname&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Brenton&#39;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;lastname&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;username&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;Tekerson&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="p">);</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">create</span><span class="p">(</span><span class="nv">$dataFromDb</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Poplate the User (DomainObject) with</span>
-</span><span class='line'><span class="sd">     * the data array.</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * This is a very simple example, but the mapping </span>
-</span><span class='line'><span class="sd">     * can be as complex as required.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     * @param array $data</span>
-</span><span class='line'><span class="sd">     * @return User</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">public</span> <span class="k">function</span> <span class="nf">populate</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$data</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">setId</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]);</span>
-</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">firstname</span> <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;firstname&#39;</span><span class="p">];</span>
-</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">lastname</span>  <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;lastname&#39;</span><span class="p">];</span>
-</span><span class='line'>        <span class="nv">$obj</span><span class="o">-&gt;</span><span class="na">username</span>  <span class="o">=</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">];</span>
-</span><span class='line'>        <span class="k">return</span> <span class="nv">$obj</span><span class="p">;</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Create a new User DomainObject</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @return User</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_create</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="nx">User</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Insert the DomainObject in persistent storage</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
-</span><span class='line'><span class="sd">     * and running an insert statement.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_insert</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// ...</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Update the DomainObject in persistent storage</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
-</span><span class='line'><span class="sd">     * and running an update statement.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_update</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// ...</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="sd">/**</span>
-</span><span class='line'><span class="sd">     * Delete the DomainObject from persistent storage</span>
-</span><span class='line'><span class="sd">     * </span>
-</span><span class='line'><span class="sd">     * This may include connecting to the database</span>
-</span><span class='line'><span class="sd">     * and running a delete statement.</span>
-</span><span class='line'><span class="sd">     *</span>
-</span><span class='line'><span class="sd">     * @param DomainObjectAbstract $obj</span>
-</span><span class='line'><span class="sd">     */</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_delete</span><span class="p">(</span><span class="nx">DomainObjectAbstract</span> <span class="nv">$obj</span><span class="p">)</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// ...</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Example</h2>
-
-<p>Ok, I realize that I&#8217;ve dumped a lot of code and we&#8217;re nearly finished. Now we finally get to see how it all fits together to do something. Here, I am creating a simple example where I fetch a User based on their ID, change the Users name, and store it back to the database.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Initialise the Mapper.</span>
-</span><span class='line'><span class="nv">$userMapper</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserMapper</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Fetch and manipulate the User object</span>
-</span><span class='line'><span class="nv">$user</span> <span class="o">=</span> <span class="nv">$userMapper</span><span class="o">-&gt;</span><span class="na">findById</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'><span class="nv">$user</span><span class="o">-&gt;</span><span class="na">lastname</span> <span class="o">=</span> <span class="s1">&#39;Alker&#39;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Tell the UserMapper that the User needs to be saved.</span>
-</span><span class='line'><span class="nv">$userMapper</span><span class="o">-&gt;</span><span class="na">save</span><span class="p">(</span><span class="nv">$user</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Well, I hope everything makes sense. This is a very simplified version of the concepts I have been working on.</p>
-
-<p>These simple examples could be expanded in may directions. Such as;</p>
-
-<p>Validation of the DomainObject fields, I haven&#8217;t decided if the validation should be contained in the DomainObject or the Mapper.</p>
-
-<p>An <a href="http://martinfowler.com/eaaCatalog/identityMap.html">identity map</a> to ensure only 1 instance of each DomainObject exists in memory at a time.</p>
-
-<p>A <a href="http://martinfowler.com/eaaCatalog/unitOfWork.html">UnitOfWork</a> to track which objects need saving, deleting and to co-ordinate roll backs on error, or the order of persistence to satisfy foreign key constraints.</p>
-
-<p>The Mapper could access many data stores; RDBMSs, Session/Cookie data or web services to name a few. Remember, the Mapper decouples the DomainObject completely from the persistent storage</p>
-
-<p>Anyway, I hope this provides a fairly simple concrete example that you can build upon to create a more complete solution that you can then share with the rest of us.</p>
 ]]></content>
   </entry>
   

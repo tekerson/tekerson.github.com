@@ -105,13 +105,13 @@
 
 <div class="entry-content"><p>As part of the current application I am developing, I have the need for a reliable queue that is not going to allow duplicate reads when <em>popped</em> from multiple threads or processes.</p>
 
-<p>The queue in this case is an outgoing mail queue. The system needs to read the task from the queue, generate the email by substituting in the member&#8217;s details, and then send it to the mail server.</p>
+<p>The queue in this case is an outgoing mail queue. The system needs to read the task from the queue, generate the email by substituting in the member&rsquo;s details, and then send it to the mail server.</p>
 
-<p>When reading the queue with only 1 process, it is easy &#8211; read the queue, process the email, delete the queue entry, repeat. Concurrency adds the problem that 2 (or more) processes could read the same email, and we really <strong>don&#8217;t</strong> want an email going to a member 2 or 3 times.</p>
+<p>When reading the queue with only 1 process, it is easy &mdash; read the queue, process the email, delete the queue entry, repeat. Concurrency adds the problem that 2 (or more) processes could read the same email, and we really <strong>don&rsquo;t</strong> want an email going to a member 2 or 3 times.</p>
 
-<p>My first solution involved a single &#8220;master&#8221; thread that would read the queue and delegate the processing to worker threads. While this worked, it was complicated and error prone. After some discussion with some people on <a href="irc://irc.freenode.net/#mysql">#mysql on freenode</a>. I found what should be a suitable database level method.</p>
+<p>My first solution involved a single &ldquo;master&rdquo; thread that would read the queue and delegate the processing to worker threads. While this worked, it was complicated and error prone. After some discussion with some people on <a href="irc://irc.freenode.net/#mysql">#mysql on freenode</a>. I found what should be a suitable database level method.</p>
 
-<p>By selecting the queue entry with the <em>FOR UPDATE</em> modifier, the row is placed under an exclusive lock &#8211; the same lock used when a row is being updated, and won&#8217;t be allowed to be read until it is updated  (N.B. only works when using the INNODB storage engine)</p>
+<p>By selecting the queue entry with the <em>FOR UPDATE</em> modifier, the row is placed under an exclusive lock &mdash; the same lock used when a row is being updated, and won&rsquo;t be allowed to be read until it is updated  (N.B. only works when using the INNODB storage engine)</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -124,7 +124,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The process now has a lock on that row, and it won&#8217;t be read by any others. It can then be updated to mark it as &#8220;being processed&#8221; or deleted from the queue, depending on your needs.</p>
+<p>The process now has a lock on that row, and it won&rsquo;t be read by any others. It can then be updated to mark it as &ldquo;being processed&rdquo; or deleted from the queue, depending on your needs.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -199,6 +199,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -212,10 +216,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

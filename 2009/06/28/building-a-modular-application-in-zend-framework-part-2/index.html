@@ -103,7 +103,7 @@
   </header>
 
 
-<div class="entry-content"><p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We&#8217;re going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
+<div class="entry-content"><p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We&rsquo;re going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
 
 <p>Note, there are still some bugs in Zend_Tool that prevent this working as it should, I will note the bugs and their fixes as we encounter them.</p>
 
@@ -119,7 +119,7 @@
 <pre><code>zf create controller index 1 guestbook
 </code></pre>
 
-<p>The &#8220;1&#8221; argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
+<p>The &ldquo;1&rdquo; argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
 
 <pre><code>zf create controller ?
 </code></pre>
@@ -130,14 +130,14 @@
 resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 </code></pre>
 
-<p>To check our module is working, we can navigate to our guestbook at http://aza/guestbook and we should see the default view for the index action.</p>
+<p>To check our module is working, we can navigate to our guestbook at <a href="http://aza/guestbook">http://aza/guestbook</a> and we should see the default view for the index action.</p>
 
-<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn&#8217;t prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
-<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn&#8217;t be but we don&#8217;t really care, we&#8217;re going to replace it anyway.</p>
+<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn&rsquo;t prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
+<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn&rsquo;t be but we don&rsquo;t really care, we&rsquo;re going to replace it anyway.</p>
 
 <h2>Create module bootstrap</h2>
 
-<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn&#8217;t create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
+<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn&rsquo;t create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -150,7 +150,7 @@ resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don&#8217;t need any further bootstrapping.</p>
+<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don&rsquo;t need any further bootstrapping.</p>
 
 <p><strong>Important note</strong>: <strong><em>All</em> bootstrap functions</strong> for <strong>every module</strong> are run for <strong>every request</strong>.</p>
 
@@ -160,7 +160,7 @@ resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
 
 <p>Now we have the module skeleton in place, lets start porting the guestbook code to our module. This turns out to be fairly easy; the majority of the changes involve prefixing class names with the module name.</p>
 
-<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it&#8217;s on the right hand side in zip or tar.gz form).</p>
+<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it&rsquo;s on the right hand side in zip or tar.gz form).</p>
 
 <h2>Importing Quickstart</h2>
 
@@ -189,11 +189,11 @@ application/modules/guestbook/forms/</p>
 
 <p>Now we have the files in the right place, we need to update the files to be modular.</p>
 
-<p>We&#8217;ll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
+<p>We&rsquo;ll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
 
-<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with &#8220;Default<em>&#8221;, but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of &#8220;Default</em>&#8221; with &#8220;Guestbook_&#8221; in the application/modules/guestbook/models/ directory is all we need.</p>
+<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with &ldquo;Default<em>&rdquo;, but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of &ldquo;Default</em>&rdquo; with &ldquo;Guestbook_&rdquo; in the application/modules/guestbook/models/ directory is all we need.</p>
 
-<p>The controller is a little trickier because it isn&#8217;t already prefixed (controllers in the default module aren&#8217;t), but it&#8217;s still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
+<p>The controller is a little trickier because it isn&rsquo;t already prefixed (controllers in the default module aren&rsquo;t), but it&rsquo;s still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
 
 <p>Finally, we get to the view. In our index view (application/modules/guestbook/views/scripts/index/index.phtml) we need to update the parameters passed to the url helper to reference our controller. Adding the module, and changing the controller leaves the first link looking like this:</p>
 
@@ -220,7 +220,7 @@ application/modules/guestbook/forms/</p>
 
 <h2>Connect the database</h2>
 
-<p>I&#8217;ll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.</p>
+<p>I&rsquo;ll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.</p>
 
 <h2>Conclusion</h2>
 
@@ -228,7 +228,7 @@ application/modules/guestbook/forms/</p>
 
 <h2>Download</h2>
 
-<p>For those who had trouble following along, I&#8217;ve made the entire application (including database) available via my <a href="http://github.com/tekerson/A-Zend-Application/tree/master">github repository</a>.</p>
+<p>For those who had trouble following along, I&rsquo;ve made the entire application (including database) available via my <a href="http://github.com/tekerson/A-Zend-Application/tree/master">github repository</a>.</p>
 </div>
 
 
@@ -290,6 +290,10 @@ application/modules/guestbook/forms/</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -303,10 +307,6 @@ application/modules/guestbook/forms/</p>
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

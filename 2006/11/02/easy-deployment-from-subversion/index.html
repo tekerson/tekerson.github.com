@@ -105,7 +105,7 @@
 
 <div class="entry-content"><p>After recently discovering the ways in which a version control server, combined with a sensible set of deployment scripts, can development easier (up until now the ones I have used have all been poorly configured and more of a hindrance then a help). I moved some of my personal projects onto my subversion server.</p>
 
-<p>I have been using <a href="http://subversion.tigris.org/">subversion</a> for some years to manage the configuration files on my Linux boxen, on the suggestion of an article I read at one time but can&#8217;t now find a link for (there are some similar ones available), all those fiddly kernel configs and xorg.conf files that you tweak until they break, then can&#8217;t remember what you changed.</p>
+<p>I have been using <a href="http://subversion.tigris.org/">subversion</a> for some years to manage the configuration files on my Linux boxen, on the suggestion of an article I read at one time but can&rsquo;t now find a link for (there are some similar ones available), all those fiddly kernel configs and xorg.conf files that you tweak until they break, then can&rsquo;t remember what you changed.</p>
 
 <p>Being in charge of the version control systems at work, I am always looking for better and easier ways to keep the latest versions checked in and easily deploy to the live servers (and be able to roll it back if it all goes up in flames). So with the help of a few simple shell scripts, I finally have a system that allows my to edit and test locally before committing and deploying to the live sites.</p>
 
@@ -121,9 +121,9 @@
 </span><span class='line'>rm -rf /tmp/project/</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Of course this is only the basic form, with all values hard coded, there are more advanced scripts that take arguments, for example I use <em>&#8211;live</em> to deploy to the live server as opposed to the (default) staging/test server, or allow the the name of the branch/tag and revision to be specified.</p>
+<p>Of course this is only the basic form, with all values hard coded, there are more advanced scripts that take arguments, for example I use <em>&mdash;live</em> to deploy to the live server as opposed to the (default) staging/test server, or allow the the name of the branch/tag and revision to be specified.</p>
 
-<p>This allows easy deployment of code bases in a fairly efficient manner. I am still struggling with control of database structures, I currently start with an SQL dump of the schema, and then incrementally store SQL scripts to update the database to newer versions to allow deployment on various sites. I am considering writing a tool to compare the schema of 2 databases and provide SQL code to transform one into the other&#8230; when I get time.</p>
+<p>This allows easy deployment of code bases in a fairly efficient manner. I am still struggling with control of database structures, I currently start with an SQL dump of the schema, and then incrementally store SQL scripts to update the database to newer versions to allow deployment on various sites. I am considering writing a tool to compare the schema of 2 databases and provide SQL code to transform one into the other&hellip; when I get time.</p>
 
 <p>Now I just need to convince the developers to use it.</p>
 </div>
@@ -187,6 +187,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -200,10 +204,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

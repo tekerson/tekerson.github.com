@@ -9,7 +9,8 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="While writing a fairly standard sign-up/log-in system, I got to the point of validating the password to make sure it only contained acceptable &hellip;">
+  <meta name="description" content="If you&rsquo;re reading this then I have successfully migrated to my new VPS hosting on Slicehost.
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +84,42 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2008/08/12/new-vps-hosting/">New VPS Hosting</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-08-12T07:38:16+10:00" pubdate data-updated="true">Aug 12<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>If you&rsquo;re reading this then I have successfully migrated to my new VPS hosting on <a href="https://manage.slicehost.com/customers/new?referrer=1470153180">Slicehost</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2008/07/15/trim-validation/">Trim() Validation</a></h1>
     
     
@@ -106,9 +143,9 @@
   </header>
 
 
-  <div class="entry-content"><p>While writing a fairly standard sign-up/log-in system, I got to the point of validating the password to make sure it only contained acceptable characters. Now for me this would usually mean a regular expression. But, since this system wasn&#8217;t for me I decided to make the &#8220;valid characters&#8221; configurable, and generally the people configuring it won&#8217;t be able to write a regular expression.</p>
+  <div class="entry-content"><p>While writing a fairly standard sign-up/log-in system, I got to the point of validating the password to make sure it only contained acceptable characters. Now for me this would usually mean a regular expression. But, since this system wasn&rsquo;t for me I decided to make the &ldquo;valid characters&rdquo; configurable, and generally the people configuring it won&rsquo;t be able to write a regular expression.</p>
 
-<p>My solution is to use <a href="http://php.net/trim">php&#8217;s trim()</a> (or more specifically <a href="http://php.net/rtrim">rtrim()</a>, but it doesn&#8217;t really matter) by passing the users input as the first argument, and the string of valid characters as the second; I should get an empty string in return. So the test, only allowing lowercase letters, becomes:</p>
+<p>My solution is to use <a href="http://php.net/trim">php&rsquo;s trim()</a> (or more specifically <a href="http://php.net/rtrim">rtrim()</a>, but it doesn&rsquo;t really matter) by passing the users input as the first argument, and the string of valid characters as the second; I should get an empty string in return. So the test, only allowing lowercase letters, becomes:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -121,9 +158,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Simple! I don&#8217;t know how it compares speed wise with other methods, but it seems simple and effective and I can&#8217;t imagine it&#8217;s terribly slow unless your strings get larger.</p>
+<p>Simple! I don&rsquo;t know how it compares speed wise with other methods, but it seems simple and effective and I can&rsquo;t imagine it&rsquo;s terribly slow unless your strings get larger.</p>
 
-<p>I&#8217;m also not sure how it would handle multi-byte characters. But I don&#8217;t <strong>think</strong> it would be a problem if it doesn&#8217;t. Anyone got any insight?</p>
+<p>I&rsquo;m also not sure how it would handle multi-byte characters. But I don&rsquo;t <strong>think</strong> it would be a problem if it doesn&rsquo;t. Anyone got any insight?</p>
 </div>
   
   
@@ -159,16 +196,16 @@
   </header>
 
 
-  <div class="entry-content"><p>The system I have been building is a direct marketing system (don&#8217;t hate me, it&#8217;s opt-in) and to be compliant with their ethics policy it requires &#8220;2 click unsubscribe&#8221; functionality from all its email campaigns; 1 click on the link in the email, and 1 click on a big &#8220;Don&#8217;t Ever Send Me Email Again&#8221; button. So people actually have an option to opt out at any time, as any good (and I use that word in the relative sense) email marketing system should.</p>
+  <div class="entry-content"><p>The system I have been building is a direct marketing system (don&rsquo;t hate me, it&rsquo;s opt-in) and to be compliant with their ethics policy it requires &ldquo;2 click unsubscribe&rdquo; functionality from all its email campaigns; 1 click on the link in the email, and 1 click on a big &ldquo;Don&rsquo;t Ever Send Me Email Again&rdquo; button. So people actually have an option to opt out at any time, as any good (and I use that word in the relative sense) email marketing system should.</p>
 
 <p>The problem this poses for me though, is how can I let a member unsubscribe without authenticating themselves? Authentication would take more than 2 clicks! The obvious solution is to not require authentication by simply adding the members identifier (email address, user name, database id, whatever can identify them uniquely) to the link. So I would have a URL something like:</p>
 
 <pre><code>http://example.com/member/unsubscribe?member=1234
 </code></pre>
 
-<p>And simply make all the options on that page act on the member identified by the identifier. Great! Until a malicious netizen comes along, seeing the scheme decides to systematically unsubscribe all my members. This would be achieved easily by guessing the identifiers, made even easier because they&#8217;re sequential, and clicking the unsubscribe button.</p>
+<p>And simply make all the options on that page act on the member identified by the identifier. Great! Until a malicious netizen comes along, seeing the scheme decides to systematically unsubscribe all my members. This would be achieved easily by guessing the identifiers, made even easier because they&rsquo;re sequential, and clicking the unsubscribe button.</p>
 
-<p>The initial solution is to use some other &#8220;key&#8221; in the link, one that is not so easy to guess. So a key was added, giving the url a form like:</p>
+<p>The initial solution is to use some other &ldquo;key&rdquo; in the link, one that is not so easy to guess. So a key was added, giving the url a form like:</p>
 
 <pre><code>http://example.com/member/unsubscribe?member=1234&amp;key=SECRETKEY
 </code></pre>
@@ -182,7 +219,7 @@
 <pre><code>http://example.com/member/unsubscribe?token=1234:HASH
 </code></pre>
 
-<p>I&#8217;ve removed the member variable and combined it into a delimited token. This was mainly because I thought it looked a little nicer, it would function just as well as a separate variable. The real change is in the HASH. The new hash still uses the SECRETKEY that was used in the previous iteration, except it is now combined with the url that I want to give them access to, and an added salt so all tokens can be invalidated if required. In PHP, this looks something like this:</p>
+<p>I&rsquo;ve removed the member variable and combined it into a delimited token. This was mainly because I thought it looked a little nicer, it would function just as well as a separate variable. The real change is in the HASH. The new hash still uses the SECRETKEY that was used in the previous iteration, except it is now combined with the url that I want to give them access to, and an added salt so all tokens can be invalidated if required. In PHP, this looks something like this:</p>
 
 <pre><code>&lt;code&gt;$allowedUrl = '/member/unsubscribe';
 $hash = md5($salt . $allowedUrl . ':' . $secretKey);
@@ -190,65 +227,11 @@ $token = $id . ':' . $hash;
 &lt;/code&gt;
 </code></pre>
 
-<p>On the page, to allow access, the token is decomposed, the member&#8217;s identifier extracted, and their key retrieved. Their key is then used in the same process to generate a hash for the URL they are requesting. If the hashes match, they have access. To make it a little more user friendly, the allowed URL is added to their session, so they still have access to the page even if they lose the token from the URL. If they hit any other page with the restricted URL in their session they are logged out and sent back to re-authenticate.</p>
+<p>On the page, to allow access, the token is decomposed, the member&rsquo;s identifier extracted, and their key retrieved. Their key is then used in the same process to generate a hash for the URL they are requesting. If the hashes match, they have access. To make it a little more user friendly, the allowed URL is added to their session, so they still have access to the page even if they lose the token from the URL. If they hit any other page with the restricted URL in their session they are logged out and sent back to re-authenticate.</p>
 
-<p>One shortfall that I am aware of, and that was pointed out in a discussion on #phpc, is the members secret keys should ideally be rotated, so it can only be used once. This would mean that stealing a link would at worst allow one login, and only to one page. This may be implemented if it doesn&#8217;t impact too much on usability (that classic trade-off, security vs. convenience).</p>
+<p>One shortfall that I am aware of, and that was pointed out in a discussion on #phpc, is the members secret keys should ideally be rotated, so it can only be used once. This would mean that stealing a link would at worst allow one login, and only to one page. This may be implemented if it doesn&rsquo;t impact too much on usability (that classic trade-off, security vs. convenience).</p>
 
-<p>Now, I am not a security expert and as such don&#8217;t recommend anyone take my advice (is this good enough for a disclaimer), but apart from the one caveat mentioned, I think this solution meets the requirements without forfeiting too much in security. Any comments or advice on the technique are, as always, appreciated.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/05/31/my-web-2-world/">My Web 2.0 World</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-05-31T02:41:40+10:00" pubdate data-updated="true">May 31<span>st</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The last month or so I&#8217;ve been trying to actually get into the whole &#8220;Web 2.0&#8221; (I don&#8217;t like the term by the way) world. I know it&#8217;s old news, and it&#8217;s not like it&#8217;s new to me either. I just recently thought about all the web applications that seem to be so popular that I have dormant accounts on, the main ones are;</p>
-
-<ul>
-<li><p><a href="http://www.facebook.com/profile.php?id=611142997">Facebook</a></p></li>
-<li><p><a href="http://twitter.com/tekerson">Twitter</a></p></li>
-<li><p><a href="http://flickr.com/photos/26075837@N02/">Flickr</a></p></li>
-<li><p><a href="http://del.icio.us/tekerson">del.icio.us</a></p></li>
-</ul>
-
-
-<p>Facebook, well, that&#8217;s taken MySpace&#8217;s place as the social network I only passively interact with. The other three are of more interest to me, so I&#8217;ve decided to try and use them for something useful.</p>
-
-<p>Flickr is a fairly easy one, I have a large collection of digitized photographs spanning a few years which are for the most part sorted/tagged thanks to <a href="http://f-spot.org/Main_Page">F-Spot</a> which has the ability to sync with many popular image hosting sites including Flickr and <a href="http://picasaweb.google.com/Brenton.Alker/">Google&#8217;s Picasaweb</a>. So I am gradually building the on-line collection, I initially intended to just dump the lot on there (if only as a backup) but then realised that there are a few too many GB for that.</p>
-
-<p>Del.icio.us I get, but as someone who has never been a big collector of bookmarks, I don&#8217;t find too useful. My bookmarks in my browser have always been a mess, mainly because they are all just temporary. Any site I visit on a regular basis for any extended period of time, I know the address for (or at least know a good google query to find it). But, in the spirit of my trying to &#8220;giving it a go&#8221; I installed the <a href="http://del.icio.us/help/firefox/extension">firefox extension</a> and added my &#8220;recent bookmarks&#8221; to this page using the <a href="http://rick.jinlabs.com/code/delicious">wordpress plugin</a> (over there on the right somewhere). I must say I&#8217;m using it more, but still not a great deal.</p>
-
-<p>Twitter is an oddity to me, it seems incredibly popular; in spite of it&#8217;s apparent unreliability. To me it seems to sit somewhere between a very slow IRC and a short message mailing list. I think the only advantage I can see is that it can work mobile, though I&#8217;ve not had much luck keeping that working for more than a day or two. Most other people who have complained about &#8220;Not Getting It&#8221; when it comes to Twitter seem to be told to install a desktop client, as it is much more conducive to regular use than the website. So, I diligently installed <a href="http://funkatron.com/spaz">Spaz</a>, an <a href="http://www.adobe.com/products/air/">Adobe Air</a> based client, which means I now get little popups telling me when someone &#8220;tweets&#8221;. That makes it more convenient, so far it hasn&#8217;t made it more interesting.</p>
-
-<p>Although all the tools are very cool, maybe this &#8220;Social Web&#8221; thing just isn&#8217;t for me. Then again, maybe it&#8217;s this whole &#8220;Social&#8221; thing that just doesn&#8217;t work for me ;)</p>
+<p>Now, I am not a security expert and as such don&rsquo;t recommend anyone take my advice (is this good enough for a disclaimer), but apart from the one caveat mentioned, I think this solution meets the requirements without forfeiting too much in security. Any comments or advice on the technique are, as always, appreciated.</p>
 </div>
   
   
@@ -273,6 +256,10 @@ $token = $id . ':' . $hash;
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -286,10 +273,6 @@ $token = $id . ':' . $hash;
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

@@ -105,9 +105,9 @@
 
 <div class="entry-content"><p>A few months back, when I was first starting with the Zend Framework, I posted my <a href="/2007/06/26/extending-zend-frameworks-viewrenderer-helper-to-allow-application-and-controller-page-layouts/">extension to the ViewRenderer helper</a>. This is the helper that the Controller uses to work with the View. My extension was in order to implement site-wide and controller-wide layouts, allowing a consistent look and feel in an application.</p>
 
-<p>I have been fairly happily using this extension since then, more recently though, I got back to fixing some problems with it. One problem I noted (and updated the previous post to reflect), was it&#8217;s double calling of the action. After further investigation, it turns out it wasn&#8217;t calling it twice, but had an image with an empty src tag in the layout, causing the browser to request the page twice.</p>
+<p>I have been fairly happily using this extension since then, more recently though, I got back to fixing some problems with it. One problem I noted (and updated the previous post to reflect), was it&rsquo;s double calling of the action. After further investigation, it turns out it wasn&rsquo;t calling it twice, but had an image with an empty src tag in the layout, causing the browser to request the page twice.</p>
 
-<p>However, It still gave me an excuse to have another look at it, and fix up some other issues. So here I am posting the revised code. If you are using the old one, it isn&#8217;t backwards compatible, but there isn&#8217;t much to change and I think it&#8217;s a much nicer implementation. It uses a stack to render the layouts in order, and is therefore much more extensible to multi-level layouts.</p>
+<p>However, It still gave me an excuse to have another look at it, and fix up some other issues. So here I am posting the revised code. If you are using the old one, it isn&rsquo;t backwards compatible, but there isn&rsquo;t much to change and I think it&rsquo;s a much nicer implementation. It uses a stack to render the layouts in order, and is therefore much more extensible to multi-level layouts.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -358,7 +358,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>The implementation in the view script is very similar to the previous incarnation, except the view is no longer responsible for rendering the children itself, this is done beforehand, and is passed to the layout in the &#8220;content&#8221; variable. Leaving the layout to look something like:</p>
+<p>The implementation in the view script is very similar to the previous incarnation, except the view is no longer responsible for rendering the children itself, this is done beforehand, and is passed to the layout in the &ldquo;content&rdquo; variable. Leaving the layout to look something like:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -489,6 +489,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -502,10 +506,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

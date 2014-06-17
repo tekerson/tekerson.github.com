@@ -103,7 +103,7 @@
   </header>
 
 
-<div class="entry-content"><p>I have long marvelled at the ability of ssh to tunnel connections, and regularly use this feature to give myself access to services behind firewalls, in offices, far far away… As such, In spite of the seeming ubiquity of the concept, I have never seen the benifit of a VPN. But recently, after discovering <a href="http://openvpn.net/">OpenVPN</a> set up on one of the servers at work (One for which I&#8217;m not the primary admin).</p>
+<div class="entry-content"><p>I have long marvelled at the ability of ssh to tunnel connections, and regularly use this feature to give myself access to services behind firewalls, in offices, far far away… As such, In spite of the seeming ubiquity of the concept, I have never seen the benifit of a VPN. But recently, after discovering <a href="http://openvpn.net/">OpenVPN</a> set up on one of the servers at work (One for which I&rsquo;m not the primary admin).</p>
 
 <p>I looked through the configuration and it looked significantly simpler than I had anticipated. So I took it upon myself to join my home network with that of the one in the office (Why?… Why not?)</p>
 
@@ -149,7 +149,7 @@
 </span><span class='line'>ping 30</span></code></pre></td></tr></table></div></figure>
 
 
-<p>Note: Both are class C networks, My home IP range is 192.168.1.xxx and the one at work is 192.168.0.xxx This makes life easier, because the networks don&#8217;t overlap, otherwise I believe some form of NAT would be required. Once the Tunnels are set up and both services are started</p>
+<p>Note: Both are class C networks, My home IP range is 192.168.1.xxx and the one at work is 192.168.0.xxx This makes life easier, because the networks don&rsquo;t overlap, otherwise I believe some form of NAT would be required. Once the Tunnels are set up and both services are started</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>/etc/init.d/openvpn start</span></code></pre></td></tr></table></div></figure>
@@ -171,7 +171,7 @@
 </span><span class='line'>…</span></code></pre></td></tr></table></div></figure>
 
 
-<p>This configuration even adds and tears down the routing rule (only set up on my local machine at the moment) that forward traffic to the &#8220;other&#8221; network through the tunnel (The &#8220;route&#8221; line in my configuration). Unfortunately, because these machines are not the default gateways for their networks, some configuration on the gateway may be required to get them to forward everyone&#8217;s traffic (not just that originating from the connected systems) through the tunnel. I&#8217;ll post it when I figure it out. OR if anyone knows, please comment!</p>
+<p>This configuration even adds and tears down the routing rule (only set up on my local machine at the moment) that forward traffic to the &ldquo;other&rdquo; network through the tunnel (The &ldquo;route&rdquo; line in my configuration). Unfortunately, because these machines are not the default gateways for their networks, some configuration on the gateway may be required to get them to forward everyone&rsquo;s traffic (not just that originating from the connected systems) through the tunnel. I&rsquo;ll post it when I figure it out. OR if anyone knows, please comment!</p>
 </div>
 
 
@@ -233,6 +233,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -246,10 +250,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

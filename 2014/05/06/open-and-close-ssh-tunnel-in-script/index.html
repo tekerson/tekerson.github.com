@@ -103,11 +103,11 @@
   </header>
 
 
-<div class="entry-content"><p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&#8217;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
+<div class="entry-content"><p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&rsquo;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
 
 <p>In that spirit, I wanted a script to create an ssh tunnel and connect my irc client (irssi) to my bouncer (znc), behind my home firewall.</p>
 
-<p>So, this is what I&#8217;m using:</p>
+<p>So, this is what I&rsquo;m using:</p>
 
 <pre><code>#!/bin/bash
 ssh -f -o ExitOnForwardFailure=yes -L 6667:localhost:6667 user@home.example.com sleep 30
@@ -116,7 +116,7 @@ irssi
 
 <p>The <code>-f -o ExitOnForwardFailure=yes</code> combination makes ssh wait until the forwarded ports have been established before backgrounding. Effectively, this blocks the script until the ports are ready to use.</p>
 
-<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&#8217;re using it. So, once I quit irssi, the tunnel closes.</p>
+<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&rsquo;re using it. So, once I quit irssi, the tunnel closes.</p>
 
 <p>Then, irssi configured to connect to localhost:6667 which is tunneled to localhost:6667 on the target machine, where it finds znc!</p>
 </div>
@@ -165,6 +165,8 @@ irssi
         <a class="basic-alignment left" href="/2013/11/06/replay-web-hook-requests-with-netcat/" title="Previous Post: Replay web hook requests with netcat">&laquo; Replay web hook requests with netcat</a>
       
       
+        <a class="basic-alignment right" href="/2014/06/18/getting-the-tools-haskell-edition/" title="Next Post: Getting the tools: Haskell Edition">Getting the tools: Haskell Edition &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -176,6 +178,10 @@ irssi
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
     
       <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
@@ -191,10 +197,6 @@ irssi
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

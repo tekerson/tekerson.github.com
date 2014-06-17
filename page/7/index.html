@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="When you build an application, it is often deployed to a number of servers each with a different set of configurations. The development and &hellip;">
+  <meta name="description" content="Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,209 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2009/03/03/converting-a-flat-array-with-parent-ids-to-a-nested-tree/">Converting a Flat Array With Parent ID&#8217;s to a Nested Tree</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-03T21:37:32+10:00" pubdate data-updated="true">Mar 3<span>rd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry, or a navigation menu structure). The &ldquo;Adjacency List&rdquo; method; probably the most common, involves storing a reference to the parent in each of the children.</p>
+
+<p>Here is a snippet for converting the rows stored using the adjacency list method into a hierarchical array in PHP. My goal was to do this in 1 pass, without recursion. I ended up using 2 passes, I think 1 pass is achievable if you can guarantee the parent will always be returned before all of its children. But since I couldn&rsquo;t, the first pass is to change the id of the row to be the key of the array.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'><span class="k">function</span> <span class="nf">convertToTree</span><span class="p">(</span><span class="k">array</span> <span class="nv">$flat</span><span class="p">,</span> <span class="nv">$idField</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="nv">$parentIdField</span> <span class="o">=</span> <span class="s1">&#39;parentId&#39;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="nv">$childNodesField</span> <span class="o">=</span> <span class="s1">&#39;childNodes&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nv">$indexed</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+</span><span class='line'>    <span class="c1">// first pass - get the array indexed by the primary id  </span>
+</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$flat</span> <span class="k">as</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$idField</span><span class="p">]]</span> <span class="o">=</span> <span class="nv">$row</span><span class="p">;</span>
+</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$idField</span><span class="p">]][</span><span class="nv">$childNodesField</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">//second pass  </span>
+</span><span class='line'>    <span class="nv">$root</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$indexed</span> <span class="k">as</span> <span class="nv">$id</span> <span class="o">=&gt;</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$parentIdField</span><span class="p">]][</span><span class="nv">$childNodesField</span><span class="p">][</span><span class="nv">$id</span><span class="p">]</span> <span class="o">=&amp;</span> <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$id</span><span class="p">];</span>
+</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$parentIdField</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>            <span class="nv">$root</span> <span class="o">=</span> <span class="nv">$id</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="k">array</span><span class="p">(</span><span class="nv">$root</span> <span class="o">=&gt;</span> <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$root</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Usage:</span>
+</span><span class='line'><span class="nv">$rows</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Menu&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-1&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 2-1&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-2&#39;</span><span class="p">,</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">convertToTree</span><span class="p">(</span><span class="nv">$rows</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// Produces:</span>
+</span><span class='line'><span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="k">NULL</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Menu&#39;</span><span class="p">,</span>
+</span><span class='line'>        <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>            <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+</span><span class='line'>                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-1&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
+</span><span class='line'>                        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+</span><span class='line'>                        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-2&#39;</span><span class="p">,</span>
+</span><span class='line'>                        <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                        <span class="p">),</span>
+</span><span class='line'>                    <span class="p">),</span>
+</span><span class='line'>                <span class="p">),</span>
+</span><span class='line'>            <span class="p">),</span>
+</span><span class='line'>            <span class="mi">3</span> <span class="o">=&gt;</span>  <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 2-1&#39;</span><span class="p">,</span>
+</span><span class='line'>                <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
+</span><span class='line'>                <span class="p">),</span>
+</span><span class='line'>            <span class="p">),</span>
+</span><span class='line'>        <span class="p">),</span>
+</span><span class='line'>    <span class="p">),</span>
+</span><span class='line'><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2009/02/13/environment-specific-bootstrapping-for-zend-framework/">Environment Specific Bootstrapping for Zend Framework</a></h1>
     
     
@@ -106,19 +309,19 @@
   </header>
 
 
-  <div class="entry-content"><p>When you build an application, it is often deployed to a number of servers each with a different set of configurations. The development and production servers, with different debug, logging, and database details is an obvious example. Many approaches I have seen to dealing with this, including Anis uddin Ahmad&#8217;s <a href="http://www.ajaxray.com/blog/2009/02/03/advanced-bootstrapping-configure-your-zend-framework-application-for-multiple-host/">post that inspired this one</a>, involve determining the domain the application is running on, and loading a pre-determined configuration for that host.</p>
+  <div class="entry-content"><p>When you build an application, it is often deployed to a number of servers each with a different set of configurations. The development and production servers, with different debug, logging, and database details is an obvious example. Many approaches I have seen to dealing with this, including Anis uddin Ahmad&rsquo;s <a href="http://www.ajaxray.com/blog/2009/02/03/advanced-bootstrapping-configure-your-zend-framework-application-for-multiple-host/">post that inspired this one</a>, involve determining the domain the application is running on, and loading a pre-determined configuration for that host.</p>
 
 <p>There are 2 downfalls to that solution from my point of view;</p>
 
 <ol>
-<li><p>Each new environment involves editing the source of the application</p></li>
-<li><p>If the application involves command line components, there is no way to determine the domain, requiring a special case</p></li>
+<li><p> Each new environment involves editing the source of the application</p></li>
+<li><p> If the application involves command line components, there is no way to determine the domain, requiring a special case</p></li>
 </ol>
 
 
-<p>My solution may look familiar if you have ever looked at <a href="http://www.djangoproject.com/">python&#8217;s django</a>. It involves using environment variables, which can be set through the web server, or on the command line - even in crontab. Basically, I set an environment variable specifying the location of the configuration file to load into the application. I actually allow a list of configuration files,so you can have a &#8220;base&#8221; and only override specific configuration as required per location.</p>
+<p>My solution may look familiar if you have ever looked at <a href="http://www.djangoproject.com/">python&rsquo;s django</a>. It involves using environment variables, which can be set through the web server, or on the command line &ndash; even in crontab. Basically, I set an environment variable specifying the location of the configuration file to load into the application. I actually allow a list of configuration files,so you can have a &ldquo;base&rdquo; and only override specific configuration as required per location.</p>
 
-<p>To add and environment variable in apache, you use the mod_env module&#8217;s <a href="http://httpd.apache.org/docs/1.3/mod/mod_env.html#setenv">SetEnv directive</a>.</p>
+<p>To add and environment variable in apache, you use the mod_env module&rsquo;s <a href="http://httpd.apache.org/docs/1.3/mod/mod_env.html#setenv">SetEnv directive</a>.</p>
 
 <p><code>SetEnv APPLICATION_CONFIG /path/to/config/basic.php:/path/to/config/development.php</code></p>
 
@@ -191,15 +394,15 @@
   </header>
 
 
-  <div class="entry-content"><p>I have been trying to get together a post on the <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">Data Mapper</a> pattern since I started experimenting with it in a personal project. It seems to me to be a fantastic answer to the decoupling of in-memory data objects and the data store. I still don&#8217;t have all the answers, but Rob Allen&#8217;s recent post <a href="http://akrabat.com/2008/12/13/on-models-in-a-zend-framework-application/">On models in a Zend Framework application</a>, and the associated discussion provoked me to publish some of what I do have.</p>
+  <div class="entry-content"><p>I have been trying to get together a post on the <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">Data Mapper</a> pattern since I started experimenting with it in a personal project. It seems to me to be a fantastic answer to the decoupling of in-memory data objects and the data store. I still don&rsquo;t have all the answers, but Rob Allen&rsquo;s recent post <a href="http://akrabat.com/2008/12/13/on-models-in-a-zend-framework-application/">On models in a Zend Framework application</a>, and the associated discussion provoked me to publish some of what I do have.</p>
 
 <p><em>Warning</em>: This post will be quite long and is very code heavy, but I hope it illustrates some of my current thoughts.</p>
 
 <p>Anyway, lets get down to it.</p>
 
-<p>I will be showing 4 classes. Two (2) Abstract &#8220;library&#8221; classes, and 2 examples of their use;</p>
+<p>I will be showing 4 classes. Two (2) Abstract &ldquo;library&rdquo; classes, and 2 examples of their use;</p>
 
-<p>And now, the code. Instead of breaking the code into little pieces, I&#8217;ll add inline comments to explain what&#8217;s going on.</p>
+<p>And now, the code. Instead of breaking the code into little pieces, I&rsquo;ll add inline comments to explain what&rsquo;s going on.</p>
 
 <h2>Classes</h2>
 
@@ -705,7 +908,7 @@
 
 <h2>Example</h2>
 
-<p>Ok, I realize that I&#8217;ve dumped a lot of code and we&#8217;re nearly finished. Now we finally get to see how it all fits together to do something. Here, I am creating a simple example where I fetch a User based on their ID, change the Users name, and store it back to the database.</p>
+<p>Ok, I realize that I&rsquo;ve dumped a lot of code and we&rsquo;re nearly finished. Now we finally get to see how it all fits together to do something. Here, I am creating a simple example where I fetch a User based on their ID, change the Users name, and store it back to the database.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -736,7 +939,7 @@
 
 <p>These simple examples could be expanded in may directions. Such as;</p>
 
-<p>Validation of the DomainObject fields, I haven&#8217;t decided if the validation should be contained in the DomainObject or the Mapper.</p>
+<p>Validation of the DomainObject fields, I haven&rsquo;t decided if the validation should be contained in the DomainObject or the Mapper.</p>
 
 <p>An <a href="http://martinfowler.com/eaaCatalog/identityMap.html">identity map</a> to ensure only 1 instance of each DomainObject exists in memory at a time.</p>
 
@@ -745,54 +948,6 @@
 <p>The Mapper could access many data stores; RDBMSs, Session/Cookie data or web services to name a few. Remember, the Mapper decouples the DomainObject completely from the persistent storage</p>
 
 <p>Anyway, I hope this provides a fairly simple concrete example that you can build upon to create a more complete solution that you can then share with the rest of us.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/12/16/telecommute-experience-part-2/">Telecommute Experience (Part 2)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-12-16T18:34:01+10:00" pubdate data-updated="true">Dec 16<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have been telecommuting for a bit over a month now, and things have settled quite well.</p>
-
-<p>We have set up an office, away from the entertainment area (except the foosball table, that&#8217;s in the office :)). This has been good to keep some separation between those trying to get work done and the rest of the household population.</p>
-
-<p>With the time difference, office hours work well. An 8 hour stint from 1pm to 9pm (Canada) is the same as 7am to 3pm (Australia). Giving plenty of time in the morning to enjoy the snow, while still allowing ample real-time communication with the office during business hours, and even leaving some time after the work day to relax.</p>
-
-<p>The work itself hasn&#8217;t changed much. A good issue tracker makes things much easier (We use <a href="http://eventum.mysql.org/">MySQL&#8217;s Eventum</a>) because everyone can easily see a current list of priorities and who is doing what, which is always important but even more so without real-time contact.</p>
-
-<p>A good local development environment has also been invaluable, being able to develop and test completely without a connection to the world ensures I can still be productive even when the Internet is on the fritz. Using virtual machines I have set up individual environments for each project. <a href="http://git.or.cz/">Git</a> (via git-svn) for version control allows me to work; branching, committing, merging and reverting all locally.</p>
-
-<p>Communication has primarily been via instant messenger, which was already the case in the office anyway, so no real transition there. Skype is also great if you need voice communication (I generally don&#8217;t).</p>
-
-<p>Using these tools, the transition has been smooth and painless. We have even successfully deployed a major project since I have been here. So far, so good.</p>
 </div>
   
   
@@ -817,6 +972,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -830,10 +989,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

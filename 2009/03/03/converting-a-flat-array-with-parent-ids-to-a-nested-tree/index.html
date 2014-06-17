@@ -103,9 +103,9 @@
   </header>
 
 
-<div class="entry-content"><p>Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry, or a navigation menu structure). The &#8220;Adjacency List&#8221; method; probably the most common, involves storing a reference to the parent in each of the children.</p>
+<div class="entry-content"><p>Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry, or a navigation menu structure). The &ldquo;Adjacency List&rdquo; method; probably the most common, involves storing a reference to the parent in each of the children.</p>
 
-<p>Here is a snippet for converting the rows stored using the adjacency list method into a hierarchical array in PHP. My goal was to do this in 1 pass, without recursion. I ended up using 2 passes, I think 1 pass is achievable if you can guarantee the parent will always be returned before all of its children. But since I couldn&#8217;t, the first pass is to change the id of the row to be the key of the array.</p>
+<p>Here is a snippet for converting the rows stored using the adjacency list method into a hierarchical array in PHP. My goal was to do this in 1 pass, without recursion. I ended up using 2 passes, I think 1 pass is achievable if you can guarantee the parent will always be returned before all of its children. But since I couldn&rsquo;t, the first pass is to change the id of the row to be the key of the array.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -332,6 +332,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -345,10 +349,6 @@
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="When you have an &#8220;position&#8221; column in a table, to allow the user to select the order of elements in the table or as an optimization for &hellip;">
+  <meta name="description" content="When you have an &ldquo;position&rdquo; column in a table, to allow the user to select the order of elements in the table or as an optimization for &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,7 +103,7 @@
   </header>
 
 
-<div class="entry-content"><p>When you have an &#8220;position&#8221; column in a table, to allow the user to select the order of elements in the table or as an optimization for pagination. They always seem to get out of sequence at some point&#8211;ending up with gaps in the sequence.
+<div class="entry-content"><p>When you have an &ldquo;position&rdquo; column in a table, to allow the user to select the order of elements in the table or as an optimization for pagination. They always seem to get out of sequence at some point&mdash;ending up with gaps in the sequence.
 This is something I run into not quiet often enough to remember how to do it, yet often enough to to be frustrating. So here is an easy solution to re-sequence the position column in a table, maintaining the current order, just closing any gaps.</p>
 
 <p>SET @pos := 0;
@@ -171,6 +171,10 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -184,10 +188,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Well, a return anyway. I&#8217;m not exactly sure how triumphant it is. Yes, that&#8217;s right, I&#8217;m back. I&#8217;ve been away from my blog, &hellip;">
+  <meta name="description" content="I have, on occasion, had need to manually drop an email into a users inbox. For example, when an over-zealous virus scanner dumps mail into &ldquo; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,59 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/2008/03/14/manually-deliver-email-to-maildir/">Manually Deliver Email to Maildir</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-14T21:12:31+10:00" pubdate data-updated="true">Mar 14<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have, on occasion, had need to manually drop an email into a users inbox. For example, when an over-zealous virus scanner dumps mail into &ldquo;quarantine&rdquo;.</p>
+
+<p>After confirming that the email are, in fact, virus free, the emails are able to be injected into the users maildir with the help of <a href="http://jeenyus.net/~budney/linux/software/safecat.html">safecat</a>, which guarantees atomic copying (even from a slow standard input stream) and unique file naming.</p>
+
+<p>The basic format of the command is:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>safecat &lt;tmp_dir&gt; .Maildir/new/ &lt; msg.eml
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>with the only restriction being that tmp_dir must be on the same file system, as the algorithm uses hard links to guarantee instant availability of the complete file.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/2008/02/21/a-triumphant-return/">A Triumphant Return</a></h1>
     
     
@@ -106,13 +159,13 @@
   </header>
 
 
-  <div class="entry-content"><p>Well, a return anyway. I&#8217;m not exactly sure how triumphant it is.</p>
+  <div class="entry-content"><p>Well, a return anyway. I&rsquo;m not exactly sure how triumphant it is.</p>
 
-<p>Yes, that&#8217;s right, I&#8217;m back. I&#8217;ve been away from my blog, my country and (for the most part) the Internet for over a month. I&#8217;ve been holidaying in Canada, doing some snowboarding, seeing the sights, doing the usual touristy stuff. As great as it was, all good things must come to an end, so here I am, back at home.</p>
+<p>Yes, that&rsquo;s right, I&rsquo;m back. I&rsquo;ve been away from my blog, my country and (for the most part) the Internet for over a month. I&rsquo;ve been holidaying in Canada, doing some snowboarding, seeing the sights, doing the usual touristy stuff. As great as it was, all good things must come to an end, so here I am, back at home.</p>
 
-<p>Some photos of my adventures can be found in <a href="http://picasaweb.google.com/Brenton.Alker">my gallery</a>. There are plenty more photo&#8217;s which I might put up, and I might even get around to adding captions at some point.</p>
+<p>Some photos of my adventures can be found in <a href="http://picasaweb.google.com/Brenton.Alker">my gallery</a>. There are plenty more photo&rsquo;s which I might put up, and I might even get around to adding captions at some point.</p>
 
-<p>On a technical note, about 2 days into my trip my server went down, and as it is unmanaged (read: sitting in my living room); I couldn&#8217;t do anything about it, so it stayed down all month. Luckily there isn&#8217;t anything on it more critical than my blog, but as a result Google has completely removed me from existence.</p>
+<p>On a technical note, about 2 days into my trip my server went down, and as it is unmanaged (read: sitting in my living room); I couldn&rsquo;t do anything about it, so it stayed down all month. Luckily there isn&rsquo;t anything on it more critical than my blog, but as a result Google has completely removed me from existence.</p>
 </div>
   
   
@@ -148,9 +201,9 @@
   </header>
 
 
-  <div class="entry-content"><p>This topic wasn&#8217;t on my &#8220;to do&#8221; list, but it came up. So here it is.</p>
+  <div class="entry-content"><p>This topic wasn&rsquo;t on my &ldquo;to do&rdquo; list, but it came up. So here it is.</p>
 
-<p>Use of procmail to filter emails is definitely not a new thing, that is what it does after all. But in my attempt to configure it, I found very little clear information about support for &#8220;Maildir&#8221; style delivery amongst the wealth of documentation on the subject.</p>
+<p>Use of procmail to filter emails is definitely not a new thing, that is what it does after all. But in my attempt to configure it, I found very little clear information about support for &ldquo;Maildir&rdquo; style delivery amongst the wealth of documentation on the subject.</p>
 
 <p>The 2 main differences in a .procmailrc that works with Maildir, is the trailing slash on the MAILDIR value and the way target folders are specified.</p>
 
@@ -177,65 +230,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>So, the 2 points to note, as I said are. The maildir path ends in &#8220;/&#8221; and the destination is a folder within the Maildir, which is a hidden directory with its own set of cur/new emails in it.</p>
+<p>So, the 2 points to note, as I said are. The maildir path ends in &ldquo;/&rdquo; and the destination is a folder within the Maildir, which is a hidden directory with its own set of cur/new emails in it.</p>
 
 <p>Thanks to procmail, I now only have one location to maintain my filtering rules. My email can then be accessed through IMAP from work, home, laptop and webmail without them being moved into the wrong folders.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2007/12/05/much-ado-about-nothing/">Much Ado About Nothing</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-12-05T05:44:57+10:00" pubdate data-updated="true">Dec 5<span>th</span>, 2007</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>This blog entry doesn&#8217;t actually contain any technical notes, which is a first for me. I think I might do posts of the style more often, as my posts will hopefully be more frequent if I allow myself the freedom to discuss ideas in general, and not have to delve into a particular topic.</p>
-
-<p>On that note, it&#8217;s been a hectic few months and doesn&#8217;t look like slowing down before the end of the year. Unfortunately, my blog is one of the many aspects of life that has been neglected. However, I have been busy doing, and learning, different things and should have some interesting topics to write about when I do eventually get around to putting something together.</p>
-
-<p>A short list of tools, technologies and techniques crossing my path recently that I intend to blog (more) about include:</p>
-
-<ul>
-<li><p>Caching (memcached/apc)</p></li>
-<li><p>MySQL 5 Features (clusters, replication, stored procedures, triggers)</p></li>
-<li><p>Zend Framework</p></li>
-<li><p>Xen virtualisation</p></li>
-<li><p>HA &#8211; heartbeat et. al</p></li>
-<li><p>Load balancing</p></li>
-<li><p>Advanced Apache mod_rewrite (Rewrite mappers)</p></li>
-<li><p>PHP multi-processing (forking)</p></li>
-<li><p>Web services (SOA)</p></li>
-</ul>
-
-
-<p>And possibly others. That should give you an idea of what to look forward to, as well as a list to help me remember. I hope to post on at least one or two of those topics before the end of the year, and maybe some other lighter material as well.
-Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the general tourist thing. Should be great fun and much needed break, but until then… I&#8217;ve got a project to hack on!</p>
 </div>
   
   
@@ -260,6 +257,10 @@ Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and close SSH tunnel in script</a>
       </li>
     
@@ -273,10 +274,6 @@ Then I&#8217;m off on holidays to Canada for 5 weeks, snowboarding and doing the
     
       <li class="post">
         <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/">Post-fetch Manipulation (sorting) of ngResources in AngularJS</a>
       </li>
     
   </ul>
