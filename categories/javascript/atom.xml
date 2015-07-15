@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Javascript | Deprecated Behaviour]]></title>
+  <title><![CDATA[Category: JavaScript | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/javascript/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-08-25T17:04:00+10:00</updated>
+  <updated>2015-07-15T22:52:21+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -14,210 +14,96 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Post-fetch Manipulation (sorting) of ngResources in AngularJS]]></title>
-    <link href="http://blog.tekerson.com/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs/"/>
-    <updated>2013-07-10T17:06:00+10:00</updated>
-    <id>http://blog.tekerson.com/2013/07/10/post-fetch-manipulation-sorting-of-ngresources-in-angularjs</id>
-    <content type="html"><![CDATA[<p>Just a quick tip that I found useful in a recent Angular.js application.</p>
+    <title type="html"><![CDATA[Value Objects in JavaScript]]></title>
+    <link href="http://blog.tekerson.com/2015/07/15/value-objects-in-javascript/"/>
+    <updated>2015-07-15T21:31:43+10:00</updated>
+    <id>http://blog.tekerson.com/2015/07/15/value-objects-in-javascript</id>
+    <content type="html"><![CDATA[<p>Value Objects are awesome! Many of the JavaScript applications I have encountered don&rsquo;t explicitly define their domain objects at all, instead passing primitives or raw object literals around.  Value Objects can define the values in an way that allows discussion and reasoning about the values being passed around. As well as a logical place to &ldquo;put code&rdquo;.</p>
 
-<p>I was trying to randomize the order of elements within a list retrieved from a <a href="http://docs.angularjs.org/api/ngResource.$resource">ngResource</a> (answers in a quiz or poll application). The naive approach would be to write the code as if the resource fetch is synchronous.</p>
+<p>To explore their use, lets start by defining a simple Value Object &ndash; Distance &ndash; because I don&rsquo;t claim to be creative in these matters.</p>
 
-<p>``` js
-angular.module(&lsquo;myApp&rsquo;).controller(&lsquo;MyCtrl&rsquo;, function ($scope, $resource, $routeParams) {</p>
+<p>About the simplest way of defining a Value Object is like this.</p>
 
-<pre><code>var shuffle = function (list) { /* ... */ };
-var repo = $resource('/api/question/:id', {id: '@id'});
-$scope.question = repo.get({id: $routeParams.id});
-shuffle(question.anwers);
-</code></pre>
-
-<p>});
-```</p>
-
-<p>The problem that will soon become apparent, is that the <code>get</code> is <em>not</em> synchronous. So, when the <code>shuffle(question.answer)</code> is called, the <code>question</code> object is not yet populated.</p>
-
-<p>One approach that I encountered to circumvent the issue is to use the built in <a href="http://docs.angularjs.org/api/ng.filter:orderBy">orderBy filter</a> with a callback that randomly chooses the order. This works, because the filter is run when the returning data triggers a new digest. This may be good enough in some circumstances. The problem I encountered with this approach however, is the list is re-sorted every digest cycle. So, if there is anything much going on in the scope, the list will re-sort itself causing the bound elements in the page to jump around.</p>
-
-<p>The solution for me, was to sort the list once, after it is retrieved. This can be accomplished by passing a callback, as the second argument to <code>$resource.get</code>, that will be called with the returned data once it becomes available. This allows you to perform any required manipulation on the data before it is assigned to the <code>$scope</code>.</p>
-
-<p>``` js
-angular.module(&lsquo;myApp&rsquo;).controller(&lsquo;MyCtrl&rsquo;, function ($scope, $resource, $routeParams) {</p>
-
-<pre><code>var shuffle = function (list) { /* ... */ };
-var repo = $resource('/api/question/:id', {id: '@id'});
-$scope.question = repo.get({id: $routeParams.id}, function (question) {
-    shuffle(question.anwers);
-});
-</code></pre>
-
-<p>});
-```</p>
-
-<p>In this instance, the answers to the question are shuffled, but the pattern is useful any time you want to perform an action only <em>after</em> the data if fetched. This may include calculating aggregates or even fetching extra, dependant data.</p>
-
-<p>As an aside, I don&rsquo;t believe this manipulation belongs in the controller and should probably be encapsulated in a service that the controller consumes. I will have a look at using &ldquo;fat&rdquo; services and &ldquo;lean&rdquo; controllers in a future post.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Yahoo YUI Subscribe to drag drop events]]></title>
-    <link href="http://blog.tekerson.com/2006/12/12/yahoo-yui-subscribe-to-drag-drop-events/"/>
-    <updated>2006-12-12T09:13:21+10:00</updated>
-    <id>http://blog.tekerson.com/2006/12/12/yahoo-yui-subscribe-to-drag-drop-events</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve been playing with the <a href="http://developer.yahoo.com/yui/">Yahoo! UI</a> (YUI) Javascript Library recently, it contains all the useful utilities you would expect from a JavaScript library, as well as some more gratuitous features.</p>
-
-<p>While I can&rsquo;t honestly say I have spent the time to compare Yahoo&rsquo;s efforts to those of others, such as <a href="http://prototype.conio.net/">prototype</a> or <a href="http://script.aculo.us/">script.aculo.us</a>, I have taken a liking to the way the Yahoo library feelsâ€¦ even if it&rsquo;s just their coding style just feels a little funky.</p>
-
-<p>One of the staple favourites of the library, is the Drag-Drop collection. The boss (and the client) always likes it when they can drag things around their web applications, especially when it&rsquo;s not just pointless eye candy. After playing with the scripts for a while, I got the feeling that something was missing. It turned out to be the ability to subscribe to drag drop events. The general way Yahoo deals with the &ldquo;event&rdquo; handlers for the dragged or dropped items is by overriding functions that are called. This works quiet well for most things, but seeing as another important part of the library is event handling, including custom events, it seems a shame to let it go to waste and not allow events to be fired and subscribed to by the Drag-Drop classes.</p>
-
-<p>With that in mind, and borrowing some concepts from <a href="http://www.thinkvitamin.com/features/javascript/15-things-you-can-do-with-yahoo-ui">an inspiring article</a> I wrote a simple extension to the YAHOO.util.DD class that creates custom events that can be subscribed to by any number of listeners.</p>
-
-<p>There were some issues with the apparent inconsistency of the arguments being passed between functions, but I normalised it as best I could and can up with this:</p>
-
-<p><code>
-/**
-* @extends YAHOO.util.DD
-* @constructor
-* @param {String} ElId the id of the element that will cause the resize
-* @param {String} sGroup the group of related DragDrop items
-* @param {Array} config the arbitrary configuration array
-*/
-YAHOO.Gnosis.DD = function(ElId, sGroup, config)
-{
-if (ElId)
-{
-this.init(ElId, sGroup, config);
+<p><code>javascript
+function Distance(value, unit) {
+  this.value = value;
+  this.unit = unit;
 }
+</code></p>
+
+<p>This is a good start and really isn&rsquo;t much more difficult that using object literals. Given the other advantages (that can be added incrementally), I don&rsquo;t see a down side.</p>
+
+<p>But, but we can do better!</p>
+
+<h2>Immutability</h2>
+
+<p>My first step would be to make it immutable. Immutability is a great property to have, especially for things being passed around a lot. For Value Objects, I think it is a reasonable default.</p>
+
+<p><code>javascript
+function Distance(value, unit) {
+  this.value = value;
+  this.unit = unit;
+  return Object.freeze(this);
 }
-YAHOO.extend(YAHOO.Gnosis.DD, YAHOO.util.DD,
-{
-onStart: new YAHOO.util.CustomEvent('onStart event'),
-startDrag: function(x,y,z)
-{
-this.onStart.fire(x,y);
-},
-onComplete: new YAHOO.util.CustomEvent('onComplete event'),
-endDrag: function(event)
-{
-this.onComplete.fire(event.clientX, event.clientY, event.target);
-},
-duringDrag: new YAHOO.util.CustomEvent('duringDrag event'),
-onDrag: function(event)
-{
-this.duringDrag.fire(event.clientX, event.clientY, event.target);
+</code></p>
+
+<p>Now, <code>Object.freeze</code> isn&rsquo;t perfect. It only freezes the object itself; nested properties can still be mutated. But, I still think it&rsquo;s worth it to prevent accidental mutation, or third party code mutating your objects without your knowledge (I&rsquo;m looking at you, <code>ng-repeat</code>).</p>
+
+<h2>Validation</h2>
+
+<p>The next issue to look at is validation of the fields. <code>new Distance(12, 'parsecs');</code> would ostensibly give a valid <code>Distance</code>, but it probably wouldn&rsquo;t be very useful. We can use the constructor function to check the parameters, ensuring only valid values can be created. In this case, say &ndash; A distance is a positive whole number measured in centimetres, metres or kilometres.</p>
+
+<p>It might be implemented this way:</p>
+
+<p>``` javascript
+function Distance(value, unit) {
+  if (parseInt(value, 10) !== value) {</p>
+
+<pre><code>return new TypeError('Distance Value is not a decimal number');
+</code></pre>
+
+<p>  }
+  if (Distance.units.indexOf(unit) === -1) {</p>
+
+<pre><code>return new TypeError('Distance Unit is not is not valid');
+</code></pre>
+
+<p>  }</p>
+
+<p>  this.value = value;
+  this.unit = unit;
+  return Object.freeze(this);
 }
-});
-</code>
-(Gnosis is the framework, a collection of <a href="http://php.net">PHP</a> and Javascript I am putting together as a basis for my development projects.)</p>
-
-<p>It seems so obvious now. I&rsquo;ve put together a <a href="http://example.blog.everyone-here.is-a-geek.com/yui-dragdrop-subscribe/">basic example</a> to show how this can be used.</p>
-
-<p>This is only a start, there are plenty of other events that are worth overriding in this manner, for example the onDragEnter, onDragOut, onDragDrop, onDragOver, onMouseUp and onMouseDown functions (and a few more). That&rsquo;s another thing I like about the YUI, it&rsquo;s designed to be extended.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Priority When Multiple CSS Classes are Applied]]></title>
-    <link href="http://blog.tekerson.com/2006/11/04/priority-when-multiple-css-classes-are-applied/"/>
-    <updated>2006-11-04T02:16:59+10:00</updated>
-    <id>http://blog.tekerson.com/2006/11/04/priority-when-multiple-css-classes-are-applied</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I&rsquo;ve checked it out and it works like this.</p>
-
-<p>I had a page, who&rsquo;s table cells all had a CSS class that applied a background colour, some font attributes and what have you.
-The class (from an external stylesheet file):
-```
-td.listCell
-{</p>
-
-<pre><code>…
-color: black;
-background-color: grey;
-…
-</code></pre>
-
-<p>}
-<code>
-was applied individually to each cell like:
-</code>
-<td class="listCell"></td>
+Distance.units = [&lsquo;cm&rsquo;, &rsquo;m', &lsquo;km&rsquo;];
 ```</p>
 
-<p>I needed to apply a second class on certain cells to change the background colour, this is part of an on-page Javascript search. This page has lots of content, a large form, most of which is hidden and only small parts are used at a time. The search is supposed to highlight the cells that contain the text in the search field.</p>
+<p>The decision to <code>return</code> the <code>Error</code>s instead of <code>throw</code> them is probably debatable, but I don&rsquo;t think validation errors are &ldquo;exceptional&rdquo; and find it composes better with higher order functions (eg. <code>map</code>, <code>filter</code>, <code>reduce</code>) which I generally use a lot of. Either way, the point is it won&rsquo;t get back a valid <code>Distance</code> object. And, since they are immutable, a valid <code>Distance</code> only ever be valid.</p>
 
-<p>So, I added a searchHighlight style to the head of the page, making it look like:</p>
+<h2>Logic</h2>
 
-<p>```
-<head></p>
+<p>Once a Value Object is defined, it becomes a great place to put some logic. Normalization and comparison logic is a good candidate. For example, adding methods to compare two distances.</p>
 
-<pre><code>…
-&lt;style type="text/css"&gt;
-    .searchHighlight { background-color: red }
-&lt;/style&gt;
-&lt;link rel="stylesheet" type="text/css" href="stylesheet.css" /&gt;
-</code></pre>
+<p><code>javascript
+Distance.multipliers = [1, 100, 100000];
+Distance.prototype.toCentimetres = function () {
+  var multiplier = Distance.multipliers[Distance.units.indexOf(this.unit)];
+  return this.value * multiplier;
+};
+Distance.prototype.isCloserThan = function (other) {
+  return this.toCentimetres() &lt; other.toCentimetres();
+};
+</code></p>
 
-<p></head>
-```</p>
+<p>It&rsquo;s also a good place to add domain logic; the application may define how far is considered &ldquo;walkable&rdquo;. By having the Value Object, it provides somewhere for this knowledge to go and prevents <code>if (distance &lt; 5)</code> being duplicated across the application.</p>
 
-<p>On my way I went, coded the javascript to search the table and add the &lsquo;searchHighlight&rsquo; class to the cells that needed hightlighting. Easy. Except it didn&rsquo;t work.</p>
+<p><code>javascript
+Distance.walkable = new Distance(5, 'km');
+Distance.prototype.isWalkable = function () {
+  return this.isCloserThan(Distance.walkable);
+};
+</code></p>
 
-<p>When the Javascript found it&rsquo;s target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
-
-<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it&rsquo;s normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
-
-<p>So I created a simple test page, to make sure I was wasn&rsquo;t going (more) insane, and that multiple CSS styles ever worked.
-The test page looked like this:</p>
-
-<p>```
-&lt;!DOCTYPE html PUBLIC &ldquo;&ndash;//W3C//DTD XHTML 1.0 Strict//EN&rdquo; &ldquo;<a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</a>&rdquo;>
-<html></p>
-
-<pre><code>&lt;head&gt;
-    &lt;title&gt;Multiple CSS Class Test&lt;/title&gt;
-    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;&lt;/meta&gt;
-    &lt;style type="text/css"&gt;
-        .normal { font-weight: bold; background-color: red;}
-        .special { background-color: blue }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;div class="normal"&gt;class=&amp;quot;normal&amp;quot;&lt;/div&gt;
-    &lt;div class="special"&gt;class=&amp;quot;special&amp;quot;&lt;/div&gt;
-    &lt;div class="normal special"&gt;class=&amp;quot;normal special&amp;quot;&lt;/div&gt;
-    &lt;div class="special normal"&gt;class=&amp;quot;special normal&amp;quot;&lt;/div&gt;
-&lt;/body&gt;
-</code></pre>
-
-<p></html>
-```</p>
-
-<p>The results are sort of what I expected&hellip; the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn&rsquo;t matter. So they are getting the bold from the normal style, and the background from the special style.</p>
-
-<p>Great. So why didn&rsquo;t it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that &lsquo;special&rsquo; is declared first) and the results are very different, the &lsquo;special&rsquo; class is ignored completely.</p>
-
-<p>That&rsquo;s right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn&rsquo;t know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
-
-<p>For example, if (from my test page) I remove the special style, and put it in an external style sheet, and include it like so:
-```
-…</p>
-
-
-
-<p><link rel="stylesheet" type="text/css" href="stylesheet.css" />
-…
-```</p>
-
-<p>It works, but doing this doesn&rsquo;t:
-```
-…
-<link rel="stylesheet" type="text/css" href="stylesheet.css" /></p>
-
-
-
-<p>…
-```</p>
-
-<p>So the include is exactly the same as typing in the style in the file. Whereas I was under the impression that styles in the file took precedence over those in external (linked) stylesheets (where they overlap of course). But it seems I was wrong. Now I know.</p>
+<p>Then, when I decide I&rsquo;m too lazy to walk 5km, it only needs changing in one place.</p>
 ]]></content>
   </entry>
   

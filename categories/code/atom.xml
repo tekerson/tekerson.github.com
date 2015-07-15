@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Code | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/code/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2014-08-25T17:04:00+10:00</updated>
+  <updated>2015-07-15T22:52:21+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,100 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Value Objects in JavaScript]]></title>
+    <link href="http://blog.tekerson.com/2015/07/15/value-objects-in-javascript/"/>
+    <updated>2015-07-15T21:31:43+10:00</updated>
+    <id>http://blog.tekerson.com/2015/07/15/value-objects-in-javascript</id>
+    <content type="html"><![CDATA[<p>Value Objects are awesome! Many of the JavaScript applications I have encountered don&rsquo;t explicitly define their domain objects at all, instead passing primitives or raw object literals around.  Value Objects can define the values in an way that allows discussion and reasoning about the values being passed around. As well as a logical place to &ldquo;put code&rdquo;.</p>
+
+<p>To explore their use, lets start by defining a simple Value Object &ndash; Distance &ndash; because I don&rsquo;t claim to be creative in these matters.</p>
+
+<p>About the simplest way of defining a Value Object is like this.</p>
+
+<p><code>javascript
+function Distance(value, unit) {
+  this.value = value;
+  this.unit = unit;
+}
+</code></p>
+
+<p>This is a good start and really isn&rsquo;t much more difficult that using object literals. Given the other advantages (that can be added incrementally), I don&rsquo;t see a down side.</p>
+
+<p>But, but we can do better!</p>
+
+<h2>Immutability</h2>
+
+<p>My first step would be to make it immutable. Immutability is a great property to have, especially for things being passed around a lot. For Value Objects, I think it is a reasonable default.</p>
+
+<p><code>javascript
+function Distance(value, unit) {
+  this.value = value;
+  this.unit = unit;
+  return Object.freeze(this);
+}
+</code></p>
+
+<p>Now, <code>Object.freeze</code> isn&rsquo;t perfect. It only freezes the object itself; nested properties can still be mutated. But, I still think it&rsquo;s worth it to prevent accidental mutation, or third party code mutating your objects without your knowledge (I&rsquo;m looking at you, <code>ng-repeat</code>).</p>
+
+<h2>Validation</h2>
+
+<p>The next issue to look at is validation of the fields. <code>new Distance(12, 'parsecs');</code> would ostensibly give a valid <code>Distance</code>, but it probably wouldn&rsquo;t be very useful. We can use the constructor function to check the parameters, ensuring only valid values can be created. In this case, say &ndash; A distance is a positive whole number measured in centimetres, metres or kilometres.</p>
+
+<p>It might be implemented this way:</p>
+
+<p>``` javascript
+function Distance(value, unit) {
+  if (parseInt(value, 10) !== value) {</p>
+
+<pre><code>return new TypeError('Distance Value is not a decimal number');
+</code></pre>
+
+<p>  }
+  if (Distance.units.indexOf(unit) === -1) {</p>
+
+<pre><code>return new TypeError('Distance Unit is not is not valid');
+</code></pre>
+
+<p>  }</p>
+
+<p>  this.value = value;
+  this.unit = unit;
+  return Object.freeze(this);
+}
+Distance.units = [&lsquo;cm&rsquo;, &rsquo;m', &lsquo;km&rsquo;];
+```</p>
+
+<p>The decision to <code>return</code> the <code>Error</code>s instead of <code>throw</code> them is probably debatable, but I don&rsquo;t think validation errors are &ldquo;exceptional&rdquo; and find it composes better with higher order functions (eg. <code>map</code>, <code>filter</code>, <code>reduce</code>) which I generally use a lot of. Either way, the point is it won&rsquo;t get back a valid <code>Distance</code> object. And, since they are immutable, a valid <code>Distance</code> only ever be valid.</p>
+
+<h2>Logic</h2>
+
+<p>Once a Value Object is defined, it becomes a great place to put some logic. Normalization and comparison logic is a good candidate. For example, adding methods to compare two distances.</p>
+
+<p><code>javascript
+Distance.multipliers = [1, 100, 100000];
+Distance.prototype.toCentimetres = function () {
+  var multiplier = Distance.multipliers[Distance.units.indexOf(this.unit)];
+  return this.value * multiplier;
+};
+Distance.prototype.isCloserThan = function (other) {
+  return this.toCentimetres() &lt; other.toCentimetres();
+};
+</code></p>
+
+<p>It&rsquo;s also a good place to add domain logic; the application may define how far is considered &ldquo;walkable&rdquo;. By having the Value Object, it provides somewhere for this knowledge to go and prevents <code>if (distance &lt; 5)</code> being duplicated across the application.</p>
+
+<p><code>javascript
+Distance.walkable = new Distance(5, 'km');
+Distance.prototype.isWalkable = function () {
+  return this.isCloserThan(Distance.walkable);
+};
+</code></p>
+
+<p>Then, when I decide I&rsquo;m too lazy to walk 5km, it only needs changing in one place.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation]]></title>
@@ -246,131 +340,6 @@ $logger = $this->_helper->resource(&lsquo;Log&rsquo;);</p>
 
 <p>While this is a simple example, it can be really beneficial when working with, for example, a service layer. The service you need might depend on another service, both of which may depend on an Authorization service. All the services depend on their data mappers (which themselves depends on a database connection) and their entity factories, etc.
 Instantiating a dependency tree like this for every object you need can lead to duplicate and hard to modify code. Dependency injection coupled with a good container can provide highly versatile code whose behaviour can be drastically changed by only modifying a configuration file.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Building a Modular Application in Zend Framework - Part 2]]></title>
-    <link href="http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2/"/>
-    <updated>2009-06-28T00:43:35+10:00</updated>
-    <id>http://blog.tekerson.com/2009/06/28/building-a-modular-application-in-zend-framework-part-2</id>
-    <content type="html"><![CDATA[<p>Welcome to part two of the series exploring the modular application structure in Zend Framework. With the basic application set up in <a href="http://blog.tekerson.com/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">part one</a>, we can get down to actually creating our first module. We&rsquo;re going to refactor the <a href="http://framework.zend.com/docs/quickstart/">official quickstarts</a> guestbook. This will let us focus on the modular structure without getting bogged down in business logic.</p>
-
-<p>Note, there are still some bugs in Zend_Tool that prevent this working as it should, I will note the bugs and their fixes as we encounter them.</p>
-
-<h2>Create the module</h2>
-
-<p>From the base path of our application (/WORKING/PATH/aza from the last article), we can issue the command to the Zend_Tool CLI to create our guestbook module.</p>
-
-<pre><code>zf create module guestbook
-</code></pre>
-
-<p>Then, create the index controller within the guestbook module.</p>
-
-<pre><code>zf create controller index 1 guestbook
-</code></pre>
-
-<p>The &ldquo;1&rdquo; argument tells Zend_Tool that we want to automatically create an index action within the new controller. We can get a help listing like this:</p>
-
-<pre><code>zf create controller ?
-</code></pre>
-
-<p>Once the new module and controller is created we need to tell the application that we are using modules. We do this by adding two lines to the configs/application.ini. The first activates the modules resource. The second configures the front controller, telling it where the modules are located. These lines should be added to the end of the production section of the .ini file.</p>
-
-<pre><code>resources.modules = ""
-resources.frontController.moduleDirectory = APPLICATION_PATH "/modules"
-</code></pre>
-
-<p>To check our module is working, we can navigate to our guestbook at <a href="http://aza/guestbook">http://aza/guestbook</a> and we should see the default view for the index action.</p>
-
-<p><a href="http://framework.zend.com/issues/browse/ZF-7121">Bug</a>: Zend_Tool doesn&rsquo;t prefix the controller names within the module name. The guestbook index controller class IndexController needs to be changed to Guestbook_IndexController.
-<a href="http://framework.zend.com/issues/browse/ZF-6908">Bug</a>: The default view for the controller is the same as the main page, it shouldn&rsquo;t be but we don&rsquo;t really care, we&rsquo;re going to replace it anyway.</p>
-
-<h2>Create module bootstrap</h2>
-
-<p>In the same way that the Bootstrap.php set up the environment for our main application (also known as the default module) each module has its own Bootstrap.php that adds anything additional that each module needs. Zend_Tool doesn&rsquo;t create this bootstrap by default, so we need to create application/modules/guestbook/Bootstrap.php and it should contain.</p>
-
-<p><code>php
-&lt;?php
-class Guestbook_Bootstrap extends Zend_Application_Module_Bootstrap
-{
-}
-</code></p>
-
-<p>By creating this file, the application will automatically perform module bootstrap tasks such as adding autoloaders for the default resources; including models, forms and services. Any other module specific bootstrapping tasks can be added as _init*() functions. In our case, we don&rsquo;t need any further bootstrapping.</p>
-
-<p><strong>Important note</strong>: <strong><em>All</em> bootstrap functions</strong> for <strong>every module</strong> are run for <strong>every request</strong>.</p>
-
-<p>The bootstrap process occurs <em>before</em> routing and dispatch, so during bootstrap there is no way to know which module/controller/action is being requested. Therefore, any setup that should be done only if a particular module is requested should be done in plugins, <em>not</em> bootstrap.</p>
-
-<h2>Getting Quickstart</h2>
-
-<p>Now we have the module skeleton in place, lets start porting the guestbook code to our module. This turns out to be fairly easy; the majority of the changes involve prefixing class names with the module name.</p>
-
-<p>To make life easy, start by acquiring a copy of the completed <a href="http://framework.zend.com/docs/quickstart">quickstart application</a> (it&rsquo;s on the right hand side in zip or tar.gz form).</p>
-
-<h2>Importing Quickstart</h2>
-
-<p>Once you have downloaded and extracted the files into a temporary folder, we can start copying in the files we need.</p>
-
-<p>We need to copy the GuestbookController from the Quickstart (making it the IndexController) and all of the Quickstart models, views and forms to the appropriate places within our module.</p>
-
-<p>From (Quickstart)To (Aza)</p>
-
-<p>application/controllers/GuestbookController.php</p>
-
-<p>application/modules/guestbook/controllers/IndexController.php</p>
-
-<p>application/models/*
-application/modules/guestbook/models/</p>
-
-<p>application/views/scripts/guestbook/*
-application/modules/guestbook/views/scripts/index/</p>
-
-<p>application/forms/*
-application/modules/guestbook/forms/</p>
-
-<p>The controller and the views will require overwriting the existing files.</p>
-
-<h2>Porting Quickstart</h2>
-
-<p>Now we have the files in the right place, we need to update the files to be modular.</p>
-
-<p>We&rsquo;ll start with the easiest one, the form. It is simple because it is already prefixed for the Default module, all we need to do it change the prefix to Guestbook_. So the class in application/modules/guestbook/forms/Guestbook.php changes from Default_Form_Guestbook to Guestbook_Form_Guestbook.</p>
-
-<p>Now the models. There are many more changes here but they are just as simple because the models (like the form) are already prefixed with &ldquo;Default<em>&rdquo;, but the classes also contain references to each other, so we need to change more than just the class names. A simple search and replace of &ldquo;Default</em>&rdquo; with &ldquo;Guestbook_&rdquo; in the application/modules/guestbook/models/ directory is all we need.</p>
-
-<p>The controller is a little trickier because it isn&rsquo;t already prefixed (controllers in the default module aren&rsquo;t), but it&rsquo;s still not too hard. The name of the class in application/modules/guestbook/controllers/IndexController.php just needs to be changed from GuestbookController to Guestbook_IndexController, as it has changed from the guestbook controller within default module (no prefix) to the index controller within the guestbook module. We also need to update the references to the models and forms, the same search and replace as we used in the models will suffice.</p>
-
-<p>Finally, we get to the view. In our index view (application/modules/guestbook/views/scripts/index/index.phtml) we need to update the parameters passed to the url helper to reference our controller. Adding the module, and changing the controller leaves the first link looking like this:
-``` html</p>
-
-<p><p><a href="<?php echo $this->url(</p>
-
-<pre><code>array(
-    'module'    =&gt; 'guestbook',
-    'controller' =&gt; 'index',
-    'action'     =&gt; 'sign'
-), 
-'default', 
-true) ?&gt;"&gt;Sign Our Guestbook&lt;/a&gt;&lt;/p&gt;
-</code></pre>
-
-<p>```</p>
-
-<p>Done!</p>
-
-<h2>Connect the database</h2>
-
-<p>I&rsquo;ll leave the actual creation of the database to you. It is he same as the Quickstart and this post is already particularly long. You will need to create the database, and add the configuration to the application.ini.</p>
-
-<h2>Conclusion</h2>
-
-<p>We have just ported the Quickstart guestbook application to a Zend Framework Module. Modularizing applications allows for easier code reuse across applications. Hopefully modules will become standardized to the point that there will be a repository of modules that can be added to your application and providing drop in functionality.</p>
-
-<h2>Download</h2>
-
-<p>For those who had trouble following along, I&rsquo;ve made the entire application (including database) available via my <a href="http://github.com/tekerson/A-Zend-Application/tree/master">github repository</a>.</p>
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="When you have an &ldquo;position&rdquo; column in a table, to allow the user to select the order of elements in the table or as an optimization for &hellip;">
+  <meta name="description" content="This is part one of a series exploring modular application development in Zend Framework. In this entry we&rsquo;ll look at downloading and &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,112 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2009/06/17/building-a-modular-application-in-zend-framework-part-1/">Building a Modular Application in Zend Framework - Part 1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-17T19:45:29+10:00" pubdate data-updated="true">Jun 17<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is part one of a series exploring modular application development in Zend Framework. In this entry we&rsquo;ll look at downloading and installing Zend Framework, especially Zend_Tool, on a Linux environment. We&rsquo;ll start from the beginning so that future posts can build on a known environment. Throughout this post, the code snippets are copy/paste ready, so following along should be easy, just start in a new working directory.</p>
+
+<h2>Install Zend Framework</h2>
+
+<p>The first step is to actually get ZF, so start by downloading the package (about 40MB in total) into our working directory and extracting it.</p>
+
+<pre><code>wget http://framework.zend.com/releases/ZendFramework-1.8.4/ZendFramework-1.8.4.tar.gz
+tar zxf ZendFramework-1.8.4.tar.gz
+</code></pre>
+
+<p>We&rsquo;ll then create a symlink to provide an easy upgrade path (extract the new version and move the symlink), and an easier to remember directory name.</p>
+
+<pre><code>ln -s ZendFramework-1.8.4 ZendFramework
+</code></pre>
+
+<h2>Install Zend_Tool</h2>
+
+<p>Creating an alias allows command &ldquo;zf&rdquo; to always point to the Zend_Tool shell script, so we can use the command line tool from wherever we need it.</p>
+
+<pre><code>alias zf=`pwd`/ZendFramework/bin/zf.sh
+</code></pre>
+
+<p>Now the installation is complete, we should be able to check what version of the framework we have just installed.</p>
+
+<pre><code>zf show version
+# Zend Framework Version: 1.8.4
+</code></pre>
+
+<p>If this works, we&rsquo;re ready to start creating our project. The documentation provides some alternate methods of <a href="http://framework.zend.com/manual/en/zend.tool.framework.clitool.html#zend.tool.framework.clitool.setup-general">setting up Zend_Tool</a>, including setting it up in a windows environment.</p>
+
+<h2>Create the project</h2>
+
+<p>Once Zend_Tool is working, we can begin creating our project. For the exercise, we&rsquo;ll call our project &ldquo;aza&rdquo; (A Zend Application). Using Zend_Tool, we create the basic structure for the project.</p>
+
+<pre><code>zf create project aza
+</code></pre>
+
+<p>This should produce a project structure that looks like this</p>
+
+<p>[caption id=&ldquo;attachment_131&rdquo; align=&ldquo;alignnone&rdquo; width=&ldquo;324&rdquo; caption=&ldquo;Directory Listing of new project&rdquo;]<img src="http://blog.tekerson.com/wp-content/uploads/2009/06/screen.jpg" alt="Directory Listing of new project" />[/caption]</p>
+
+<h2>Setup the web server</h2>
+
+<p>Finally, we can tell the Apache2 web server about our application by adding a VirtualHost to the server configuration. You will need to replace &ldquo;/WORKING/PATH/&rdquo; with the absolute path to the directory in which you are working (run pwd if you&rsquo;re not sure).</p>
+
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerName aza
+    DocumentRoot /WORKING/PATH/aza/public
+    &lt;Directory /WORKING/PATH/aza/public&gt;
+        php_value include_path "/WORKING/PATH/ZendFramework/library"
+        php_value magic_quotes_gpc 0
+        php_value short_open_tag "on"
+        DirectoryIndex index.php
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>Don&rsquo;t forget to restart the web server to enable the site.</p>
+
+<h2>Test our page!</h2>
+
+<p>We should now be able to navigate to our site and be warmly welcomed to our new Zend Framework application!
+We&rsquo;ll stop here for now. In the next post, we&rsquo;ll start looking at creating our first module.</p>
+
+<h2>Updates</h2>
+
+<p>2009-06-26
+Updated for ZF Version 1.8.4</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -160,76 +266,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/03/11/php-quebec-wrap-up-from-a-conference-newb/">PHP Quebec Wrap-up From a Conference Newb</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-03-11T21:02:09+10:00" pubdate data-updated="true">Mar 11<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As I am in Canada for only 3 more weeks, and we don&rsquo;t get too many PHP conferences in Brisbane, I took the opportunity to attended my first ever PHP conference. I thought I would share my thoughts, and maybe those more experienced can help me do it &ldquo;better&rdquo; next time.</p>
-
-<p>After flying across the country we checked into the hotel, the Hilton Bonaventure in Montreal. The front desk apparently didn&rsquo;t know we were there for the conference because we didn&rsquo;t &ldquo;book with the others&rdquo;. I&rsquo;m not sure what that means, or what difference it would have made? The hotel offered free wireless in the foyer and conference halls, but not in the rooms. Luckily, we were close enough to the foyer to access their wireless from our room (once I sorted out some driver issues on my laptop).</p>
-
-<h2>Day 1</h2>
-
-<p>After missing most of the openning keynote on the first day in favour of eating (I didn&rsquo;t know breakfast would be available) I jumped into the sessions. Starting with <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney&rsquo;s</a> <a href="http://conf.phpquebec.com/en/session#practical_zend_framework_jutsu_with_dojo">Practical Zend Framework Jutsu with Dojo</a>, which provided a practical overview to an area of the Zend Framework I have been planning on investigating, but haven&rsquo;t yet got round to. This was followed up by <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall&rsquo;s</a> explaining their process of <a href="http://conf.phpquebec.com/en/session#building_ria_application_in_php">Building RIA Application in PHP</a>. This wasn&rsquo;t a talk I intended to attend (Sara Goleman&rsquo;s talk was scheduled for this time, but was unable to attend due to illness) but it was interesting to see the differences in building a PHP application without a HTML front end.<a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall"></a></p>
-
-<p>After lunch, <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethan&rsquo;s</a> looked into search and indexing. <a href="http://conf.phpquebec.com/en/session#of_haystacks_and_needles">Of Haystacks and Needles</a>, introduced MySQL full text, Selenium and Solr. While I have used Selenium, Solr seems like a useful step up for systems with higher requirements. The afternoon sessions were <a href="http://conf.phpquebec.com/en/session#a_tour_of_mysql_high_availability">A tour of MySQL High Availability</a> by <a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a>, which talked about the difference between scaling for performance and scaling for HA, and techniques for the latter, for me there wasn&rsquo;t much I hadn&rsquo;t used before, but some of the monitoring tools warrant further research. <a href="http://conf.phpquebec.com/en/session#stupid_browser_tricks">Stupid Browser Tricks</a> by <a href="http://conf.phpquebec.com/en/conferencier#sean_coates">Sean Coates</a>, was in a similar boat. It was a good introduction to some useful browser side tools (Firebug, YSlow! and Selenium IDE) but I had hoped for a deeper look into Selenium. Isn&rsquo;t everyone using firebug by now? FirePHP is a nice addition though.</p>
-
-<h2>Day 2</h2>
-
-<p>Day 2 started with a quick breakfast (I&rsquo;m a fast learner ;)), then the <a href="http://conf.phpquebec.com/en/session#php_code_review">PHP Code Review Part #1</a>, with <a href="http://conf.phpquebec.com/en/conferencier#sebastian_bergmann">Sebastian Bergmann</a> and <a href="http://conf.phpquebec.com/en/conferencier#stefan_priebsch">Stefan Priebsch</a> delving into some not particularly pretty examples of code from well known PHP applications such as Wordpress. It&rsquo;s reassuring to know other people write and release bad code too :) I didn&rsquo;t attend Part #2 of the session, where they took code samples from the audience and critiqued them. Instead I opted to drop in on <a href="http://conf.phpquebec.com/en/conferencier#chris_hartjes">Chris Hartjes</a> expaining why <a href="http://conf.phpquebec.com/en/session#deployment_is_not_a_4_letter_word">Deployment Is Not A 4 Letter Word</a> and that with some planning and appropriate tools, in your absence even the sysadmin should be able to deploy your application with confidence.</p>
-
-<p>The pre-lunch keynote was <a href="http://conf.phpquebec.com/en/conferencier#john_coggeshall">John Coggeshall</a> again discussing RIA in <a href="http://conf.phpquebec.com/en/session#beyond_the_browser">Beyond the Browser</a>. Is the browser dead? Not yet, but it certainly has some growing competition. After a break, I listened to <a href="http://conf.phpquebec.com/en/conferencier#ilia_alshanetsky">Ilia Alshanetsky</a> talk about <a href="http://conf.phpquebec.com/en/session#premature_optimization_mistakes">Premature Optimization Mistakes</a>, focusing on optimising the server stack itself before delving into application level optimisation. Arguing it usually provides more results without the risk of breaking the application. <a href="http://conf.phpquebec.com/en/session#php_for_the_enterprise">PHP for the Enterprise</a> then examined how PHP has reached a level where it is suitable for projects that were once considered the realm of &ldquo;real&rdquo; programming languages. Most of the talk discussed more technical details of scaling PHP to an enterprise level, such as database buffer sizes, performance monitoring and caching at various levels.</p>
-
-<p>The day ended with the career fair which saw a number of, primarily local, employers (including the armed forces?) set up booths and discuss their work and employment with the potential candidates at the conference. While I wasn&rsquo;t actively seeking employment, I did have a chat with some of the representatives. Given the location of the conference, it wasn&rsquo;t too big a surprise that the majority were bilingual and in some cases French only offices.</p>
-
-<h2>Day 3</h2>
-
-<p>My final day of the conference started with <a href="http://conf.phpquebec.com/en/conferencier#owen_byrne">Owen Byrne</a> discussing <a href="http://conf.phpquebec.com/en/session#growing_a_development_team_while_building_a_huge_app_at_500_miles/hour">Growing a Development Team While Building a Huge App at 500 miles/hour</a>; which I attended, hoping to garner an insight into building a team and managing agile development on a large project. While the project was an interesting one, Owen seemed to be more interested in giving out t-shirts and I didn&rsquo;t feel we got very deep into the whole process. Being a fairly heavy user and fan of Zend Framework, I joined <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> in his search for some of <a href="http://conf.phpquebec.com/en/session#zf">Zend Framework&rsquo;s Little Known Gems</a>. The talk was targeted at using the components in isolation and I discovered a number of components that may come in handy in future projects, with or without the MVC stack.</p>
-
-<p><a href="http://conf.phpquebec.com/en/conferencier#morgan_tocker">Morgan Tocker</a> then talked further about MySQL, this time focusing on performance as opposed to high availability. There were a few points about the inner working of the InnoDB storage engine that got my attention, including some builds available from Percona we may need to look at.</p>
-
-<p>The round-table <a href="http://conf.phpquebec.com/en/session#framework">Framework Comparison</a>, featuring <a href="http://conf.phpquebec.com/en/conferencier#fabien_potencier">Fabien Potencier</a> (Symfony) <a href="http://conf.phpquebec.com/en/conferencier#derick_rethans">Derick Rethans</a> (ezComponents) and <a href="http://conf.phpquebec.com/en/conferencier#matthew_weier_ophinney">Matthew Weier O&#8217;Phinney</a> (Zend Framework) seemed to indicate that all 3 frameworks solve much the same problem, they even went as far as agreeing you should use components from the other frameworks when your primary framework doesn&rsquo;t include one. Much different to the &ldquo;my framework is better&rdquo; &ldquo;discussions&rdquo; we too often see.</p>
-
-<p>Finally, <a href="http://conf.phpquebec.com/en/conferencier#chris_shiflett">Chris Shiflett</a> addressed <a href="http://conf.phpquebec.com/en/session#security-centered_design__dont_just_plan_for_security_design_for_it">Security-Centered Design: Don&rsquo;t Just Plan for Security; Design For It</a> provided an alternative look at some interesting security topics. Instead of focusing on technical details, he primarly focused on security from a user perspective as &ldquo;user perception is as important as reality&rdquo;. Giving examples of various recent attacks on high profile sites that, while not actually the fault of the site, would be perceived as such by most users. He also put forward ideas about using &ldquo;ambient signifiers&rdquo; to assist in the fight against phishing, and how the normal (request-reload) web model can mean important information is missed due to &ldquo;change blindness&rdquo; including a live demonstration. He suggesting AJAX might be a suitable solution in this case (as long as it&rsquo;s still accessible of course).</p>
-
-<h2>Conclusions</h2>
-
-<p>All-in-all the conference was a great experience, the hotel was really nice (especially compared to some of the hostels where I usually slum on my travels) and the talks were wide ranging and generally well presented.</p>
-
-<p>Some of the material I found too &ldquo;introductory&rdquo;, but I think that may be because I primarily attended sessions on topics I am familiar with hoping to learn more, whereas using the talks as introductions to new topics might have been a better idea. How do people usually select talks?</p>
-
-<p>I also didn&rsquo;t attend much in the way of &ldquo;extra-conference&rdquo; activities; social events outside of the conference schedule. I am a little disappointed about this, as it would have been good to chat to some members of the community in a less formal setting, so this is something I think I would do much more of next time. And there will be a next time.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/7/">&larr; Older</a>
@@ -247,6 +283,10 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/15/value-objects-in-javascript/">Value Objects in JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
       </li>
     
@@ -260,10 +300,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     
       <li class="post">
         <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
   </ul>
@@ -282,7 +318,7 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Brenton Alker -
+  Copyright &copy; 2015 - Brenton Alker -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

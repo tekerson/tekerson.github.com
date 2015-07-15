@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Wow, it&rsquo;s been over 3 years since my last post! And, like so many entertainment franchises, I think it&rsquo;s time for a reboot. I stopped &hellip;">
+  <meta name="description" content="As I previously blogged, I&rsquo;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2013/03/28/ideas-of-march-wheres-the-love/">Ideas of March: Where&#8217;s the Love?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-28T21:43:00+10:00" pubdate data-updated="true">Mar 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As I previously blogged, I&rsquo;ve recently changed blogging platform to use a static generator. One of the disadvantages that comes with serving only static files is a lack of interactivity; There is no server-side scripts to handle things like comments. The most common solution is to use a third party service, such as <a href="http://disqus.com">Disqus</a> that provides a JavaScript widget for you.</p>
+
+<p>Of course, as Chris Shiflett in his (now traditional :P) <a href="http://shiflett.org/blog/2013/mar/ideas-of-march">Ideas of March</a> post espouses, the disadvantage of any third party service is the lack of data ownership; &ldquo;You never know when it&rsquo;s going to disappear.&rdquo; citing the recent announcement that Google Reader is to be shut down. This is why I am reluctant to implement such a solution. And given Lorna Mitchell&rsquo;s suggestion, <a href="http://www.lornajane.net/posts/2013/ideas-of-march-dont-read-the-comments">&ldquo;don&rsquo;t read the comments&rdquo;</a>, I have to wonder if having comments is worth the effort involved?</p>
+
+<p>For now, it looks like I&rsquo;m going to remain comment free. Which is a shame. The occasional grateful comment from a random stranger on the Internet has a certain way of almost making up for some of the not-so-nice the Internet thrusts upon us. Without this feedback, where&rsquo;s the love?</p>
+
+<p>Both Lorna Mitchell and Rob Allen (in <a href="http://akrabat.com/me/ideas-of-march-its-my-content-and-my-opinion/">his response</a>) assert that they intend to sometimes &ldquo;turn off comments and encourage others to respond by writing [&hellip;] on their own blog.&rdquo; I think this is a fantastic idea (I&rsquo;m doing so right now), though I do have some concern about how well fragmented blog posts can coalesce into a meaningful conversation, &ldquo;trackbacks&rdquo; were an attempt at solving this issue, but I&rsquo;m not sure that worked too well.</p>
+
+<p>This is one advantage the &ldquo;walled gardens&rdquo; currently hold &ndash; they have the ability to aggregate the posts into a single congruous conversation.</p>
+
+<p>If you have any solutions to the fragmented conversation problem, write a response on your blog and I&rsquo;ll&hellip; Probably never see it&hellip; Ping me on <a href="http://twitter.com/tekerson">twitter</a>, maybe?</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -158,100 +204,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2009/09/08/bootstrapping-the-doctrine2-autoloader-in-zend-framework/">Bootstrapping the Doctrine 2.0 Autoloader in Zend Framework</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-09-08T01:03:53+10:00" pubdate data-updated="true">Sep 8<span>th</span>, 2009</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em><strong>Please Note:</strong> This post was based on the Alpha release of Doctrine2. They have since added Doctrine\Common\IsolatedClassLoader which (among other things) doesn&rsquo;t automatically register itself so we no longer have to unregister it, making things much easier.</em></p>
-
-<p>Doctrine 2.0 looks like it might finally be the ORM framework I have been seeking for PHP. While the older versions of Doctrine provided great functionality, they were too intrusive for my taste. I think an ORM should provide a true <a href="http://martinfowler.com/eaaCatalog/dataMapper.html">data mapper</a>; in which the domain entities need know nothing about their persistence.</p>
-
-<p>Matthew Weier O&#8217;Phinney has already posted about <a href="http://weierophinney.net/matthew/archives/220-Autoloading-Doctrine-and-Doctrine-entities-from-Zend-Framework.html">autoloading Doctrine in Zend Framework</a>, but Doctrine2 presents some new challenges. Mainly that Doctrine2 is fully PHP5.3, including &ldquo;real&rdquo; namespaces, so its classes don&rsquo;t follow the (current) Zend naming standard and the ZF autoloader won&rsquo;t load them for us.</p>
-
-<p>Good News, Doctrine provides its own autoloader that we can leverage to load its own classes.</p>
-
-<p>Bad News, the Doctrine autoloader automatically registers itself with spl_autoload_register, causing the normal Zend loader to be forgotten (well, pushed down the stack, where it isn&rsquo;t very useful).</p>
-
-<p>Good News, it&rsquo;s easy to remove the doctrine autoloader using spl_autoload_unregister, then push it onto the ZF autoloader stack, targeting the Doctrine namespace. Letting the ZF autoloader call it as necessary.</p>
-
-<p>Enough jibber-jabber, how do we do all this? In the bootstrap! Adding this method to your Bootstrap.php will achieve what we want; adding the Doctrine autoloader to the Zend Framework autoloader queue for the &ldquo;Doctrine\&rdquo; namespace.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'>    <span class="k">protected</span> <span class="k">function</span> <span class="nf">_initDoctrine</span><span class="p">()</span>
-</span><span class='line'>    <span class="p">{</span>
-</span><span class='line'>        <span class="c1">// Create the doctrine autoloader and remove it from the spl autoload stack (it adds itself)</span>
-</span><span class='line'>        <span class="k">require_once</span> <span class="s1">&#39;Doctrine/Common/ClassLoader.php&#39;</span><span class="p">;</span>
-</span><span class='line'>        <span class="nv">$doctrineAutoloader</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="k">new</span> <span class="nx">\Doctrine\Common\ClassLoader</span><span class="p">(),</span> <span class="s1">&#39;loadClass&#39;</span><span class="p">);</span>
-</span><span class='line'>        <span class="nb">spl_autoload_unregister</span><span class="p">(</span><span class="nv">$doctrineAutoloader</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// Fetch the global Zend Autoloader</span>
-</span><span class='line'>        <span class="nv">$autoloader</span> <span class="o">=</span> <span class="nx">Zend_Loader_Autoloader</span><span class="o">::</span><span class="na">getInstance</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// Push the doctrine autoloader to load for the Doctrine\ namespace</span>
-</span><span class='line'>        <span class="nv">$autoloader</span><span class="o">-&gt;</span><span class="na">pushAutoloader</span><span class="p">(</span><span class="nv">$doctrineAutoloader</span><span class="p">,</span> <span class="s1">&#39;Doctrine\\&#39;</span><span class="p">);</span>
-</span><span class='line'>    <span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>We can use all of Doctrine&rsquo;s classes anywhere else in our code.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">use</span> <span class="nx">Doctrine\ORM</span><span class="p">;</span>
-</span><span class='line'><span class="nv">$manager</span> <span class="o">=</span> <span class="nx">EntityManager</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="s1">&#39;driver&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;pdo_sqlite&#39;</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;:memory:/&#39;</span><span class="p">));</span>
-</span><span class='line'><span class="c1">// ...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I still have a lot to learn and the documentation on 2.0 is a little sparse as yet, but this is a start.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/5/">&larr; Older</a>
@@ -269,6 +221,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/15/value-objects-in-javascript/">Value Objects in JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
       </li>
     
@@ -282,10 +238,6 @@
     
       <li class="post">
         <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
   </ul>
@@ -304,7 +256,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Brenton Alker -
+  Copyright &copy; 2015 - Brenton Alker -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

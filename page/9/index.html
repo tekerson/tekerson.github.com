@@ -9,8 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="If you&rsquo;re reading this then I have successfully migrated to my new VPS hosting on Slicehost.
-">
+  <meta name="description" content="With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in git, and it&rsquo;s easy! Until this week, I had &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,83 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/09/05/basic-branching-with-git/">Basic Branching With Git</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-09-05T22:48:22+10:00" pubdate data-updated="true">Sep 5<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>With 3 long-running tasks concurrently on my plate, I finally got around to learning branching in <a href="http://git.or.cz/">git</a>, and it&rsquo;s <strong>easy!</strong></p>
+
+<p>Until this week, I had managed to get by without learning to branch. I have looked previously but got a little lost. I often temporarily stored my work using &ldquo;<a href="http://www.kernel.org/pub/software/scm/git/docs/git-stash.html">git-stash</a>&rdquo; to work on multiple things at once, but this is very limiting.</p>
+
+<p>So, Here we go. My basic workflow now look like this.</p>
+
+<p>Create a new branch (based on the HEAD of your current branch), and automatically switch to it:</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; -b my_branch&lt;/code&gt;
+</code></pre>
+
+<p>Then you can work within this branch as you always would.</p>
+
+<p>Work, work, work&hellip;</p>
+
+<pre><code>&lt;code&gt;&lt;a&gt;&lt;/a&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-add.html" title="git-add manual page"&gt;git add&lt;/a&gt; files_i_have_edited.txt
+&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-commit.html" title="git-commit manual page"&gt;git commit&lt;/a&gt; -m 'My changes'&lt;/code&gt;
+</code></pre>
+
+<p>Repeating this step until the task is complete. Then, to get the changes back into the master branch. Switch to it</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; master&lt;/code&gt;
+</code></pre>
+
+<p>And pull the changes from the branch</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-pull.html" title="git-pull manual page"&gt;git pull&lt;/a&gt; . my_branch&lt;/code&gt;
+</code></pre>
+
+<p>Easy. No need to remember revision numbers where you branched, or which changed have already been merged. You can of course switch back to the branch and continue work with</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html" title="git-checkout manual page"&gt;git checkout&lt;/a&gt; my_branch&lt;/code&gt;
+</code></pre>
+
+<p>this &ldquo;edit, commit, pull&rdquo; cycle can continue until the task is complete. Then, once you&rsquo;re satisfied you can delete the branch with</p>
+
+<pre><code>&lt;code&gt;&lt;a href="http://www.kernel.org/pub/software/scm/git/docs/git-branch.html" title="git-branch manual page"&gt;git branch&lt;/a&gt; -d my_branch&lt;/code&gt;
+</code></pre>
+
+<p>It&rsquo;s still in the history of course, but no need to keep old branches around.</p>
+
+<p>Hope that makes things clear to anyone else who was confused as I was by some of the overly complicated explanation of branching in git.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -168,77 +244,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/07/05/an-attempt-at-restricted-auto-login/">An Attempt at Restricted Auto-Login</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-07-05T02:33:18+10:00" pubdate data-updated="true">Jul 5<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The system I have been building is a direct marketing system (don&rsquo;t hate me, it&rsquo;s opt-in) and to be compliant with their ethics policy it requires &ldquo;2 click unsubscribe&rdquo; functionality from all its email campaigns; 1 click on the link in the email, and 1 click on a big &ldquo;Don&rsquo;t Ever Send Me Email Again&rdquo; button. So people actually have an option to opt out at any time, as any good (and I use that word in the relative sense) email marketing system should.</p>
-
-<p>The problem this poses for me though, is how can I let a member unsubscribe without authenticating themselves? Authentication would take more than 2 clicks! The obvious solution is to not require authentication by simply adding the members identifier (email address, user name, database id, whatever can identify them uniquely) to the link. So I would have a URL something like:</p>
-
-<pre><code>http://example.com/member/unsubscribe?member=1234
-</code></pre>
-
-<p>And simply make all the options on that page act on the member identified by the identifier. Great! Until a malicious netizen comes along, seeing the scheme decides to systematically unsubscribe all my members. This would be achieved easily by guessing the identifiers, made even easier because they&rsquo;re sequential, and clicking the unsubscribe button.</p>
-
-<p>The initial solution is to use some other &ldquo;key&rdquo; in the link, one that is not so easy to guess. So a key was added, giving the url a form like:</p>
-
-<pre><code>http://example.com/member/unsubscribe?member=1234&amp;key=SECRETKEY
-</code></pre>
-
-<p>Were SECRETKEY is a key they is generated randomly when the user signs up and stored with their account details. Using this, the system would allow a user to log in simply by clicking the link, they could then unsubscribe.</p>
-
-<p>The problem being, of course, that by simply logging the user into their account anyone who has the link has full access to the account without needing to know any more information. So they could then read (and change) email addresses, passwords etc. Not ideal.</p>
-
-<p>My solution has been to take the key a step further, and limit it to only the intended page. In this case the unsubscribe page. So my new url looks like this:</p>
-
-<pre><code>http://example.com/member/unsubscribe?token=1234:HASH
-</code></pre>
-
-<p>I&rsquo;ve removed the member variable and combined it into a delimited token. This was mainly because I thought it looked a little nicer, it would function just as well as a separate variable. The real change is in the HASH. The new hash still uses the SECRETKEY that was used in the previous iteration, except it is now combined with the url that I want to give them access to, and an added salt so all tokens can be invalidated if required. In PHP, this looks something like this:</p>
-
-<pre><code>&lt;code&gt;$allowedUrl = '/member/unsubscribe';
-$hash = md5($salt . $allowedUrl . ':' . $secretKey);
-$token = $id . ':' . $hash;
-&lt;/code&gt;
-</code></pre>
-
-<p>On the page, to allow access, the token is decomposed, the member&rsquo;s identifier extracted, and their key retrieved. Their key is then used in the same process to generate a hash for the URL they are requesting. If the hashes match, they have access. To make it a little more user friendly, the allowed URL is added to their session, so they still have access to the page even if they lose the token from the URL. If they hit any other page with the restricted URL in their session they are logged out and sent back to re-authenticate.</p>
-
-<p>One shortfall that I am aware of, and that was pointed out in a discussion on #phpc, is the members secret keys should ideally be rotated, so it can only be used once. This would mean that stealing a link would at worst allow one login, and only to one page. This may be implemented if it doesn&rsquo;t impact too much on usability (that classic trade-off, security vs. convenience).</p>
-
-<p>Now, I am not a security expert and as such don&rsquo;t recommend anyone take my advice (is this good enough for a disclaimer), but apart from the one caveat mentioned, I think this solution meets the requirements without forfeiting too much in security. Any comments or advice on the technique are, as always, appreciated.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/10/">&larr; Older</a>
@@ -256,6 +261,10 @@ $token = $id . ':' . $hash;
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/15/value-objects-in-javascript/">Value Objects in JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2014/06/18/getting-the-tools-haskell-edition/">Getting the tools: Haskell Edition</a>
       </li>
     
@@ -269,10 +278,6 @@ $token = $id . ':' . $hash;
     
       <li class="post">
         <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/08/12/applying-functional-concepts-to-oop-referential-transparency-slash-command-query-separation/">Applying Functional Concepts to OOP: Referential Transparency / Command-Query Separation</a>
       </li>
     
   </ul>
@@ -291,7 +296,7 @@ $token = $id . ':' . $hash;
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Brenton Alker -
+  Copyright &copy; 2015 - Brenton Alker -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
