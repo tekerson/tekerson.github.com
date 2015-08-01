@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Code | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/code/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2015-07-15T22:52:21+10:00</updated>
+  <updated>2015-08-01T19:03:24+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,92 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Entity Objects in JavaScript]]></title>
+    <link href="http://blog.tekerson.com/2015/07/31/entity-objects-in-javascript/"/>
+    <updated>2015-07-31T18:26:37+10:00</updated>
+    <id>http://blog.tekerson.com/2015/07/31/entity-objects-in-javascript</id>
+    <content type="html"><![CDATA[<p>In my last post I looked at Value Objects and how I might implement them in JavaScript. This time I&rsquo;m going to look at Entities. Entities are kind of the next rung on the ladder in the domain model. They can be composed of Value Objects.</p>
+
+<p>Entities are <em>not</em> defined by their attributes in the same way as Value Objects, instead they have an enduring &ldquo;Identity&rdquo;. The canonical example is a person. A person isn&rsquo;t defined by their name, their age, their height, or any other attribute. Any of these can change and they are still the same person (barring any deep philisophical discussion). In software systems, this is usually implemented by assigning an arbitrary key that uniquely identifies the entity for its lifetime.</p>
+
+<p>Where this key comes from is irrelevant to this discussion, but it is common for it to be a value that is generated in the persistence layer when the data is saved.</p>
+
+<p>So, from this we could say that an entity is an instance with an identity and a collection of mutable attributes. Using a similar validation style to the one I used for Value Objects, I might write this in JavaScript like (yes, I&rsquo;m using a Car example, but I promise it&rsquo;s not the usual inheritence/composition example):</p>
+
+<p>``` javascript
+function Car(id, fields) {</p>
+
+<pre><code>if (!id instanceof CarId) {
+    throw new TypeError('Expected: CarId');
+}
+if (!fields instanceof CarFields) {
+    throw new TypeError('Expected: CarFields');
+}
+
+this.id = id;
+this.fields = fields;
+return Object.freeze(this);
+</code></pre>
+
+<p>}
+```</p>
+
+<p>But, I just said that entities are mutable, so, why am I still calling <code>Object.freeze</code>? Because, I want <em>this</em> object &ndash; the Entity &ndash; to be immutable, its <code>id</code> can&rsquo;t change but it&rsquo;s <code>fields</code> are still mutable; I&rsquo;m taking advantage of the shallow freeze semantics.</p>
+
+<p>Side Note: If you&rsquo;ve been paying close attention, you may have noticed I&rsquo;m <code>throw</code>ing exceptions here instead of <code>return</code>ing them like last time. This is because I consider passing the wrong type to be a developer error, which is (hopefully) an exceptional situation, as opposed to a user entering an invalid value, which is to be expected.</p>
+
+<p>Ignoring the <code>CarId</code>, which will be a Value Object similar to the previous post. The only interesting part left is the <code>CarFields</code> object. This will be slightly different to the Value Object and the Entity itself because it&rsquo;s mutable. So, its validation must be performed in the setters instead of the constructor. Using the common setter/getter pattern, it looks like:</p>
+
+<p>``` javascript
+function CarFields(model, odometer) {
+  this.model(model);
+  this.odometer(odometer);
+}</p>
+
+<p>CarFields.prototype.model = function(model) {
+  if (model === undefined) {</p>
+
+<pre><code>return this._model;
+</code></pre>
+
+<p>  }
+  if (!model instanceof CarMake) {</p>
+
+<pre><code>throw new TypeError('Expected: CarModel');
+</code></pre>
+
+<p>  }
+  this._model = model;
+}</p>
+
+<p>CarFields.prototype.odometer = function(odometer) {
+  if (odometer === undefined) {</p>
+
+<pre><code>return this._odometer;
+</code></pre>
+
+<p>  }
+  if (!odometer instanceof Distance) {</p>
+
+<pre><code>throw new TypeError('Expected: Distance');
+</code></pre>
+
+<p>  }
+  this._odometer = odometer;
+}
+```</p>
+
+<p>Even though we now have setters, all of the values are still required in the constructor. This makes it impossible* to have a partially instantiated instance running around.</p>
+
+<p>* &ldquo;Impossible&rdquo; is an optimistic take on it. If you want to assign invalid values directly to the &ldquo;internal&rdquo; fields, this won&rsquo;t protect you from yourself. This is JavaScript after all.</p>
+
+<p>Another way of modeling the <code>CarEntity</code> is to have the fields as properties of the entity but leave the <code>id</code> as <code>null</code> until it is persisted, then updating it. The advantage of explicitly defining a <code>CarFields</code> is, once again, less mutation and preventing the creation of partially instantiated instances.</p>
+
+<p>Before the data is persisted we have only <code>CarFields</code>. Once it is persisted <em>then</em> we have a <code>CarEntity</code>. The different types represent the different stages in the lifecycle and the two states are less easily confused.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Value Objects in JavaScript]]></title>
@@ -59,13 +145,13 @@ function Distance(value, unit) {
 function Distance(value, unit) {
   if (parseInt(value, 10) !== value) {</p>
 
-<pre><code>return new TypeError('Distance Value is not a decimal number');
+<pre><code>return new Error('Distance Value is not a decimal number');
 </code></pre>
 
 <p>  }
   if (Distance.units.indexOf(unit) === -1) {</p>
 
-<pre><code>return new TypeError('Distance Unit is not is not valid');
+<pre><code>return new Error('Distance Unit is not is not valid');
 </code></pre>
 
 <p>  }</p>
@@ -222,124 +308,6 @@ $manager = EntityManager::create(array('driver' =&gt; 'pdo_sqlite', 'path' =&gt;
 </code></p>
 
 <p>I still have a lot to learn and the documentation on 2.0 is a little sparse as yet, but this is a start.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dependency Injection Container Resource in Zend Framework]]></title>
-    <link href="http://blog.tekerson.com/2009/07/06/dependency-injection-container-resource-in-zend-framework/"/>
-    <updated>2009-07-06T13:00:51+10:00</updated>
-    <id>http://blog.tekerson.com/2009/07/06/dependency-injection-container-resource-in-zend-framework</id>
-    <content type="html"><![CDATA[<p>A good dependency injection container is a godsend when it comes to managing the dependency tree of even a moderately complex domain model. As such, it comes as no surprise there has been much discussion about them of late in the PHP and Zend Framework communities.</p>
-
-<p>Based on the <a href="http://github.com/beberlei/yadif/tree/master">Yadif</a> and Benjamin Eberlei&rsquo;s recent look at <a href="http://www.whitewashing.de/blog/articles/117">Using a Dependency Injection Container with Zend_Application</a>, where he replaces Zend_Applications default container instance (A Zend_Registry instance) with a Yadif_Container, I have created a Zend_Application_Resource to allow configuration based injection of dependencies into the container via the normal ZF configuration file (application.ini)</p>
-
-<p>The container resource copies any already instantiated objects from the old container into the new one, then replaces the default container.</p>
-
-<p>``` php
-&lt;?php
-class Tek_Application_Resource_Container extends Zend_Application_Resource_ResourceAbstract
-{</p>
-
-<pre><code>protected $_container = null;
-
-public function getContainer()
-{
-    if (null === $this-&gt;_container) {
-        $options = $this-&gt;getOptions();
-        $container = $this-&gt;_getBootstrap()-&gt;getContainer();
-        if (!$container instanceof Yadif_Container) {
-            $config = isset($options['options']) ? new Zend_Config($options['options']) : null;
-            $container = new Yadif_Container(array(), $config);
-
-            // import instances from the existing (Zend_Registry) container
-            foreach ($this-&gt;_getBootstrap()-&gt;getContainer() as $key =&gt; $instance) {
-                $container-&gt;__set($key, $instance);
-            }
-        }
-        $container-&gt;addComponents($options['objects']);
-        $this-&gt;_container = $container;
-    }
-
-    return $this-&gt;_container;
-}
-
-public function init()
-{
-    $this-&gt;getContainer();
-    $this-&gt;_getBootstrap()-&gt;setContainer($this-&gt;_container);
-    return $this-&gt;_container;
-}
-
-protected function _getBootstrap()
-{
-    $app = $this-&gt;getBootstrap()-&gt;getApplication();
-    if ($app instanceof Zend_Application) {
-        return $app-&gt;getBootstrap();
-    } else {
-        return $app;
-    }
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>I&rsquo;ve also created a simple action helper to allow easy grabbing of resources from the action controllers. Both reside in <a href="http://github.com/tekerson/Tek/tree/master">my extensions repository</a>.</p>
-
-<p>To use the container resource you will need to add the prefix and path to the bootstrappers plugin loader:</p>
-
-<p>``` php
-&lt;?php
-class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
-{
-// &hellip;</p>
-
-<pre><code>protected function _initPlugins()
-{
-   $this-&gt;getPluginLoader()-&gt;addPrefixPath(
-       'Tek_Application_Resource',
-       'Tek/Application/Resource'
-   );
-}
-</code></pre>
-
-<p>// &hellip;
-}
-```</p>
-
-<p>Then you can add the resources and their dependencies via the normal configuration system. This means adding lines like:</p>
-
-<pre><code>resources.container.objects.Log.class = "Zend_Log"
-resources.container.objects.Log.arguments.0 = "Log_Writer"
-
-resources.container.objects.Log_Writer.class = "Zend_Log_Writer_Stream"
-resources.container.objects.Log_Writer.arguments.0 = "%Log_Writer.stream%"
-
-resources.container.options.Log_Writer.stream = APPLICATION_PATH "/../log/application.log"
-</code></pre>
-
-<p>There are 2 resources defined here, the &ldquo;Log&rdquo; and the &ldquo;Log_Writer&rdquo;.</p>
-
-<ol>
-<li><p> Log is an instance of Zend_Log and takes a Log_Writer resource as the first (and only) argument to its constructor.</p></li>
-<li><p> The Log_Writer resource is an instance of Zend_Log_Writer_Stream and takes a scalar as its only argument. The scalar value is defined in the container option specified.</p></li>
-</ol>
-
-
-<p>Now, the controller can write a log like this.</p>
-
-<p>``` php
-&lt;?php
-$logger = $this->getInvokeArg(&lsquo;bootstrap&rsquo;)&ndash;>getResource(&lsquo;Log&rsquo;);
-// or, with the helper
-$logger = $this->_helper->resource(&lsquo;Log&rsquo;);</p>
-
-<p>$logger->log(&lsquo;A log message&rsquo;, Zend_Log::NOTICE);
-```</p>
-
-<p>While this is a simple example, it can be really beneficial when working with, for example, a service layer. The service you need might depend on another service, both of which may depend on an Authorization service. All the services depend on their data mappers (which themselves depends on a database connection) and their entity factories, etc.
-Instantiating a dependency tree like this for every object you need can lead to duplicate and hard to modify code. Dependency injection coupled with a good container can provide highly versatile code whose behaviour can be drastically changed by only modifying a configuration file.</p>
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I often find myself performing operations on single column CSV files to perform tasks such as merging member id lists, or email addresses, counting &hellip;">
+  <meta name="description" content="As part of the current application I am developing, I have the need for a reliable queue that is not going to allow duplicate reads when popped from &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/04/08/using-a-mysql-table-as-a-thread-safe-queue/">Using a MySQL Table as a Thread-safe Queue</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-08T20:56:50+10:00" pubdate data-updated="true">Apr 8<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As part of the current application I am developing, I have the need for a reliable queue that is not going to allow duplicate reads when <em>popped</em> from multiple threads or processes.</p>
+
+<p>The queue in this case is an outgoing mail queue. The system needs to read the task from the queue, generate the email by substituting in the member&rsquo;s details, and then send it to the mail server.</p>
+
+<p>When reading the queue with only 1 process, it is easy &mdash; read the queue, process the email, delete the queue entry, repeat. Concurrency adds the problem that 2 (or more) processes could read the same email, and we really <strong>don&rsquo;t</strong> want an email going to a member 2 or 3 times.</p>
+
+<p>My first solution involved a single &ldquo;master&rdquo; thread that would read the queue and delegate the processing to worker threads. While this worked, it was complicated and error prone. After some discussion with some people on <a href="irc://irc.freenode.net/#mysql">#mysql on freenode</a>. I found what should be a suitable database level method.</p>
+
+<p>By selecting the queue entry with the <em>FOR UPDATE</em> modifier, the row is placed under an exclusive lock &mdash; the same lock used when a row is being updated, and won&rsquo;t be allowed to be read until it is updated  (N.B. only works when using the INNODB storage engine)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>SELECT id, task FROM queue WHERE processing = 0 FOR UPDATE;
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The process now has a lock on that row, and it won&rsquo;t be read by any others. It can then be updated to mark it as &ldquo;being processed&rdquo; or deleted from the queue, depending on your needs.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>
+</span><span class='line'>UPDATE queue SET processing = 1 WHERE id = :id;
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With the queue entry safely belonging to the thread, it can now take as long as it needs to process. By keeping the time between the SELECT…FOR UPDATE and UPDATE to a minimum the throughput should be increased significantly from the original non-concurrent solution.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -169,48 +239,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/02/21/a-triumphant-return/">A Triumphant Return</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-02-21T20:40:58+10:00" pubdate data-updated="true">Feb 21<span>st</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Well, a return anyway. I&rsquo;m not exactly sure how triumphant it is.</p>
-
-<p>Yes, that&rsquo;s right, I&rsquo;m back. I&rsquo;ve been away from my blog, my country and (for the most part) the Internet for over a month. I&rsquo;ve been holidaying in Canada, doing some snowboarding, seeing the sights, doing the usual touristy stuff. As great as it was, all good things must come to an end, so here I am, back at home.</p>
-
-<p>Some photos of my adventures can be found in <a href="http://picasaweb.google.com/Brenton.Alker">my gallery</a>. There are plenty more photo&rsquo;s which I might put up, and I might even get around to adding captions at some point.</p>
-
-<p>On a technical note, about 2 days into my trip my server went down, and as it is unmanaged (read: sitting in my living room); I couldn&rsquo;t do anything about it, so it stayed down all month. Luckily there isn&rsquo;t anything on it more critical than my blog, but as a result Google has completely removed me from existence.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/13/">&larr; Older</a>
@@ -228,6 +256,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/31/entity-objects-in-javascript/">Entity Objects in JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/07/15/value-objects-in-javascript/">Value Objects in JavaScript</a>
       </li>
     
@@ -241,10 +273,6 @@
     
       <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
       </li>
     
   </ul>

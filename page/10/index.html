@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="The system I have been building is a direct marketing system (don&rsquo;t hate me, it&rsquo;s opt-in) and to be compliant with their ethics policy it &hellip;">
+  <meta name="description" content="While writing a fairly standard sign-up/log-in system, I got to the point of validating the password to make sure it only contained acceptable &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2008/07/15/trim-validation/">Trim() Validation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-15T23:11:18+10:00" pubdate data-updated="true">Jul 15<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>While writing a fairly standard sign-up/log-in system, I got to the point of validating the password to make sure it only contained acceptable characters. Now for me this would usually mean a regular expression. But, since this system wasn&rsquo;t for me I decided to make the &ldquo;valid characters&rdquo; configurable, and generally the people configuring it won&rsquo;t be able to write a regular expression.</p>
+
+<p>My solution is to use <a href="http://php.net/trim">php&rsquo;s trim()</a> (or more specifically <a href="http://php.net/rtrim">rtrim()</a>, but it doesn&rsquo;t really matter) by passing the users input as the first argument, and the string of valid characters as the second; I should get an empty string in return. So the test, only allowing lowercase letters, becomes:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;&#39;</span> <span class="o">!==</span> <span class="nb">rtrim</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="s1">&#39;abcdefghijklmnopqrstuvwxyz&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">false</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Simple! I don&rsquo;t know how it compares speed wise with other methods, but it seems simple and effective and I can&rsquo;t imagine it&rsquo;s terribly slow unless your strings get larger.</p>
+
+<p>I&rsquo;m also not sure how it would handle multi-byte characters. But I don&rsquo;t <strong>think</strong> it would be a problem if it doesn&rsquo;t. Anyone got any insight?</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -203,49 +256,6 @@ $token = $id . ':' . $hash;
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2008/05/04/sixty-second-tech/">Sixty Second Tech</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-05-04T21:48:27+10:00" pubdate data-updated="true">May 4<span>th</span>, 2008</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://www.sixtysecondtech.com">Sixty Second Tech</a> is a (relatively) new podcast by prominent Zender <a href="http://blog.calevans.com/">Cal Evans</a> that promises to be the &ldquo;Cure to BSS&rdquo;</p>
-
-<blockquote><p>Sixty Second Tech is the only known cure for â€œBlank Stare Syndromeâ€ (BSS). BSS happens when one of your technical friends starts talking to you and unconsciously slips into geek speak. They don&rsquo;t realize they&rsquo;ve triggered BSS until long after your eyes glaze over. BSS is an embarrassing condition but a curable one, just spend one minute a week listening to Sixty Second Tech.</p></blockquote>
-
-<p>While I am definitely on the side of the &ldquo;technical friends&rdquo;, the short podcasts &mdash; almost exactly 1 minute each, quite impressive &mdash; are a great way to provoke thought about aspects of technology that may not otherwise have been brought to the fore, but probably should be; such as <a href="http://www.sixtysecondtech.com/2008/03/02/the-secret-to-cheap-and-easy-websites/">Wordpress as a CMS</a>, <a href="http://www.sixtysecondtech.com/2008/03/31/openid-and-you/">OpenID</a> and <a href="http://www.sixtysecondtech.com/2008/03/24/do-you-know-what-they-are-saying-about-you/">Google Alerts</a>
-But, my favourite is pointing anyone who speaks to me about &ldquo;SEO&rdquo; to the episode &ldquo;<a href="http://www.sixtysecondtech.com/2008/03/10/go-relevant-or-go-home/">Go Relevant or Go Home!</a>&rdquo;; which sums up very succinctly the folly of the whole practice.</p>
-
-<p>His name is Cal Evans, and he is my sixty second tech.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/11/">&larr; Older</a>
@@ -263,6 +273,10 @@ But, my favourite is pointing anyone who speaks to me about &ldquo;SEO&rdquo; to
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/31/entity-objects-in-javascript/">Entity Objects in JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/07/15/value-objects-in-javascript/">Value Objects in JavaScript</a>
       </li>
     
@@ -276,10 +290,6 @@ But, my favourite is pointing anyone who speaks to me about &ldquo;SEO&rdquo; to
     
       <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
       </li>
     
   </ul>

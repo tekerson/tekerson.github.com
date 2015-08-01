@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="Value Objects are awesome! Many of the JavaScript applications I have encountered don&rsquo;t explicitly define their domain objects at all, instead &hellip;">
+  <meta name="description" content="In my last post I looked at Value Objects and how I might implement them in JavaScript. This time I&rsquo;m going to look at Entities. Entities are &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,140 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2015/07/31/entity-objects-in-javascript/">Entity Objects in JavaScript</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-31T18:26:37+10:00" pubdate data-updated="true">Jul 31<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In my last post I looked at Value Objects and how I might implement them in JavaScript. This time I&rsquo;m going to look at Entities. Entities are kind of the next rung on the ladder in the domain model. They can be composed of Value Objects.</p>
+
+<p>Entities are <em>not</em> defined by their attributes in the same way as Value Objects, instead they have an enduring &ldquo;Identity&rdquo;. The canonical example is a person. A person isn&rsquo;t defined by their name, their age, their height, or any other attribute. Any of these can change and they are still the same person (barring any deep philisophical discussion). In software systems, this is usually implemented by assigning an arbitrary key that uniquely identifies the entity for its lifetime.</p>
+
+<p>Where this key comes from is irrelevant to this discussion, but it is common for it to be a value that is generated in the persistence layer when the data is saved.</p>
+
+<p>So, from this we could say that an entity is an instance with an identity and a collection of mutable attributes. Using a similar validation style to the one I used for Value Objects, I might write this in JavaScript like (yes, I&rsquo;m using a Car example, but I promise it&rsquo;s not the usual inheritence/composition example):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Car</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">fields</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">id</span> <span class="k">instanceof</span> <span class="nx">CarId</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarId&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fields</span> <span class="k">instanceof</span> <span class="nx">CarFields</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarFields&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">fields</span> <span class="o">=</span> <span class="nx">fields</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But, I just said that entities are mutable, so, why am I still calling <code>Object.freeze</code>? Because, I want <em>this</em> object &ndash; the Entity &ndash; to be immutable, its <code>id</code> can&rsquo;t change but it&rsquo;s <code>fields</code> are still mutable; I&rsquo;m taking advantage of the shallow freeze semantics.</p>
+
+<p>Side Note: If you&rsquo;ve been paying close attention, you may have noticed I&rsquo;m <code>throw</code>ing exceptions here instead of <code>return</code>ing them like last time. This is because I consider passing the wrong type to be a developer error, which is (hopefully) an exceptional situation, as opposed to a user entering an invalid value, which is to be expected.</p>
+
+<p>Ignoring the <code>CarId</code>, which will be a Value Object similar to the previous post. The only interesting part left is the <code>CarFields</code> object. This will be slightly different to the Value Object and the Entity itself because it&rsquo;s mutable. So, its validation must be performed in the setters instead of the constructor. Using the common setter/getter pattern, it looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">CarFields</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">odometer</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="nx">model</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">odometer</span><span class="p">(</span><span class="nx">odometer</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">CarFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">model</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_model</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">model</span> <span class="k">instanceof</span> <span class="nx">CarMake</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarModel&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">CarFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">odometer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">odometer</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">odometer</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_odometer</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">odometer</span> <span class="k">instanceof</span> <span class="nx">Distance</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: Distance&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_odometer</span> <span class="o">=</span> <span class="nx">odometer</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Even though we now have setters, all of the values are still required in the constructor. This makes it impossible* to have a partially instantiated instance running around.</p>
+
+<p>* &ldquo;Impossible&rdquo; is an optimistic take on it. If you want to assign invalid values directly to the &ldquo;internal&rdquo; fields, this won&rsquo;t protect you from yourself. This is JavaScript after all.</p>
+
+<p>Another way of modeling the <code>CarEntity</code> is to have the fields as properties of the entity but leave the <code>id</code> as <code>null</code> until it is persisted, then updating it. The advantage of explicitly defining a <code>CarFields</code> is, once again, less mutation and preventing the creation of partially instantiated instances.</p>
+
+<p>Before the data is persisted we have only <code>CarFields</code>. Once it is persisted <em>then</em> we have a <code>CarEntity</code>. The different types represent the different stages in the lifecycle and the two states are less easily confused.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -167,10 +301,10 @@
 <span class='line-number'>13</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Distance</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">unit</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">!==</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Distance Value is not a decimal number&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Distance Value is not a decimal number&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">Distance</span><span class="p">.</span><span class="nx">units</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">unit</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Distance Unit is not is not valid&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Distance Unit is not is not valid&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
@@ -295,57 +429,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2014/05/06/open-and-close-ssh-tunnel-in-script/">Open and Close SSH Tunnel in Script</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-06T13:38:00+10:00" pubdate data-updated="true">May 6<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have been using SSH tunnels for a <em>long</em> time. Usually, I just manually open the tunnels I require. But, setting up my new machine (archlinux on a Thinkpad t440s.. shiny!) I&rsquo;ve been writing a lot of shell scripts to automate much of what I used to do manually.</p>
-
-<p>In that spirit, I wanted a script to create an ssh tunnel and connect my irc client (irssi) to my bouncer (znc), behind my home firewall.</p>
-
-<p>So, this is what I&rsquo;m using:</p>
-
-<pre><code>#!/bin/bash
-ssh -f -o ExitOnForwardFailure=yes -L 6667:localhost:6667 user@home.example.com sleep 30
-irssi
-</code></pre>
-
-<p>The <code>-f -o ExitOnForwardFailure=yes</code> combination makes ssh wait until the forwarded ports have been established before backgrounding. Effectively, this blocks the script until the ports are ready to use.</p>
-
-<p>The <code>sleep 30</code> keeps the connection open (in the background) for 30 seconds before ssh terminates. <em>However</em>, if there is an open connection on the tunnel, ssh will wait for it to close before terminating. This means, you have 30 seconds to connect to the forwarded port, then it will stay open as long as you&rsquo;re using it. So, once I quit irssi, the tunnel closes.</p>
-
-<p>Then, irssi configured to connect to localhost:6667 which is tunneled to localhost:6667 on the target machine, where it finds znc!</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/2/">&larr; Older</a>
@@ -361,6 +444,10 @@ irssi
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/31/entity-objects-in-javascript/">Entity Objects in JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/07/15/value-objects-in-javascript/">Value Objects in JavaScript</a>
       </li>
     
@@ -374,10 +461,6 @@ irssi
     
       <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
       </li>
     
   </ul>

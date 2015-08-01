@@ -4,7 +4,7 @@
   <title><![CDATA[Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2015-07-15T22:52:21+10:00</updated>
+  <updated>2015-08-01T19:03:24+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -12,6 +12,113 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Entity Objects in JavaScript]]></title>
+    <link href="http://blog.tekerson.com/2015/07/31/entity-objects-in-javascript/"/>
+    <updated>2015-07-31T18:26:37+10:00</updated>
+    <id>http://blog.tekerson.com/2015/07/31/entity-objects-in-javascript</id>
+    <content type="html"><![CDATA[<p>In my last post I looked at Value Objects and how I might implement them in JavaScript. This time I&rsquo;m going to look at Entities. Entities are kind of the next rung on the ladder in the domain model. They can be composed of Value Objects.</p>
+
+<p>Entities are <em>not</em> defined by their attributes in the same way as Value Objects, instead they have an enduring &ldquo;Identity&rdquo;. The canonical example is a person. A person isn&rsquo;t defined by their name, their age, their height, or any other attribute. Any of these can change and they are still the same person (barring any deep philisophical discussion). In software systems, this is usually implemented by assigning an arbitrary key that uniquely identifies the entity for its lifetime.</p>
+
+<p>Where this key comes from is irrelevant to this discussion, but it is common for it to be a value that is generated in the persistence layer when the data is saved.</p>
+
+<p>So, from this we could say that an entity is an instance with an identity and a collection of mutable attributes. Using a similar validation style to the one I used for Value Objects, I might write this in JavaScript like (yes, I&rsquo;m using a Car example, but I promise it&rsquo;s not the usual inheritence/composition example):</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Car</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">fields</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">id</span> <span class="k">instanceof</span> <span class="nx">CarId</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarId&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fields</span> <span class="k">instanceof</span> <span class="nx">CarFields</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarFields&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">fields</span> <span class="o">=</span> <span class="nx">fields</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But, I just said that entities are mutable, so, why am I still calling <code>Object.freeze</code>? Because, I want <em>this</em> object &ndash; the Entity &ndash; to be immutable, its <code>id</code> can&rsquo;t change but it&rsquo;s <code>fields</code> are still mutable; I&rsquo;m taking advantage of the shallow freeze semantics.</p>
+
+<p>Side Note: If you&rsquo;ve been paying close attention, you may have noticed I&rsquo;m <code>throw</code>ing exceptions here instead of <code>return</code>ing them like last time. This is because I consider passing the wrong type to be a developer error, which is (hopefully) an exceptional situation, as opposed to a user entering an invalid value, which is to be expected.</p>
+
+<p>Ignoring the <code>CarId</code>, which will be a Value Object similar to the previous post. The only interesting part left is the <code>CarFields</code> object. This will be slightly different to the Value Object and the Entity itself because it&rsquo;s mutable. So, its validation must be performed in the setters instead of the constructor. Using the common setter/getter pattern, it looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">CarFields</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">odometer</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="nx">model</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">odometer</span><span class="p">(</span><span class="nx">odometer</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">CarFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">model</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_model</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">model</span> <span class="k">instanceof</span> <span class="nx">CarMake</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarModel&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">CarFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">odometer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">odometer</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">odometer</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_odometer</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">odometer</span> <span class="k">instanceof</span> <span class="nx">Distance</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: Distance&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_odometer</span> <span class="o">=</span> <span class="nx">odometer</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Even though we now have setters, all of the values are still required in the constructor. This makes it impossible* to have a partially instantiated instance running around.</p>
+
+<p>* &ldquo;Impossible&rdquo; is an optimistic take on it. If you want to assign invalid values directly to the &ldquo;internal&rdquo; fields, this won&rsquo;t protect you from yourself. This is JavaScript after all.</p>
+
+<p>Another way of modeling the <code>CarEntity</code> is to have the fields as properties of the entity but leave the <code>id</code> as <code>null</code> until it is persisted, then updating it. The advantage of explicitly defining a <code>CarFields</code> is, once again, less mutation and preventing the creation of partially instantiated instances.</p>
+
+<p>Before the data is persisted we have only <code>CarFields</code>. Once it is persisted <em>then</em> we have a <code>CarEntity</code>. The different types represent the different stages in the lifecycle and the two states are less easily confused.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Value Objects in JavaScript]]></title>
@@ -79,10 +186,10 @@
 <span class='line-number'>13</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Distance</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">unit</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">!==</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Distance Value is not a decimal number&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Distance Value is not a decimal number&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">Distance</span><span class="p">.</span><span class="nx">units</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">unit</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Distance Unit is not is not valid&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Distance Unit is not is not valid&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
@@ -950,182 +1057,6 @@ UPDATE Example SET position = @pos := @pos + 1 ORDER BY position</p>
 <p>Some of the material I found too &ldquo;introductory&rdquo;, but I think that may be because I primarily attended sessions on topics I am familiar with hoping to learn more, whereas using the talks as introductions to new topics might have been a better idea. How do people usually select talks?</p>
 
 <p>I also didn&rsquo;t attend much in the way of &ldquo;extra-conference&rdquo; activities; social events outside of the conference schedule. I am a little disappointed about this, as it would have been good to chat to some members of the community in a less formal setting, so this is something I think I would do much more of next time. And there will be a next time.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Converting a flat array with Parent ID's to a nested Tree]]></title>
-    <link href="http://blog.tekerson.com/2009/03/03/converting-a-flat-array-with-parent-ids-to-a-nested-tree/"/>
-    <updated>2009-03-03T21:37:32+10:00</updated>
-    <id>http://blog.tekerson.com/2009/03/03/converting-a-flat-array-with-parent-ids-to-a-nested-tree</id>
-    <content type="html"><![CDATA[<p>Storing hierarchical data in a tabular data structure such as a database is not uncommon in many applications (eg. threaded comments on a blog entry, or a navigation menu structure). The &ldquo;Adjacency List&rdquo; method; probably the most common, involves storing a reference to the parent in each of the children.</p>
-
-<p>Here is a snippet for converting the rows stored using the adjacency list method into a hierarchical array in PHP. My goal was to do this in 1 pass, without recursion. I ended up using 2 passes, I think 1 pass is achievable if you can guarantee the parent will always be returned before all of its children. But since I couldn&rsquo;t, the first pass is to change the id of the row to be the key of the array.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-</pre></td><td class='code'><pre><code class='php'><span class='line'><span class="cp">&lt;?php</span>
-</span><span class='line'><span class="k">function</span> <span class="nf">convertToTree</span><span class="p">(</span><span class="k">array</span> <span class="nv">$flat</span><span class="p">,</span> <span class="nv">$idField</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
-</span><span class='line'>                        <span class="nv">$parentIdField</span> <span class="o">=</span> <span class="s1">&#39;parentId&#39;</span><span class="p">,</span>
-</span><span class='line'>                        <span class="nv">$childNodesField</span> <span class="o">=</span> <span class="s1">&#39;childNodes&#39;</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="nv">$indexed</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
-</span><span class='line'>    <span class="c1">// first pass - get the array indexed by the primary id  </span>
-</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$flat</span> <span class="k">as</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$idField</span><span class="p">]]</span> <span class="o">=</span> <span class="nv">$row</span><span class="p">;</span>
-</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$idField</span><span class="p">]][</span><span class="nv">$childNodesField</span><span class="p">]</span> <span class="o">=</span> <span class="k">array</span><span class="p">();</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">//second pass  </span>
-</span><span class='line'>    <span class="nv">$root</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
-</span><span class='line'>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$indexed</span> <span class="k">as</span> <span class="nv">$id</span> <span class="o">=&gt;</span> <span class="nv">$row</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>        <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$parentIdField</span><span class="p">]][</span><span class="nv">$childNodesField</span><span class="p">][</span><span class="nv">$id</span><span class="p">]</span> <span class="o">=&amp;</span> <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$id</span><span class="p">];</span>
-</span><span class='line'>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$row</span><span class="p">[</span><span class="nv">$parentIdField</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'>            <span class="nv">$root</span> <span class="o">=</span> <span class="nv">$id</span><span class="p">;</span>
-</span><span class='line'>        <span class="p">}</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="k">array</span><span class="p">(</span><span class="nv">$root</span> <span class="o">=&gt;</span> <span class="nv">$indexed</span><span class="p">[</span><span class="nv">$root</span><span class="p">]);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Usage:</span>
-</span><span class='line'><span class="nv">$rows</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="k">null</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Menu&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-1&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 2-1&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'>    <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-2&#39;</span><span class="p">,</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="nx">convertToTree</span><span class="p">(</span><span class="nv">$rows</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="c1">// Produces:</span>
-</span><span class='line'><span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="k">NULL</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Menu&#39;</span><span class="p">,</span>
-</span><span class='line'>        <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>            <span class="mi">2</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
-</span><span class='line'>                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-1&#39;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                        <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
-</span><span class='line'>                        <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
-</span><span class='line'>                        <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 1-2&#39;</span><span class="p">,</span>
-</span><span class='line'>                        <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                        <span class="p">),</span>
-</span><span class='line'>                    <span class="p">),</span>
-</span><span class='line'>                <span class="p">),</span>
-</span><span class='line'>            <span class="p">),</span>
-</span><span class='line'>            <span class="mi">3</span> <span class="o">=&gt;</span>  <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;parentId&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Item 2-1&#39;</span><span class="p">,</span>
-</span><span class='line'>                <span class="s1">&#39;childNodes&#39;</span> <span class="o">=&gt;</span> <span class="k">array</span> <span class="p">(</span>
-</span><span class='line'>                <span class="p">),</span>
-</span><span class='line'>            <span class="p">),</span>
-</span><span class='line'>        <span class="p">),</span>
-</span><span class='line'>    <span class="p">),</span>
-</span><span class='line'><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
 ]]></content>
   </entry>
   

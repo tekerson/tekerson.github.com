@@ -164,10 +164,10 @@
 <span class='line-number'>13</span>
 </pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Distance</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">unit</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">!==</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Distance Value is not a decimal number&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Distance Value is not a decimal number&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">Distance</span><span class="p">.</span><span class="nx">units</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">unit</span><span class="p">)</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Distance Unit is not is not valid&#39;</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Distance Unit is not is not valid&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
@@ -263,6 +263,8 @@
         <a class="basic-alignment left" href="/2014/06/18/getting-the-tools-haskell-edition/" title="Previous Post: Getting the tools: Haskell Edition">&laquo; Getting the tools: Haskell Edition</a>
       
       
+        <a class="basic-alignment right" href="/2015/07/31/entity-objects-in-javascript/" title="Next Post: Entity Objects in JavaScript">Entity Objects in JavaScript &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -274,6 +276,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2015/07/31/entity-objects-in-javascript/">Entity Objects in JavaScript</a>
+      </li>
     
       <li class="post">
         <a href="/2015/07/15/value-objects-in-javascript/">Value Objects in JavaScript</a>
@@ -289,10 +295,6 @@
     
       <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
       </li>
     
   </ul>

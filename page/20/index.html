@@ -9,7 +9,7 @@
   <meta name="author" content="Brenton Alker">
 
   
-  <meta name="description" content="I often find myself only a few minutes (or hours) into a session at the bash CLI/prompt before starting a process that takes some time to complete, &hellip;">
+  <meta name="description" content="I have been having a problem with Ubuntu since I installed it (only a few weeks ago now). Every so often, about once a day on average, my DNS &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/2006/12/01/ubuntu-resetting-dns-setting-resolvconf/">Ubuntu Resetting DNS Setting (resolv.conf)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-12-01T04:28:02+10:00" pubdate data-updated="true">Dec 1<span>st</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I have been having a problem with Ubuntu since I installed it (only a few weeks ago now). Every so often, about once a day on average, my DNS settings were being reset.</p>
+
+<p>I had changed the settings in the &ldquo;Networking&rdquo; preferences interface, on numerous occasions only to discover later that the settings had been reverted. I figured it was due to the interface being set to DHCP, so I promptly changed it to a static setting (my preference in this case anyway) and thought I would be safe.</p>
+
+<p>So I went ahead and manually added my DNS server (as described in a <a href="/archives/4">previous post</a>) to my /etc/resolv.conf</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nameserver 192.168.1.100</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And went about my business. Only to discover a day later it had reverted again. It seems that even though the interface (the only one on the system) is static, that the dhcpclient still automatically reconfigures the DNS settings, to prevent this, the options are either (in order of my preference):</p>
+
+<ol>
+<li><p> Change the dhcpclient configuration &em; Simply, elegant, sweet</p></li>
+<li><p> Make resolv.conf read only &em; That&rsquo;ll show the sucker</p></li>
+<li><p> Uninstall the dhcpclient &em; I&rsquo;d prefer not to, it comes in handy if the network breaks</p></li>
+</ol>
+
+
+<p>So I took option one and changed the /etc/dhcp3/dhcpclient.conf adding the line:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>prepend domain-name-servers 192.168.1.100;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The dhcpclient still updates my DNS settings, it&rsquo;s just conveniently adds my preferred server to the top of the list. Isn&rsquo;t that nice of it.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -184,172 +245,6 @@ Then, it just works&hellip;</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/2006/11/04/priority-when-multiple-css-classes-are-applied/">Priority When Multiple CSS Classes Are Applied</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2006-11-04T02:16:59+10:00" pubdate data-updated="true">Nov 4<span>th</span>, 2006</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;ve used multiple CSS classes applied to an element on many occasion, but never run into the problem I found today. It seems counter to the CSS system as I understand it, but I&rsquo;ve checked it out and it works like this.</p>
-
-<p>I had a page, who&rsquo;s table cells all had a CSS class that applied a background colour, some font attributes and what have you.
-The class (from an external stylesheet file):</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>td.listCell
-</span><span class='line'>{
-</span><span class='line'>    …
-</span><span class='line'>    color: black;
-</span><span class='line'>    background-color: grey;
-</span><span class='line'>    …
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>was applied individually to each cell like:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;td class="listCell"&gt;&lt;/td&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I needed to apply a second class on certain cells to change the background colour, this is part of an on-page Javascript search. This page has lots of content, a large form, most of which is hidden and only small parts are used at a time. The search is supposed to highlight the cells that contain the text in the search field.</p>
-
-<p>So, I added a searchHighlight style to the head of the page, making it look like:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;head&gt;
-</span><span class='line'>    …
-</span><span class='line'>    &lt;style type="text/css"&gt;
-</span><span class='line'>        .searchHighlight { background-color: red }
-</span><span class='line'>    &lt;/style&gt;
-</span><span class='line'>    &lt;link rel="stylesheet" type="text/css" href="stylesheet.css" /&gt;
-</span><span class='line'>&lt;/head&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>On my way I went, coded the javascript to search the table and add the &lsquo;searchHighlight&rsquo; class to the cells that needed hightlighting. Easy. Except it didn&rsquo;t work.</p>
-
-<p>When the Javascript found it&rsquo;s target, and changed the class (by appending searchHighlight to the className) nothing happened. I checked the Javascript had worked, using my trusty <a href="https://addons.mozilla.org/firefox/1843/">FireBug</a> source inspector. It had. So why no change in the style?</p>
-
-<p>I changed the Javascript to replace (instead of append) the searchHighlight class, that worked, except it lost all it&rsquo;s normal formatting, which I was almost willing to put up with, but not quite. I tried pre-pending the searchHighlight class (hoping the styles were in priority order), but to no avail.</p>
-
-<p>So I created a simple test page, to make sure I was wasn&rsquo;t going (more) insane, and that multiple CSS styles ever worked.
-The test page looked like this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
-</span><span class='line'>&lt;html&gt;
-</span><span class='line'>    &lt;head&gt;
-</span><span class='line'>        &lt;title&gt;Multiple CSS Class Test&lt;/title&gt;
-</span><span class='line'>        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;&lt;/meta&gt;
-</span><span class='line'>        &lt;style type="text/css"&gt;
-</span><span class='line'>            .normal { font-weight: bold; background-color: red;}
-</span><span class='line'>            .special { background-color: blue }
-</span><span class='line'>        &lt;/style&gt;
-</span><span class='line'>    &lt;/head&gt;
-</span><span class='line'>    &lt;body&gt;
-</span><span class='line'>        &lt;div class="normal"&gt;class=&quot;normal&quot;&lt;/div&gt;
-</span><span class='line'>        &lt;div class="special"&gt;class=&quot;special&quot;&lt;/div&gt;
-</span><span class='line'>        &lt;div class="normal special"&gt;class=&quot;normal special&quot;&lt;/div&gt;
-</span><span class='line'>        &lt;div class="special normal"&gt;class=&quot;special normal&quot;&lt;/div&gt;
-</span><span class='line'>    &lt;/body&gt;
-</span><span class='line'>&lt;/html&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The results are sort of what I expected&hellip; the top div (normal) is red and bold, the second (special) is blue and not bold, the other two are applying both, but the order of the classes in the list doesn&rsquo;t matter. So they are getting the bold from the normal style, and the background from the special style.</p>
-
-<p>Great. So why didn&rsquo;t it work in my application? I finally figured it out. If, in my test, I reversed the order of the <em>declaration</em> of the styles (so that &lsquo;special&rsquo; is declared first) and the results are very different, the &lsquo;special&rsquo; class is ignored completely.</p>
-
-<p>That&rsquo;s right, the styles are applied in the order they are declared in the document, the order they are listed in the element has no effect. That I now understand (although I didn&rsquo;t know it previously). But what I find more suprising, is that the order of stylesheets files that are linked is also subjected to this hierachy.</p>
-
-<p>For example, if (from my test page) I remove the special style, and put it in an external style sheet, and include it like so:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>…
-</span><span class='line'>&lt;style type="text/css"&gt;
-</span><span class='line'>        .normal { font-weight: bold; background-color: red;}
-</span><span class='line'>&lt;/style&gt;
-</span><span class='line'>&lt;link rel="stylesheet" type="text/css" href="stylesheet.css" /&gt;
-</span><span class='line'>…</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It works, but doing this doesn&rsquo;t:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>…
-</span><span class='line'>&lt;link rel="stylesheet" type="text/css" href="stylesheet.css" /&gt;
-</span><span class='line'>&lt;style type="text/css"&gt;
-</span><span class='line'>        .normal { font-weight: bold; background-color: red;}
-</span><span class='line'>&lt;/style&gt;
-</span><span class='line'>…</span></code></pre></td></tr></table></div></figure>
-
-
-<p>So the include is exactly the same as typing in the style in the file. Whereas I was under the impression that styles in the file took precedence over those in external (linked) stylesheets (where they overlap of course). But it seems I was wrong. Now I know.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/page/21/">&larr; Older</a>
@@ -367,6 +262,10 @@ The test page looked like this:</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2015/07/31/entity-objects-in-javascript/">Entity Objects in JavaScript</a>
+      </li>
+    
+      <li class="post">
         <a href="/2015/07/15/value-objects-in-javascript/">Value Objects in JavaScript</a>
       </li>
     
@@ -380,10 +279,6 @@ The test page looked like this:</p>
     
       <li class="post">
         <a href="/2013/11/06/replay-web-hook-requests-with-netcat/">Replay web hook requests with netcat</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/09/04/remapping-capslock-to-ctrl-in-osx/">Remapping Caps Lock to Ctrl in OS X</a>
       </li>
     
   </ul>
