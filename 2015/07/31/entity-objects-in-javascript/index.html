@@ -109,7 +109,7 @@
 
 <p>Where this key comes from is irrelevant to this discussion, but it is common for it to be a value that is generated in the persistence layer when the data is saved.</p>
 
-<p>So, from this we could say that an entity is an instance with an identity and a collection of mutable attributes. Using a similar validation style to the one I used for Value Objects, I might write this in JavaScript like (yes, I&rsquo;m using a Car example, but I promise it&rsquo;s not the usual inheritence/composition example):</p>
+<p>So, from this we could say that an entity is an instance with an identity and a collection of mutable attributes. Using a similar validation style to the one I used for Value Objects, I might write this in JavaScript like:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -123,12 +123,12 @@
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Car</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">fields</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">id</span> <span class="k">instanceof</span> <span class="nx">CarId</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarId&#39;</span><span class="p">);</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">Trail</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">fields</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">id</span> <span class="k">instanceof</span> <span class="nx">TrailId</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: TrailId&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fields</span> <span class="k">instanceof</span> <span class="nx">CarFields</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarFields&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">fields</span> <span class="k">instanceof</span> <span class="nx">TrailFields</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: TrailFields&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'>  
 </span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">id</span><span class="p">;</span>
@@ -142,7 +142,7 @@
 
 <p>Side Note: If you&rsquo;ve been paying close attention, you may have noticed I&rsquo;m <code>throw</code>ing exceptions here instead of <code>return</code>ing them like last time. This is because I consider passing the wrong type to be a developer error, which is (hopefully) an exceptional situation, as opposed to a user entering an invalid value, which is to be expected.</p>
 
-<p>Ignoring the <code>CarId</code>, which will be a Value Object similar to the previous post. The only interesting part left is the <code>CarFields</code> object. This will be slightly different to the Value Object and the Entity itself because it&rsquo;s mutable. So, its validation must be performed in the setters instead of the constructor. Using the common setter/getter pattern, it looks like:</p>
+<p>Ignoring the <code>TrailId</code>, which will be a Value Object similar to the previous post. The only interesting part left is the <code>TrailFields</code> object. This will be slightly different to the Value Object and the Entity itself because it&rsquo;s mutable. So, its validation must be performed in the setters instead of the constructor. Using the common setter/getter pattern, it looks like:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -168,29 +168,51 @@
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">CarFields</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">odometer</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="nx">model</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">odometer</span><span class="p">(</span><span class="nx">odometer</span><span class="p">);</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">function</span> <span class="nx">TrailFields</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">distance</span><span class="p">,</span> <span class="nx">grade</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">distance</span><span class="p">(</span><span class="nx">distance</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">grade</span><span class="p">(</span><span class="nx">grade</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="nx">CarFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">model</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">model</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_model</span><span class="p">;</span>
+</span><span class='line'><span class="nx">TrailFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">name</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_name</span><span class="p">;</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">model</span> <span class="k">instanceof</span> <span class="nx">CarMake</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: CarModel&#39;</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">name</span> <span class="k">instanceof</span> <span class="nx">TrailName</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: TrailName&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_model</span> <span class="o">=</span> <span class="nx">model</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="nx">CarFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">odometer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">odometer</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">odometer</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_odometer</span><span class="p">;</span>
+</span><span class='line'><span class="nx">TrailFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">distance</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">distance</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">distance</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_distance</span><span class="p">;</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">odometer</span> <span class="k">instanceof</span> <span class="nx">Distance</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">distance</span> <span class="k">instanceof</span> <span class="nx">Distance</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="s1">&#39;Expected: Distance&#39;</span><span class="p">);</span>
 </span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_odometer</span> <span class="o">=</span> <span class="nx">odometer</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_distance</span> <span class="o">=</span> <span class="nx">distance</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">TrailFields</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">grade</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">grade</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="nx">grade</span> <span class="o">===</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_grade</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">grade</span> <span class="k">instanceof</span> <span class="nx">TrailGrade</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span><span class="p">(</span><span class="err">&#39;</span><span class="nx">Expected</span><span class="o">:</span> <span class="nx">TrailGrade</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>  <span class="k">this</span><span class="p">.</span><span class="nx">_grade</span> <span class="o">=</span> <span class="nx">grade</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -199,9 +221,9 @@
 
 <p>* &ldquo;Impossible&rdquo; is an optimistic take on it. If you want to assign invalid values directly to the &ldquo;internal&rdquo; fields, this won&rsquo;t protect you from yourself. This is JavaScript after all.</p>
 
-<p>Another way of modeling the <code>CarEntity</code> is to have the fields as properties of the entity but leave the <code>id</code> as <code>null</code> until it is persisted, then updating it. The advantage of explicitly defining a <code>CarFields</code> is, once again, less mutation and preventing the creation of partially instantiated instances.</p>
+<p>Another way of modeling the <code>TrailEntity</code> is to have the fields as properties of the entity but leave the <code>id</code> as <code>null</code> until it is persisted, then updating it. The advantage of explicitly defining <code>TrailFields</code> is, once again, less mutation and preventing the creation of incomplete instances.</p>
 
-<p>Before the data is persisted we have only <code>CarFields</code>. Once it is persisted <em>then</em> we have a <code>CarEntity</code>. The different types represent the different stages in the lifecycle and the two states are less easily confused.</p>
+<p>Before the data is persisted we have only <code>TrailFields</code>. Once it is persisted <em>then</em> we have a <code>TrailEntity</code>. The different types represent the different stages in the lifecycle and the two states are less easily confused.</p>
 </div>
 
 

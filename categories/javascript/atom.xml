@@ -4,7 +4,7 @@
   <title><![CDATA[Category: JavaScript | Deprecated Behaviour]]></title>
   <link href="http://blog.tekerson.com/categories/javascript/atom.xml" rel="self"/>
   <link href="http://blog.tekerson.com/"/>
-  <updated>2015-08-01T19:03:24+10:00</updated>
+  <updated>2015-08-02T18:34:40+10:00</updated>
   <id>http://blog.tekerson.com/</id>
   <author>
     <name><![CDATA[Brenton Alker]]></name>
@@ -24,16 +24,16 @@
 
 <p>Where this key comes from is irrelevant to this discussion, but it is common for it to be a value that is generated in the persistence layer when the data is saved.</p>
 
-<p>So, from this we could say that an entity is an instance with an identity and a collection of mutable attributes. Using a similar validation style to the one I used for Value Objects, I might write this in JavaScript like (yes, I&rsquo;m using a Car example, but I promise it&rsquo;s not the usual inheritence/composition example):</p>
+<p>So, from this we could say that an entity is an instance with an identity and a collection of mutable attributes. Using a similar validation style to the one I used for Value Objects, I might write this in JavaScript like:</p>
 
 <p>``` javascript
-function Car(id, fields) {</p>
+function Trail(id, fields) {</p>
 
-<pre><code>if (!id instanceof CarId) {
-    throw new TypeError('Expected: CarId');
+<pre><code>if (!id instanceof TrailId) {
+    throw new TypeError('Expected: TrailId');
 }
-if (!fields instanceof CarFields) {
-    throw new TypeError('Expected: CarFields');
+if (!fields instanceof TrailFields) {
+    throw new TypeError('Expected: TrailFields');
 }
 
 this.id = id;
@@ -48,44 +48,61 @@ return Object.freeze(this);
 
 <p>Side Note: If you&rsquo;ve been paying close attention, you may have noticed I&rsquo;m <code>throw</code>ing exceptions here instead of <code>return</code>ing them like last time. This is because I consider passing the wrong type to be a developer error, which is (hopefully) an exceptional situation, as opposed to a user entering an invalid value, which is to be expected.</p>
 
-<p>Ignoring the <code>CarId</code>, which will be a Value Object similar to the previous post. The only interesting part left is the <code>CarFields</code> object. This will be slightly different to the Value Object and the Entity itself because it&rsquo;s mutable. So, its validation must be performed in the setters instead of the constructor. Using the common setter/getter pattern, it looks like:</p>
+<p>Ignoring the <code>TrailId</code>, which will be a Value Object similar to the previous post. The only interesting part left is the <code>TrailFields</code> object. This will be slightly different to the Value Object and the Entity itself because it&rsquo;s mutable. So, its validation must be performed in the setters instead of the constructor. Using the common setter/getter pattern, it looks like:</p>
 
 <p>``` javascript
-function CarFields(model, odometer) {
-  this.model(model);
-  this.odometer(odometer);
+function TrailFields(name, distance, grade) {
+  this.name(name);
+  this.distance(distance);
+  this.grade(grade);
 }</p>
 
-<p>CarFields.prototype.model = function(model) {
-  if (model === undefined) {</p>
+<p>TrailFields.prototype.name = function(name) {
+  if (name === undefined) {</p>
 
-<pre><code>return this._model;
+<pre><code>return this._name;
 </code></pre>
 
 <p>  }
-  if (!model instanceof CarMake) {</p>
+  if (!name instanceof TrailName) {</p>
 
-<pre><code>throw new TypeError('Expected: CarModel');
+<pre><code>throw new TypeError('Expected: TrailName');
 </code></pre>
 
 <p>  }
-  this._model = model;
+  this._name = name;
 }</p>
 
-<p>CarFields.prototype.odometer = function(odometer) {
-  if (odometer === undefined) {</p>
+<p>TrailFields.prototype.distance = function(distance) {
+  if (distance === undefined) {</p>
 
-<pre><code>return this._odometer;
+<pre><code>return this._distance;
 </code></pre>
 
 <p>  }
-  if (!odometer instanceof Distance) {</p>
+  if (!distance instanceof Distance) {</p>
 
 <pre><code>throw new TypeError('Expected: Distance');
 </code></pre>
 
 <p>  }
-  this._odometer = odometer;
+  this._distance = distance;
+}</p>
+
+<p>TrailFields.prototype.grade = function(grade) {
+  if (grade === undefined) {</p>
+
+<pre><code>return this._grade;
+</code></pre>
+
+<p>  }
+  if (!grade instanceof TrailGrade) {</p>
+
+<pre><code>throw new TypeError('Expected: TrailGrade);
+</code></pre>
+
+<p>  }
+  this._grade = grade;
 }
 ```</p>
 
@@ -93,9 +110,9 @@ function CarFields(model, odometer) {
 
 <p>* &ldquo;Impossible&rdquo; is an optimistic take on it. If you want to assign invalid values directly to the &ldquo;internal&rdquo; fields, this won&rsquo;t protect you from yourself. This is JavaScript after all.</p>
 
-<p>Another way of modeling the <code>CarEntity</code> is to have the fields as properties of the entity but leave the <code>id</code> as <code>null</code> until it is persisted, then updating it. The advantage of explicitly defining a <code>CarFields</code> is, once again, less mutation and preventing the creation of partially instantiated instances.</p>
+<p>Another way of modeling the <code>TrailEntity</code> is to have the fields as properties of the entity but leave the <code>id</code> as <code>null</code> until it is persisted, then updating it. The advantage of explicitly defining <code>TrailFields</code> is, once again, less mutation and preventing the creation of incomplete instances.</p>
 
-<p>Before the data is persisted we have only <code>CarFields</code>. Once it is persisted <em>then</em> we have a <code>CarEntity</code>. The different types represent the different stages in the lifecycle and the two states are less easily confused.</p>
+<p>Before the data is persisted we have only <code>TrailFields</code>. Once it is persisted <em>then</em> we have a <code>TrailEntity</code>. The different types represent the different stages in the lifecycle and the two states are less easily confused.</p>
 ]]></content>
   </entry>
   
